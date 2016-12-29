@@ -1,7 +1,8 @@
-/app/config/parameters.yml
+!/app/config/parameters.yml
 /build/
 /phpunit.xml
 /var/*
 /web/*
 /.idea/*
 /vendor/*
+composer.lock

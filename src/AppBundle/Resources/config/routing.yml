@@ -1,0 +1,3 @@
+test:
+  path: /test1
+  defaults: { _controller: AppBundle:My:test }
