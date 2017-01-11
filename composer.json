@@ -19,8 +19,10 @@
     "require": {
         "php": ">=5.5.9",
         "symfony/symfony": "3.1.*",
+        "symfony/security-acl": "~2.8|~3.0|~3.1",
         "doctrine/orm": "^2.5",
-        "doctrine/doctrine-fixtures-bundle"    : "~2.2",
+        "doctrine/common": "~2.4",
+        "doctrine/doctrine-fixtures-bundle": "~2.2",
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/doctrine-cache-bundle": "^1.2",
         "symfony/swiftmailer-bundle": "^2.3",
@@ -32,13 +34,16 @@
         "symfony/asset": "^3.1",
         "symfony/intl": "^3.1",
         "white-october/pagerfanta-bundle": "^1.0",
-        "doctrine/doctrine-migrations-bundle": "^1.0"
+        "doctrine/doctrine-migrations-bundle": "^1.0",
+        "symfony/assetic-bundle": "^2.8",
+        "bmatzner/fontawesome-bundle": "^4.7"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",
         "symfony/phpunit-bridge": "^3.0",
         "phpunit/phpunit": "5.4.*",
-        "phpunit/dbunit": ">=1.2"
+        "phpunit/dbunit": ">=1.2",
+        "phpdocumentor/reflection-docblock": "^3.0"
     },
     "scripts": {
         "post-install-cmd": [

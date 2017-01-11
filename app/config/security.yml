@@ -2,25 +2,21 @@ security:
     encoders:
         # Our user class and the algorithm we'll use to encode passwords
         # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
-        AppBundle\Entity\User:
-            algorithm: md5
-        #    cost: 5
-        #Symfony\Component\Security\Core\User\User:
-        #    algorithm: bcrypt
-        #    cost: 12
+        AuthBundle\Entity\User:
+#        Symfony\Component\Security\Core\User\User:
+            algorithm: sha512
+            encode-as-base64: true
+            iterations: 10
 
-    #role_hierarchy:
-    #    ROLE_ADMIN: ROLE_USER
-    #    ROLE_API: ROLE_USER
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_USER, ROLE_MANAGER]
 
     providers:
         # in this example, users are stored via Doctrine in the database
         # To see the users at src/AppBundle/DataFixtures/ORM/LoadFixtures.php
         # To load users from somewhere else: http://symfony.com/doc/current/cookbook/security/custom_provider.html
-        #database_users:
-        #    entity: { class: AppBundle:User, property: username }
-        our_db_provider:
-            entity: { class: AppBundle:User, property: username }
+        database_users:
+            entity: { class: AuthBundle:User, property: email }
 #        in_memory:
 #            memory:
 #                users:
@@ -28,7 +24,7 @@ security:
 #                        password: 123456
 #                        roles: 'ROLE_USER'
 #                    admin:
-#                        password: kitten
+#                        password: 123456
 #                        roles: 'ROLE_ADMIN'
 #                    ryan:
 #                        password: $2a$12$LCY0MefVIEc3TYPHV9SNnuzOfyr2p/AXIGoQJEDs4am4JwhNz/jli
@@ -36,44 +32,42 @@ security:
 
     # http://symfony.com/doc/current/book/security.html#firewalls-authentication
     firewalls:
-       # main:
+#        default:
 #            anonymous: ~
-#            logout: ~
+#            http_basic: ~
+#        main:
+            #pattern: ^/
+#            anonymous: ~
+            #logout: ~
 #            form_login:
 #                login_path: login
 #                check_path: login
-#            pattern: ^/
-#            http_basic: ~
-#            provider: our_db_provider
-            #anonymous: ~
+            #http_basic: ~
+            #provider: our_db_provider
+#        secured_area:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
         secured_area:
-            # this firewall applies to all URLs
             pattern: ^/
-
-            # but the firewall does not require login on every page
-            # denying access is done in access_control or in your controllers
             anonymous: true
-
-            # This allows the user to login by submitting a username and password
-            # Reference: http://symfony.com/doc/current/cookbook/security/form_login_setup.html
             form_login:
-                # The route name that the login form submits to
                 check_path: login
-                # The name of the route where the login form lives
-                # When the user tries to access a protected page, they are redirected here
                 login_path: login
-                # Secure the login form against CSRF
-                # Reference: http://symfony.com/doc/current/cookbook/security/csrf_in_login_form.html
-                #csrf_token_generator: security.csrf.token_manager
+                default_target_path: secure_index
+                use_referer: true
+                #failure_path: login_failure
+                #always_use_default_target_path: true
+                csrf_token_generator: security.csrf.token_manager
 
             logout:
-                # The route name the user can go to in order to logout
-                path: security_logout
-                # The name of the route to redirect to after logging out
-                target: homepage
+                path: /logout
+                target: login
 
     access_control:
-        # this is a catch-all for the admin area
-        # additional security lives in the controllers
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/secure, roles: { ROLE_USER, ROLE_AUTHOR } }
+
+    #acl:
+    #    connection: default

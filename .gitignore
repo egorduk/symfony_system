@@ -6,3 +6,6 @@
 /.idea/*
 /vendor/*
 composer.lock
+!/web/js
+!/web/css
+!/web/uploads

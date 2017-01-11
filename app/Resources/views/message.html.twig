@@ -1,0 +1,24 @@
+{% if messageType == 'success' %}
+    {% set color = 'green' %}
+    {% set icon = 'fa-check' %}
+{% elseif messageType == 'error' %}
+    {% set color = 'red' %}
+    {% set icon = 'fa-exclamation-triangle' %}
+{% elseif messageType == 'warning' %}
+    {% set color = 'orange' %}
+    {% set icon = 'fa-warning' %}
+{% endif %}
+
+<div id="information-window">
+    <div id="">
+        <div class="information-message information-message-{{ color }}" id="js-timer">
+            <div class="information-message-icon">
+                <i class="fa {{ icon }}"></i>
+            </div>
+            <div class="information-message-body">
+                <p align="center">{{ messageText|trans }}</p>
+            </div>
+            <button class="information-message-close js-information-message-close"><i class="fa fa-times"></i></button>
+        </div>
+    </div>
+</div>

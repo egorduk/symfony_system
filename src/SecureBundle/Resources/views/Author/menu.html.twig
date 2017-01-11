@@ -1,0 +1,65 @@
+<div class="accordion" id="leftMenu">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+             <a class="accordion-toggle" href="{{ path('secure_author_homepage') }}">
+                 <i class="icon-home"></i> Домой
+             </a>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#leftMenu" href="#">
+                <i class="icon-user-6"></i> Профиль
+            </a>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#leftMenu" href="#collapseThree">
+                <i class="icon-docs"></i> Заказы
+            </a>
+        </div>
+        <div id="collapseThree" class="accordion-body collapse" style="height: 0; ">
+            <div class="accordion-inner">
+                <ul>
+                    <li>
+                        <a class="accordion-toggle" href="{{ path('secure_new_orders') }}">Новые</a>
+                    </li>
+                    {#<li>#}
+                    {#<a class="accordion-toggle" href="{{ path('secure_author_orders', {'type': 'bid'}) }}">Оцененные</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                    {#<a class="accordion-toggle" href="{{ path('secure_author_orders', {'type': 'work'}) }}">На выполнении</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                    {#<a class="accordion-toggle" href="{{ path('secure_author_orders', {'type': 'finish'}) }}">Завершенные</a>#}
+                    {#</li>#}
+                    {#<li>#}
+                    {#<a class="accordion-toggle" href="{{ path('secure_author_orders', {'type': 'favorite'}) }}">Избранные</a>#}
+                    {#</li>#}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" href="{#{{ path('secure_author_settings', {'type': 'view'}) }}#}">
+                <i class="icon-cog"></i> Настройки
+            </a>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" href="{{ path('logout') }}">
+                <i class="icon-logout-1"></i> Выход
+            </a>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" href="">
+                <i class="icon-help"></i> Помощь
+            </a>
+        </div>
+    </div>
+</div>

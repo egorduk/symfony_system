@@ -1,0 +1,24 @@
+login:
+    path: login
+    defaults: { _controller: AuthBundle:Auth:login }
+
+logout:
+    path: logout
+
+register:
+    path: register
+    defaults: { _controller: AuthBundle:Auth:register }
+
+recovery_password:
+    path: recovery_password
+    defaults: { _controller: AuthBundle:Auth:recovery }
+
+auth_confirm:
+    path: confirm/{typeConfirm}/{hashCode}/{userId}
+    defaults:  { _controller: AuthBundle:Auth:confirm }
+    methods: [GET]
+    requirements:
+        typeConfirm: 'recovery|register'
+        hashCode: '[a-z0-9]+'
+        userId: '\d+'
+

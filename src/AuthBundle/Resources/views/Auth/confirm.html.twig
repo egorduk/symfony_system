@@ -1,0 +1,20 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ 'Confirm'|trans }}
+{% endblock %}
+    {% block body %}
+        <div class="row">
+            {% if (isSuccess) %}
+                {{ include('message.html.twig', {
+                    'messageText': 'Email confirmed. You can login now.',
+                    'messageType': 'success',
+                }) }}
+            {% else %}
+                {{ include('message.html.twig', {
+                    'messageText': 'Something is wrong.',
+                    'messageType': 'error',
+                }) }}
+            {% endif %}
+        </div>
+    {% endblock %}

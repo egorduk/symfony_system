@@ -1,0 +1,27 @@
+{% extends "SecureBundle::layout_author.html.twig" %}
+
+    {% block title %}{{ 'Homepage' }}{% endblock %}
+
+    {% block content %}
+
+        <div class="container">
+            <div class="row">
+                <div  class="col-xs-4">
+                    <div id="">{{ user.avatar | raw }}</div>
+                    <p>{{ user.login }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Ваш ID - {{ user.id }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Ваш баланс: {{ user.account }} руб.</p>
+                    <hr style="border:solid 1px black">
+                    <p>Ваш статус - {{ userRole }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Вход в систему - {{ whenLoginDate }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Осталось в системе - {{ remainingTime }}</p>
+                </div>
+            </div>
+        </div>
+
+    {% endblock %}
+

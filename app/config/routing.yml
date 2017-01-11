@@ -1,3 +1,7 @@
-app_bundle_routings:
-  resource: "@AppBundle/Resources/config/routing.yml"
+auth_bundle_routings:
+  resource: "@AuthBundle/Resources/config/routing.yml"
+  prefix: /
+
+secure_bundle_routings:
+  resource: "@SecureBundle/Resources/config/routing.yml"
   prefix: /

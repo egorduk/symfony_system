@@ -1,0 +1,13 @@
+parameters:
+#    parameter_name: value
+
+services:
+    secure.date_time_helper:
+        class: SecureBundle\Service\Helper\DateTimeHelper
+
+    secure.meta_data_helper:
+        class: SecureBundle\Service\Helper\MetaDataHelper
+
+    secure.orders_helper:
+        class: SecureBundle\Service\Helper\OrdersHelper
+        arguments: ['@doctrine.orm.entity_manager']

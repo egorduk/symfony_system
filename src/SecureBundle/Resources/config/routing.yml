@@ -1,0 +1,15 @@
+secure_index:
+  path: secure/index
+  defaults: { _controller: SecureBundle:Secure:index }
+
+secure_author_homepage:
+  path: secure/author/homepage
+  defaults: { _controller: SecureBundle:Author:homepage }
+
+secure_manager_homepage:
+  path: secure/manager/homepage
+  defaults: { _controller: SecureBundle:Manager:homepage }
+
+secure_new_orders:
+  path: secure/orders/new
+  defaults: { _controller: SecureBundle:Order:newOrders }

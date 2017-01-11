@@ -1,0 +1,48 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+    {{ 'Recovery password'|trans }}
+{% endblock %}
+    {% block body %}
+            <div class="row">
+                {% if (showWindow) %}
+                    {{ include('message.html.twig', {
+                        'messageText': 'New password was sent. Check your email.',
+                        'messageType': 'success',
+                    }) }}
+                {% endif %}
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-md-offset-5">
+                    {{ form_start(form) }}
+                    {{ form_label(form.email) }}
+                    {{ form_errors(form.email) }}
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="icon-mail-8"></i></span>
+                        {{ form_widget(form.email) }}
+                    </div>
+                    {# <div class="input-group">
+                         <label for="form_recovery" class="btn btn-success"><span class="icon-ok">&nbspВосстановить пароль</span></label>
+                         {{ form_widget(form.recovery) }}
+                     </div>#}
+                    <button type="submit">{{ 'Recovery'|trans }}</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            <script>
+                $(document).ready(function() {
+                    {% if (showWindow) %}
+                    function closeMessage(el) {
+                        el.addClass('is-hidden');
+                    }
+                    $('.js-messageClose').on('click', function(e) {
+                        closeMessage($(this).closest('.Message'));
+                    });
+                    setTimeout(function() {
+                        closeMessage($('#js-timer'));
+                        //document.location.href = "{{ path("login") }}";
+                    }, 3000);
+                    {% endif %}
+                });
+            </script>
+    {% endblock %}

@@ -17,3 +17,9 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    publicKeyCaptcha: 6LcYmecSAAAAAJlYNqogbOXJVMvGgim5JoM0hcAi
+    privateKeyCaptcha: 6LcYmecSAAAAANaq8JFPxT3xEA_urO6st1gfVOXL
+    confirmPath: http://localhost/study/web/app_dev.php/auth/confirm
+    mail_sender: egorduk@yandex.com
+    mail_title: Study

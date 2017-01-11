@@ -1,0 +1,14 @@
+parameters:
+#    parameter_name: value
+    mail_options:
+        mail_sender: '%mail_sender%'
+        mail_title: '%mail_title%'
+        confirm_auth_path: '%confirm_auth_path%'
+
+services:
+    auth.captcha_service:
+        class: AuthBundle\Service\Captcha\Captcha
+
+    auth.user_helper:
+        class: AuthBundle\Service\Helper\UserHelper
+        arguments: ['@doctrine.orm.entity_manager', '%mail_options%', '@mailer', '@security.password_encoder']

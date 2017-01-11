@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AuthBundle\Entity\User" table="user">
+    <unique-constraints>
+      <unique-constraint name="login" columns="login"/>
+      <unique-constraint name="email" columns="email"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="login" type="string" column="login" length="12" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="password" type="string" column="password" length="88" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="email" type="string" column="email" length="80" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dateReg" type="datetime" column="date_reg" nullable="false"/>
+    <field name="dateConfirmRecovery" type="datetime" column="date_confirm_recovery" nullable="false"/>
+    <field name="dateConfirmReg" type="datetime" column="date_confirm_reg" nullable="false"/>
+    <field name="dateUploadAvatar" type="datetime" column="date_upload_avatar" nullable="false"/>
+    <field name="ipReg" type="integer" column="ip_reg" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+    <field name="salt" type="string" column="salt" length="64" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="role" type="string" column="role" length="20" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="isActive" type="boolean" column="is_active" nullable="false">
+      <options>
+        <option name="default">b'0'</option>
+      </options>
+    </field>
+    <field name="isConfirm" type="boolean" column="is_confirm" nullable="false">
+      <options>
+        <option name="default">b'0'</option>
+      </options>
+    </field>
+    <field name="hashCode" type="string" column="hash_code" length="60" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="token" type="string" column="token" length="30" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="recoveryPassword" type="string" column="recovery_password" length="100" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="account" type="integer" column="account" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="isBan" type="boolean" column="is_ban" nullable="false">
+      <options>
+        <option name="default">b'0'</option>
+      </options>
+    </field>
+    <field name="isAccessOrder" type="boolean" column="is_access_order" nullable="false">
+      <options>
+        <option name="default">b'0'</option>
+      </options>
+    </field>
+    <field name="avatar" type="string" column="avatar" length="25" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ratingPoint" type="integer" column="rating_point" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="rating" type="integer" column="user_rating_id" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="info" type="integer" column="user_info_id" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>
