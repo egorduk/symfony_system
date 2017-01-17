@@ -5,8 +5,6 @@ namespace SecureBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UserOrder
- *
  * @ORM\Table(name="user_order", uniqueConstraints={@ORM\UniqueConstraint(name="num", columns={"num"})})
  * @ORM\Entity
  */
@@ -148,25 +146,22 @@ class UserOrder
     private $clientDegree;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="subject_order_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\SubjectOrder", inversedBy="orders")
+     * @ORM\JoinColumn(name="subject_order_id", referencedColumnName="id")
      */
-    private $subjectOrderId;
+    private $subject;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="type_order_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\TypeOrder", inversedBy="orders")
+     * @ORM\JoinColumn(name="type_order_id", referencedColumnName="id")
      */
-    private $typeOrderId;
+    private $type;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="user_id", type="integer", nullable=false)
+     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="orders")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
-    private $userId;
+    private $user;
 
     /**
      * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\StatusOrder", inversedBy="orders")
@@ -177,9 +172,33 @@ class UserOrder
     /**
      * @return mixed
      */
-    public function getOrderStatus()
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubject()
+    {
+        return $this->subject;
     }
 
     /**
@@ -614,101 +633,7 @@ class UserOrder
         return $this->clientDegree;
     }
 
-    /**
-     * Set subjectOrderId
-     *
-     * @param integer $subjectOrderId
-     *
-     * @return UserOrder
-     */
-    public function setSubjectOrderId($subjectOrderId)
-    {
-        $this->subjectOrderId = $subjectOrderId;
-
-        return $this;
-    }
-
-    /**
-     * Get subjectOrderId
-     *
-     * @return integer
-     */
-    public function getSubjectOrderId()
-    {
-        return $this->subjectOrderId;
-    }
-
-    /**
-     * Set typeOrderId
-     *
-     * @param integer $typeOrderId
-     *
-     * @return UserOrder
-     */
-    public function setTypeOrderId($typeOrderId)
-    {
-        $this->typeOrderId = $typeOrderId;
-
-        return $this;
-    }
-
-    /**
-     * Get typeOrderId
-     *
-     * @return integer
-     */
-    public function getTypeOrderId()
-    {
-        return $this->typeOrderId;
-    }
-
-    /**
-     * Set userId
-     *
-     * @param integer $userId
-     *
-     * @return UserOrder
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    /**
-     * Get userId
-     *
-     * @return integer
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * Set statusOrderId
-     *
-     * @param integer $statusOrderId
-     *
-     * @return UserOrder
-     */
-    public function setStatusOrderId($statusOrderId)
-    {
-        $this->statusOrderId = $statusOrderId;
-
-        return $this;
-    }
-
-    /**
-     * Get statusOrderId
-     *
-     * @return integer
-     */
-    public function getStatusOrderId()
-    {
-        return $this->statusOrderId;
-    }
+    /*
 
     /**
      * Get id

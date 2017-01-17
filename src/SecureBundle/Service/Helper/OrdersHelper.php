@@ -5,6 +5,7 @@ namespace SecureBundle\Service\Helper;
 use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\StatusOrder;
+use SecureBundle\Entity\SubjectOrder;
 use SecureBundle\Entity\UserOrder;
 
 class OrdersHelper
@@ -30,6 +31,8 @@ class OrdersHelper
 
         return $qb->select('uo')
             ->from(UserOrder::class, 'uo')
+            ->innerJoin(StatusOrder::class, 'so', 'WITH', 'so = uo.status')
+            ->innerJoin(SubjectOrder::class, 'sj', 'WITH', 'sj = uo.subject')
        /* return $qb->select('uo')
             ->from(StatusOrder::class, 'uo')*/
             //->innerJoin(StatusOrder::class, 'so', 'WITH', 'uo.status = so')

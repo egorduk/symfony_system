@@ -2,19 +2,27 @@
 
 namespace AuthBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * User
- *
  * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="login", columns={"login"}), @ORM\UniqueConstraint(name="email", columns={"email"})})
  * @ORM\Entity
  */
 class User implements AdvancedUserInterface, \Serializable
 {
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
     /**
      * @var string
      *
@@ -172,18 +180,14 @@ class User implements AdvancedUserInterface, \Serializable
     private $info;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
      * @ORM\Column(name="roles", type="string")
      */
     private $role;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserOrder", mappedBy="user")
+     */
+    private $orders;
 
 
     public function __construct()
@@ -208,17 +212,18 @@ class User implements AdvancedUserInterface, \Serializable
         $this->role = 'ROLE_AUTHOR';
         $this->hashCode = '';
         $this->token = '';
-        $this->link_user_order = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_openid = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_author_file = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_user_bid = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_select_user = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_webchat_user = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_favorite_user = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_auction_user = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_order_file_user = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_user_ps = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->link_mail_option = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->link_user_order = new ArrayCollection();
+        $this->link_openid = new ArrayCollection();
+        $this->link_author_file = new ArrayCollection();
+        $this->link_user_bid = new ArrayCollection();
+        $this->link_select_user = new ArrayCollection();
+        $this->link_webchat_user = new ArrayCollection();
+        $this->link_favorite_user = new ArrayCollection();
+        $this->link_auction_user = new ArrayCollection();
+        $this->link_order_file_user = new ArrayCollection();
+        $this->link_user_ps = new ArrayCollection();
+        $this->link_mail_option = new ArrayCollection();
+        $this->orders = new ArrayCollection();
     }
 
     /**

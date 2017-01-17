@@ -1,12 +1,11 @@
 <?php
 
-namespace AuthBundle\Entity;
+namespace SecureBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * TypeOrder
- *
  * @ORM\Table(name="type_order", uniqueConstraints={@ORM\UniqueConstraint(name="code", columns={"code"}), @ORM\UniqueConstraint(name="name", columns={"name"})})
  * @ORM\Entity
  */
@@ -35,8 +34,15 @@ class TypeOrder
      */
     private $id;
 
+    /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserOrder", mappedBy="type")
+     */
+    private $orders;
 
-
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+    }
     /**
      * Set name
      *

@@ -1,14 +1,22 @@
-{% extends "::base.html.twig" %}
+{% extends "SecureBundle::layout_author.html.twig" %}
 
 {% block title %}{{ 'New orders' }}{% endblock %}
     {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
+        {{ parent() }}
+        {#<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">#}
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.0/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.css">
     {% endblock %}
     {% block javascripts_head %}
         <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
-        <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
+        {#<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>#}
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.0/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>
+        {#<script type="text/javascript" charset="utf8" src="//bartaz.github.io/sandbox.js/jquery.highlight.js"></script>#}
+        <script type="text/javascript" charset="utf8" src="{{ asset('js/DataTable/highlight.js') }}"></script>
     {% endblock %}
     {% block body %}
+    <script>
+        var webPath = "{{ asset('json/DataTable/Russian.json') }}";
+    </script>
        {# <link rel="stylesheet" href="{{ asset('bundles/css/jqgrid/custom-theme1/jquery-ui-1.10.3.custom.css') }}" />
         <link rel="stylesheet" href="{{ asset('bundles/css/jqgrid/ui.jqgrid.css') }}" />
         <script type="text/javascript" src="{{ asset('bundles/js/jqgrid/i18n/grid.locale-ru.js') }}"></script>
@@ -61,42 +69,61 @@
                     width: auto !important;
                 }*/
             </style>#}
-        <div class="">
-            <div class="row">
-                <table id="table_id" class="display">
-                    <thead>
-                    <tr>
-                        <th>№ заказа</th>
-                        <th>Предмет</th>
-                        <th>Тип работы</th>
-                        <th>Тема работы</th>
-                        <th>Задание</th>
-                        <th>Выполнение до</th>
-                        <th>Max ставка</th>
-                        <th>Min ставка</th>
-                        <th>Моя ставка</th>
-                        <th>Создан</th>
-                        <th>Действия</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for order in orders %}
-                    <tr>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.theme }}</td>
-                        <td>{{ order.task }}</td>
-                        <td></td>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.id }}</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+        <div class="row">
+            <div class="col-md-2">
+                {{ include('@Secure/Author/menu.html.twig') }}
             </div>
+            <div class="col-md-10">
+                {% block content %}
+                    <table id="orders-table" class="display responsive" width="100%">
+                        <thead>
+                        <tr>
+                            <th>№ заказа</th>
+                            <th>Предмет</th>
+                            <th>Тип работы</th>
+                            <th>Тема работы</th>
+                            <th>Выполнение до</th>
+                            <th>Max ставка</th>
+                            <th>Min ставка</th>
+                            <th>Создан</th>
+                            <th>Действия</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr>
+                            <th>№ заказа</th>
+                            <th>Предмет</th>
+                            <th>Тип работы</th>
+                            <th>Тема работы</th>
+                            <th>Выполнение до</th>
+                            <th>Max ставка</th>
+                            <th>Min ставка</th>
+                            <th>Создан</th>
+                            <th>Действия</th>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        {% for order in orders %}
+                            <tr data-id="{{ order.id }}">
+                                <td>{{ order.num }}</td>
+                                <td>{{ order.subject.childname }}</td>
+                                <td>{{ order.type.name }}</td>
+                                <td>{{ order.theme }}</td>
+                                <td>{{ order.datecreate|date('Y-m-d H:i') }}</td>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.datecreate|date('Y-m-d H:i') }}</td>
+                                <td>
+                                    <button>Отказаться</button>
+                                    <button>Скрыть</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% endblock %}
+            </div>
+        </div>
           {#  <div class="row">
                 <div id="modal-window">
                     <div id="success-window">
@@ -443,7 +470,88 @@
     {% endblock %}
     {% block javascripts_footer %}
         <script>$(document).ready( function () {
-            $('#table_id').DataTable();
-            } );
+              var buttonCommon = {
+                exportOptions: {
+                    format: {
+                        body: function(data, row, column, node) {
+                            // Strip $ from salary column to make it numeric
+                            return column === 10 ?
+                                //data.replace( /[$,]/g, '' ) :
+                                '' :
+                                data;
+                        }
+                    }
+                }
+            };
+
+            var dataTable = $('#orders-table').DataTable({
+                 initComplete: function() {
+                    this.api().columns().every( function() {
+                        var column = this;
+                        var select = $('<select><option value=""></option></select>')
+                            .appendTo($(column.footer()).empty())
+                            .on('change', function() {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+                                column
+                                    .search(val ? '^'+val+'$' : '', true, false)
+                                    .draw();
+                            });
+                        column.data().unique().sort().each( function(d, j) {
+                            select.append('<option value="'+d+'">'+d+'</option>')
+                        });
+                    });
+                },
+                searchHighlight: true,
+                select: true,
+                responsive: {
+                    details: true
+                },
+                //responsive: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', /*'excel', */'pdf', 'print',
+                    $.extend(true, {}, buttonCommon, {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: '0, 1, 2'
+                        },
+                        addClass: 'compact',
+                        text: '<i class="fa fa-file-pdf-o"></i>Excel',
+                        message: 'Yo',
+                        title: 'title'
+                    })
+                ],
+                "language": {
+                    "url": webPath
+                }
+            });
+
+            dataTable.on('draw', function() {
+                var body = $(dataTable.table().body());
+                body.unhighlight();
+                body.highlight(dataTable.search());
+            });
+
+            dataTable.on('click', 'tbody tr', function() {
+              /*  if (dataTable.row(this, { selected: true }).any()) {
+                    dataTable.row(this).deselect();
+                }*/
+                /*else {*/
+                    dataTable.row(this).select();
+                    //console.log(dataTable.row(this).data());
+                    console.log($(this).data('id'));
+                //}
+            });
+
+          /*  $('a.toggle-vis').on( 'click', function (e) {
+                e.preventDefault();
+                // Get the column API object
+                var column = table.column( $(this).attr('data-column') );
+                // Toggle the visibility
+                column.visible( ! column.visible() );
+            } );*/
+        });
         </script>
     {% endblock %}

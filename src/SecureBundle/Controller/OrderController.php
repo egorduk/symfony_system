@@ -21,7 +21,7 @@ class OrderController extends Controller
     {
         $ordersHelper = $this->get('secure.orders_helper');
         $orders = $ordersHelper->getNewOrders();
-        dump($orders);
+        //dump($orders);die;
 
         return $templateDate = [
             'orders' => $orders,

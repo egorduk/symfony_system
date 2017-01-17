@@ -1,12 +1,11 @@
 <?php
 
-namespace AuthBundle\Entity;
+namespace SecureBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SubjectOrder
- *
  * @ORM\Table(name="subject_order", uniqueConstraints={@ORM\UniqueConstraint(name="child_name", columns={"child_name"})})
  * @ORM\Entity
  */
@@ -35,7 +34,15 @@ class SubjectOrder
      */
     private $id;
 
+    /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserOrder", mappedBy="subject")
+     */
+    private $orders;
 
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+    }
 
     /**
      * Set childName

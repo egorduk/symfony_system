@@ -7,5 +7,6 @@
 /vendor/*
 composer.lock
 !/web/js
+!/web/json
 !/web/css
 !/web/uploads
