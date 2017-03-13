@@ -9,6 +9,6 @@ services:
     auth.captcha_service:
         class: AuthBundle\Service\Captcha\Captcha
 
-    auth.user_helper:
-        class: AuthBundle\Service\Helper\UserHelper
-        arguments: ['@doctrine.orm.entity_manager', '%mail_options%', '@mailer', '@security.password_encoder']
+    auth.auth_helper:
+        class: AuthBundle\Service\Helper\AuthHelper
+        arguments: ['@doctrine.orm.entity_manager', '@security.password_encoder']

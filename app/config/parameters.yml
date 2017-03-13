@@ -12,6 +12,10 @@ parameters:
     secret: ThisTokenIsNotSoSecretChangeIt
     publicKeyCaptcha: 6LcYmecSAAAAAJlYNqogbOXJVMvGgim5JoM0hcAi
     privateKeyCaptcha: 6LcYmecSAAAAANaq8JFPxT3xEA_urO6st1gfVOXL
-    confirm_auth_path: http://localhost/symfony_system/web/app_dev.php/confirm
+    confirm_auth_path: 'http://localhost/symfony_system/web/app_dev.php/confirm'
     mail_sender: egorduk@yandex.com
     mail_title: Study
+    web_dir: '%kernel.root_dir%/../web'
+    uploads_dir: '%kernel.root_dir%/../web/uploads'
+    uploads_attachments_orders_dir: '%kernel.root_dir%/../web/uploads/attachments/orders'
+    uploads_avatars_dir: '%kernel.root_dir%/../web/uploads/avatars'

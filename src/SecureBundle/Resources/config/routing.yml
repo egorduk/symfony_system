@@ -1,15 +1,53 @@
-secure_index:
-  path: secure/index
-  defaults: { _controller: SecureBundle:Secure:index }
+#--AuthorBundle--#
 
 secure_author_homepage:
-  path: secure/author/homepage
-  defaults: { _controller: SecureBundle:Author:homepage }
+    path: secure/author/homepage
+    defaults: { _controller: SecureBundle:Author:homepage }
+
+secure_author_bids:
+    path: secure/author/bids
+    defaults: { _controller: SecureBundle:Author:bids }
 
 secure_manager_homepage:
-  path: secure/manager/homepage
-  defaults: { _controller: SecureBundle:Manager:homepage }
+    path: secure/manager/homepage
+    defaults: { _controller: SecureBundle:Manager:homepage }
+
+#--OrderBundle--#
 
 secure_new_orders:
-  path: secure/orders/new
-  defaults: { _controller: SecureBundle:Order:newOrders }
+    path: secure/orders/new
+    defaults: { _controller: SecureBundle:Order:newOrders }
+
+secure_order_page:
+    path: secure/order/{orderId}
+    defaults: { _controller: SecureBundle:Order:orderPage }
+    requirements:
+        orderId: '\d+'
+    options:
+        expose: true
+
+secure_get_order_full_info:
+    path: secure/order/fullInfo/{orderId}
+    defaults: { _controller: SecureBundle:Order:getOrderFullInfo }
+    methods: [GET]
+    requirements:
+        orderId: '\d+'
+    options:
+        expose: true
+
+#--SecureBundle--#
+
+secure_index:
+    path: secure/index
+    defaults: { _controller: SecureBundle:Secure:index }
+
+secure_profile:
+    path: secure/profile
+    defaults:  { _controller: SecureBundle:Secure:profile }
+
+secure_download_file:
+    path: secure/order/file/download/{type}/{fileId}
+    defaults: { _controller: SecureBundle:Secure:downloadFile }
+    requirements:
+        type: 'attachments|pdf'
+        fileId: '\d+'

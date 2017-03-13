@@ -2,16 +2,24 @@
 
 namespace AuthBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Country
- *
  * @ORM\Table(name="country")
  * @ORM\Entity
  */
 class Country
 {
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
     /**
      * @var string
      *
@@ -34,15 +42,14 @@ class Country
     private $mobileCode;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\OneToMany(targetEntity="AuthBundle\Entity\UserInfo", mappedBy="country")
      */
-    private $id;
+    private $userInfo;
 
-
+    public function __construct()
+    {
+        $this->userInfo = new ArrayCollection();
+    }
 
     /**
      * Set name
@@ -124,5 +131,13 @@ class Country
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameWithMobileCode()
+    {
+        return $this->name . ' ' . $this->mobileCode;
     }
 }

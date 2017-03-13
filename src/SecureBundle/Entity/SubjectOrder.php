@@ -12,6 +12,15 @@ use Doctrine\ORM\Mapping as ORM;
 class SubjectOrder
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="child_name", type="string", length=50, nullable=false)
@@ -24,15 +33,6 @@ class SubjectOrder
      * @ORM\Column(name="parent_name", type="string", length=50, nullable=false)
      */
     private $parentName;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
 
     /**
      * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserOrder", mappedBy="subject")

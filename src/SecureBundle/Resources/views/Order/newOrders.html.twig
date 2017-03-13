@@ -1,557 +1,223 @@
 {% extends "SecureBundle::layout_author.html.twig" %}
 
 {% block title %}{{ 'New orders' }}{% endblock %}
+
     {% block stylesheets %}
         {{ parent() }}
-        {#<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.13/css/jquery.dataTables.css">#}
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.0/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.css">
     {% endblock %}
+
     {% block javascripts_head %}
-        <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
-        {#<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>#}
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.0/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>
-        {#<script type="text/javascript" charset="utf8" src="//bartaz.github.io/sandbox.js/jquery.highlight.js"></script>#}
-        <script type="text/javascript" charset="utf8" src="{{ asset('js/DataTable/highlight.js') }}"></script>
+        {{ parent() }}
+        <script>
+            var dataTableRussianLoc = "{{ asset('json/DataTable/Russian.json') }}";
+        </script>
     {% endblock %}
-    {% block body %}
-    <script>
-        var webPath = "{{ asset('json/DataTable/Russian.json') }}";
-    </script>
-       {# <link rel="stylesheet" href="{{ asset('bundles/css/jqgrid/custom-theme1/jquery-ui-1.10.3.custom.css') }}" />
-        <link rel="stylesheet" href="{{ asset('bundles/css/jqgrid/ui.jqgrid.css') }}" />
-        <script type="text/javascript" src="{{ asset('bundles/js/jqgrid/i18n/grid.locale-ru.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/js/jqgrid/jquery.jqGrid.min.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/js/jqgrid/jquery.jqGrid.fmatter.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/js/jqgrid/jquery.jqGrid.contextMenu.js') }}"></script>
-        <script type="text/javascript" src="{{ asset('bundles/js/script_posts.js') }}"></script>
-            <style type="text/css">
-                .popover {
-                    max-width: none;
-                }
-                #help-popover {
-                    cursor: pointer;
-                }
-                .unfavorite-order, #dialog-message-bid-order  {
-                    display: none;
-                }
-                .bootstrap-error {
-                    border-color: #E9322D!important;
-                    box-shadow: 0 0 6px #E9322D!important;
-                }
-                .grid-cell-author-last-bid {
-                    color: #398439;
-                    font-size: 17px;
-                    font-weight: bold;
-                }
-                .Message {
-                    position: relative;
-                }*
-                .Message-body {
-                    font-size: 18px;
-                }
-                #pagerOrders {
-                    height: 30px;
-                }
-                #modal-window {
-                    display: none;
-                }
-                .cell-author-last-bid {
-                    color: green;
-                    font-size: 20px !important;
-                }
-                /*#gbox_listOrders {
-                    width: 1440px;
-                }*/
-                #dialog-message-bid-order {
-                    height: auto !important;
-                }
-                /*#jqContextMenu ul{
-                    width: auto !important;
-                }*/
-            </style>#}
-        <div class="row">
-            <div class="col-md-2">
-                {{ include('@Secure/Author/menu.html.twig') }}
-            </div>
-            <div class="col-md-10">
-                {% block content %}
-                    <table id="orders-table" class="display responsive" width="100%">
-                        <thead>
-                        <tr>
-                            <th>№ заказа</th>
-                            <th>Предмет</th>
-                            <th>Тип работы</th>
-                            <th>Тема работы</th>
-                            <th>Выполнение до</th>
-                            <th>Max ставка</th>
-                            <th>Min ставка</th>
-                            <th>Создан</th>
-                            <th>Действия</th>
-                        </tr>
-                        </thead>
-                        <tfoot>
-                        <tr>
-                            <th>№ заказа</th>
-                            <th>Предмет</th>
-                            <th>Тип работы</th>
-                            <th>Тема работы</th>
-                            <th>Выполнение до</th>
-                            <th>Max ставка</th>
-                            <th>Min ставка</th>
-                            <th>Создан</th>
-                            <th>Действия</th>
-                        </tr>
-                        </tfoot>
-                        <tbody>
-                        {% for order in orders %}
-                            <tr data-id="{{ order.id }}">
-                                <td>{{ order.num }}</td>
-                                <td>{{ order.subject.childname }}</td>
-                                <td>{{ order.type.name }}</td>
-                                <td>{{ order.theme }}</td>
-                                <td>{{ order.datecreate|date('Y-m-d H:i') }}</td>
-                                <td>{{ order.id }}</td>
-                                <td>{{ order.id }}</td>
-                                <td>{{ order.datecreate|date('Y-m-d H:i') }}</td>
-                                <td>
-                                    <button>Отказаться</button>
-                                    <button>Скрыть</button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                {% endblock %}
-            </div>
+
+    {% block content %}
+        <div class="col-md-12">
+            <table id="orders-table" class="display responsive" width="100%">
+                <thead>
+                <tr>
+                    <th>№ заказа</th>
+                    <th>Предмет</th>
+                    <th>Тип работы</th>
+                    <th>Тема работы</th>
+                    <th>Выполнение до</th>
+                    <th>Max ставка</th>
+                    <th>Min ставка</th>
+                    <th>Создан</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tfoot>
+                <tr>
+                    <th>№ заказа</th>
+                    <th>Предмет</th>
+                    <th>Тип работы</th>
+                    <th>Тема работы</th>
+                    <th>Выполнение до</th>
+                    <th>Max ставка</th>
+                    <th>Min ставка</th>
+                    <th>Создан</th>
+                    <th>Статус</th>
+                    <th>Действия</th>
+                </tr>
+                </tfoot>
+                <tbody>
+                {% for order in orders %}
+                    <tr data-id="{{ order.id }}">
+                        <td>{{ order.num }}</td>
+                        <td>{{ order.subject.childname }}</td>
+                        <td>{{ order.type.name }}</td>
+                        <td>{{ order.theme }}</td>
+                        <td>{{ order.dateexpire|date('d.m.Y H:i') }}</td>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.datecreate|date('d.m.Y H:i') }}</td>
+                        <td>{{ order.status.code }}</td>
+                        <td>
+                            <button>Отказаться</button>
+                            <button>Скрыть</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#order-modal-window">
+                Launch demo modal
+            </button>
+
+            {{ include('@Secure/Author/Modal/order-modal.html.twig') }}
         </div>
-          {#  <div class="row">
-                <div id="modal-window">
-                    <div id="success-window">
-                        <div class="Message Message--green" id="js-timer">
-                            <div class="Message-icon">
-                                <i class="fa fa-check"></i>
-                            </div>
-                            <div class="Message-body">
-                                <p align="center">Ставка поставлена!</p>
-                            </div>
-                            <button class="Message-close js-messageClose"><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div id="dialog-message-bid-order" title="Поставить ставку">
-                    {% form_theme formBid "TwigBundle::layout.html.twig" %}
-                    {{ form_start(formBid, {'attr': {'id' : 'formBid'}}) }}
-                    <div class="form-group">
-                        {{ form_label(formBid.fieldSum) }}
-                        {{ form_errors(formBid.fieldSum) }}
-                        <div class="input-group">
-                            {{ form_widget(formBid.fieldSum) }}
-                            <span class="input-group-addon"><i class=" icon-rouble"></i></span>
-                        </div>
-                        {{ form_label(formBid.fieldDay) }}
-                        {{ form_errors(formBid.fieldDay) }}
-                        <div class="input-group">
-                            {{ form_widget(formBid.fieldDay) }}
-                            <span class="input-group-addon"><i class="icon-clock-5"></i></span>
-                        </div>
-                        <div class="input-group">
-                        {{ form_label(formBid.isClientDate) }}
-                        {{ form_errors(formBid.isClientDate) }}
-                            {{ form_widget(formBid.isClientDate) }}
-                        </div>
-                        {{ form_label(formBid.fieldComment) }}
-                        {{ form_errors(formBid.fieldComment) }}
-                        <div class="input-group">
-                            {{ form_widget(formBid.fieldComment) }}
-                            <span class="input-group-addon"><i class="icon-pencil-6"></i></span>
-                        </div>
-                        <br>
-                        <div class="input-group">
-                            <label for="formBid_bid" class="btn btn-success"><span class="icon-hammer">&nbspПоставить</span></label>
-                            {{ form_widget(formBid.bid) }}
-                            <label for="formBid_cancel" class="btn btn-success"><span class="icon-cancel-2">&nbspОтмена</span></label>
-                            {{ form_widget(formBid.cancel) }}
-                        </div>
-                    </div>
-                    {{ form_end(formBid) }}
-                </div>
-            </div>
-            <div class="row">
-                <table id="listOrders"></table>
-                <div id="pagerOrders"></div>
-                {% include "AcmeSecureBundle:Secure:layout_context_menu.html.twig" %}
-                <script>
-                $(document).ready(function() {
-                    $.fn.button.noConflict();
-                    var grid = $("#listOrders");
-                    grid.jqGrid({
-                        url: {{ path('secure_author_orders', { type: 'new' }) | json_encode | raw }},
-                        datatype: 'json',
-                        mtype: 'POST',
-                        cache: true,
-                        recordtext: "Просмотр заказов {0} - {1}",
-                        colNames:['','№ заказа', 'Предмет', 'Тип работы', 'Тема работы', 'Задание', 'Выполнение до', 'Max ставка', 'Min ставка', 'Моя ставка', 'Создан', 'Действия', ''],
-                        colModel :[
-                            {name:'id',index:'id',key:true,search:false,resize:false,hidden:true},
-                            {name:'num',index:'num',width:100,align:'center',resizable:false,editable:false,searchrules:{"required":true, "number":true, "maxValue":13},searchoptions:{sopt:['eq','ne','bw','cn']},formatter:customNum},
-                            {name:'subject_order',index:'subject_order',width:160,align:'center',resizable:false, editable:false,searchoptions:{sopt:['eq','ne','bw','cn']}},
-                            {name:'type_order',index:'type_order',width:150,align:'center',resizable:false,editable:false,searchoptions:{sopt:['eq','ne','bw','cn']}},
-                            {name:'theme',index:'theme',width:290,align:'center',resizable:false,editable:false,searchoptions:{sopt:['eq','bw','cn']}},
-                            {name:'task',index:'task',width:280,align:'center',resizable:false,editable:false,searchoptions:{sopt:['eq','bw','cn']}},
-                            {name:'date_expire',index:'date_expire',width:160,align:'center',resizable:false,editable:false,search:false},
-                            {name:'max_bid',index:'max_bid',width:110,align:'center',resizable:false,editable:false,search:false,sortable:false,formatter:'currency',formatoptions:{defaultValue:'',thousandsSeparator: " ",decimalPlaces:0,suffix:" руб."}},
-                            {name:'min_bid',index:'min_bid',width:110,align:'center',resizable:false,editable:false,search:false,sortable:false,formatter:'currency',formatoptions:{defaultValue:'',thousandsSeparator: " ",decimalPlaces:0,suffix:" руб."}},
-                            {name:'author_last_bid',index:'author_last_bid',width:140,align:'center',resizable:false,editable:false,search:false,sortable:false,formatter:'currency',formatoptions:{defaultValue:'',thousandsSeparator: " ",decimalPlaces:0,suffix:" руб."}},
-                            {name:'date_create',index:'date_create',width:120,align:'center',resizable:false,editable:false,search:false},
-                            {name:'action',width:80,align:'center',sortable:false,resize:false,search:false,formatter:function() {
-                                return "<div class='bid-order' style='margin-left:8px;'>" +
-                                        "<div style='float:left;margin-left:5px;' class='ui-pg-div ui-inline-del' data-title='Поставить ставку' onmouseover=\"$(this).tooltip('show')\" data-toggle='tooltip' data-placement='left'>" +
-                                        "<span class='icon-hammer'></span></div></div>" +
-                                        "<div class='favorite-order' style='margin-left:8px;'>" +
-                                        "<div style='float: left; margin-left: 5px; color: orange' data-title='В избранные заказы' onmouseover=\"$(this).tooltip('show')\" data-toggle='tooltip' data-placement='left'>" +
-                                        "<span class='icon-star-empty-2'></span></div></div>" +
-                                        "<div class='unfavorite-order' style='margin-left:8px;'>" +
-                                        "<div style='float: left; margin-left: 5px; color: orange' data-title='Из избранных заказов' onmouseover=\"$(this).tooltip('show')\" data-toggle='tooltip' data-placement='left'>" +
-                                        "<span class='icon-star'></span></div></div>";
-                            }},
-                            {name:'is_favorite_order',index:'is_favorite_order',key:false,search:false,hidden:true}
-                        ],
-                        pager: $('#pagerOrders'),
-                        rowNum: 10,
-                        rowList: [15, 25, 35],
-                        sortname: 'date_create',
-                        sortorder: 'desc',
-                        viewrecords: true,
-                        hidegrid: false,
-                        height: 'auto',
-                        altRows: true,
-                        //width:'1440',
-                        //shrinkToFit:false,
-                        altclass: 'alt-row',
-                        gridComplete: initMenu(),
-                        loadComplete : function() {
-                            function getRowId(e) {
-                                var $td = $(e.target).closest('td'), $tr = $td.closest('tr.jqgrow'), rowId = $tr.attr('id');
-                                return rowId;
-                            }
-                            function getRow(a) {
-                                return a.parent().parent();
-                            }
-                            grid.find("tr").find("td").removeAttr('title');
-                            $(".favorite-order").click(function(e) {
-                                var rowId = getRowId(e), row = getRow($(this));
-                                if (rowId) {
-                                    $.ajax({
-                                        type: 'POST',
-                                        data: 'orderId=' + rowId + '&action=favoriteOrder',
-                                        success: function(response) {
-                                            var responseObject = window.JSON.parse(response);
-                                            if (responseObject.action) {
-                                                //grid.trigger('reloadGrid');
-                                                actionFavoriteOrder(row, "favorite");
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                            $(".unfavorite-order").click(function(e) {
-                                var rowId = getRowId(e), row = getRow($(this));
-                                if (rowId) {
-                                    $.ajax({
-                                        type: 'POST',
-                                        data: 'orderId=' + rowId + '&action=unfavoriteOrder',
-                                        success: function(response) {
-                                            var responseObject = window.JSON.parse(response);
-                                            if (responseObject.action) {
-                                                actionFavoriteOrder(row, "unfavorite");
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-                            $(".bid-order").on('click', function(e) {
-                                var rowId = getRowId(e), bidSum = $("#formBid_fieldSum"), bidDay = $("#formBid_fieldDay"), bidInDate = $("#formBid_isClientDate"), bidComment = $("#formBid_fieldComment");
-                                if (rowId) {
-                                    $("#dialog-message-bid-order").dialog({
-                                        modal: true,
-                                        resizable: false,
-                                        // height: 340,
-                                        width: 350,
-                                        close: function() {
-                                            $(".error, .block-error").remove();
-                                            bidInDate.prop('checked', false);
-                                            bidDay.removeClass('bootstrap-error').prop('disabled', false).val("").tooltip('hide');
-                                            bidSum.removeClass('bootstrap-error').val("").tooltip('hide');
-                                            bidComment.val("");
-                                        }
-                                    });
-                                }
-                                $("#formBid_cancel").on('click', function() {
-                                    $("#dialog-message-bid-order").dialog('close');
-                                });
-                                $("#formBid_bid").on('click', function() {
-                                    var error = false;
-                                    if (!isNormalInteger(bidSum.val())) {
-                                        error = true;
-                                        bidSum.addClass('bootstrap-error').tooltip('show');
-                                    } else {
-                                        bidSum.removeClass('bootstrap-error').tooltip('hide');
-                                    }
-                                    if (!isNormalInteger(bidDay.val()) && !bidInDate.prop('checked')) {
-                                        error = true;
-                                        bidDay.addClass('bootstrap-error').tooltip('show');
-                                    } else {
-                                        bidDay.removeClass('bootstrap-error').tooltip('hide');
-                                    }
-                                    if (!error) {
-                                        var formBid = $("#formBid");
-                                        $.ajax({
-                                            type: 'POST',
-                                            data: formBid.serialize() + '&action=newBid' + '&orderId=' + rowId,
-                                            success: function(response) {
-                                                var responseObject = window.JSON.parse(response);
-                                                if (responseObject.response == 'valid') {
-                                                    $(".error, .block-error").remove();
-                                                    $("#dialog-message-bid-order").dialog('close');
-                                                    grid.trigger('reloadGrid');
-                                                    $("#modal-window").css({'display':'block'});
-                                                    setTimeout(function() {
-                                                        closeMessage($('#modal-window'));
-                                                    }, 2000);
-                                                } else {
-                                                    $(".error, .block-error").remove();
-                                                    $.each(responseObject.response, function(index, value) {
-                                                        var selector  = "#formBid_" + index;
-                                                        $(selector).parent().before("<p class='block-error'><span class='icon-warning error'>" + value + "</span></p>");
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                                if (bidInDate.prop("checked")) {
-                                    bidDay.prop('disabled', true);
-                                } else {
-                                    bidDay.prop('disabled', false);
-                                }
-                                bidInDate.change(function() {
-                                    if ($(this).prop("checked")) {
-                                        bidDay.removeClass('bootstrap-error').prop('disabled', true).tooltip('hide').val("");
-                                    } else {
-                                        bidDay.prop('disabled', false).val("");
-                                    }
-                                });
-                            });
-                            var grids = grid.getDataIDs(),
-                                    gridsLength = grids.length;
-                            for (var i = 0; i < gridsLength; i++) {
-                                var selectedRowOrder = $("tr.jqgrow#" + grids[i]),
-                                        blockFavoriteOrder = selectedRowOrder.find(".favorite-order"),
-                                        blockUnfavoriteOrder = selectedRowOrder.find(".unfavorite-order");
-                                grid.setCell(grids[i],9,'','cell-author-last-bid');
-                                //$("tr.jqgrow#" + rowid).find('td').eq(1).attr('title');
-                                //selectedRowOrder.css({color:'red'});
-                                if (Number(grid.getCell(grids[i], "is_favorite_order"))) {
-                                    blockFavoriteOrder.hide();
-                                    blockUnfavoriteOrder.show();
-                                } else {
-                                    blockFavoriteOrder.show();
-                                    blockUnfavoriteOrder.hide();
-                                }
-                            }
-                            /*$(".jqgrow", "#jqGrid").contextMenu('contextMenu', {
-                                bindings: {
-                                    'edit': function (t) {
-                                        alert("Edit Row Command Selected");
-                                    },
-                                    'add': function (t) {
-                                        alert("Add Row Command Selected");
-                                    },
-                                    'del': function (t) {
-                                        alert("Delete Row Command Selected");
-                                    }
-                                },
-                                onContextMenu: function (event, menu) {
-                                    var rowId = $(event.target).parent("tr").attr("id")
-                                    var grid = $("#jqGrid");
-                                    grid.setSelection(rowId);
-                                    return true;
-                                }
-                            })*/
-                        },
-                        onCellSelect: function(rowid, iCol) {
-                            if (iCol != 11) {
-                                //var rowData = grid.getRowData(rowid);
-                                //var num = rowData['num'];
-                                var num = $("tr.jqgrow#" + rowid).find('td').eq(1).find('span')[0].innerHTML, url = "{{ path("secure_author_order", {'num': 'num'}) }}";
-                                location.href = url.replace("num", num);
-                            }
-                        }
-                    }).navGrid('#pagerOrders',{view:false, search:true, searchtext: 'Поиск', del:false, add:false, edit:false, refresh:true, refreshtext: 'Обновить'},
-                            {},{},{},{},{}
-                    );
-                    //$(".ui-widget-content td").removeAttr('title');
-                    grid.setCaption('Таблица новых заказов ' + '<span id="help-popover" class="icon-help-circled" data-container="body" data-placement="bottom"></span>');
-                    function initMenu() {
-                        grid.contextMenu('contextMenu', {
-                            bindings: {
-                                'open-in-new-tab': function () {
-                                    var rowId = grid.getGridParam("selrow");
-                                    var num = $("tr.jqgrow#" + rowId).find('td').eq(1).find('span')[0].innerHTML, url = "{{ path("secure_author_order", {'num': 'num'}) }}";
-                                    //location.href = url.replace("num", num);
-                                    url = url.replace("num", num);
-                                    window.open(url, "_blank");
-                                }
-                            },
-                            menuStyle: {
-                                backgroundColor: '#fcfdfd',
-                                border: '1px solid #a6c9e2',
-                                maxWidth: '600px', // to be sure
-                                width: '100%' // to have good width of the menu
-                            },
-                            itemHoverStyle: {
-                                border: '1px solid #79b7e7',
-                                color: '#1d5987',
-                                backgroundColor: '#d0e5f5'
-                            },
-                            onContextMenu: function (event, menu) {
-                                var rowId = $(event.target).parent("tr").attr("id");
-                                //var grid = $("#jqGrid");
-                                if (!rowId) {
-                                    return false; // no contex menu on rows having no "jqgrow" class
-                                }
-                                grid.setSelection(rowId);
-                                return true;
-                            }
-                        });
-                    }
-                    function closeMessage(el) {
-                        el.addClass('is-hidden').css({'display':'none'});
-                    }
-                    $('.js-messageClose').on('click', function(e) {
-                        closeMessage($(this).closest('.Message'));
-                    });
-                    function getRow(a) {
-                        return a.parent().parent();
-                    }
-                    function actionFavoriteOrder(a, type) {
-                        var blockFavoriteOrder = a.find(".favorite-order"), blockUnfavoriteOrder = a.find(".unfavorite-order");
-                        if (type == "favorite") {
-                            blockFavoriteOrder.hide();
-                            blockUnfavoriteOrder.show();
-                        } else {
-                            blockFavoriteOrder.show();
-                            blockUnfavoriteOrder.hide();
-                        }
-                    }
-                    function isNormalInteger(str) {
-                        return /^\+?([1-9]\d*)$/.test(str);
-                    }
-                    /*function customNum(cellvalue) {
-                        return ("<span class='grid-cell-num'>" + cellvalue + "</span>");
-                    }*/
-                    $(".ui-jqgrid-titlebar").live('mouseenter', function() {
-                        $("#help-popover").popover({
-                            html : true,
-                            content : function() {
-                                return "Для поиска нажмите на <div style=\"display: inline-block\"><span class=\"ui-icon ui-icon-search\"></span></div></br>" +
-                                        "Для сброса результата поиска нажмите на <div style=\"display: inline-block\"><span class=\"ui-icon ui-icon-arrowreturnthick-1-w\"></span></div></br>" +
-                                        "Для обновления таблицы нажмите на <div style=\"display: inline-block\"><span class=\"ui-icon ui-icon-refresh\"></span></div></br>" +
-                                        "Для добавления заказа в избранное нажмите на <div style=\"display: inline-block\"><span class=\"icon-star-empty-2\"></span></div></br>" +
-                                        "Для того,чтобы поставить ставку на заказ,нажмите на <div style=\"display: inline-block\"><span class=\"icon-hammer\"></span></div>";
-                            }
-                        });
-                    });
-                });
-                </script>
-            </div>#}
     {% endblock %}
     {% block javascripts_footer %}
         <script>$(document).ready( function () {
-              var buttonCommon = {
-                exportOptions: {
-                    format: {
-                        body: function(data, row, column, node) {
-                            // Strip $ from salary column to make it numeric
-                            return column === 10 ?
-                                //data.replace( /[$,]/g, '' ) :
-                                '' :
-                                data;
+            var selectedOrderId,
+                ajaxSpinner = Spinner,
+                buttonCommon = {
+                    exportOptions: {
+                        format: {
+                            body: function(data, row, column, node) {
+                                // Strip $ from salary column to make it numeric
+                                return column === 10 ?
+                                    //data.replace( /[$,]/g, '' ) :
+                                    '' :
+                                    data;
+                            }
                         }
                     }
-                }
-            };
+                };
 
-            var dataTable = $('#orders-table').DataTable({
-                 initComplete: function() {
-                    this.api().columns().every( function() {
-                        var column = this;
-                        var select = $('<select><option value=""></option></select>')
-                            .appendTo($(column.footer()).empty())
-                            .on('change', function() {
-                                var val = $.fn.dataTable.util.escapeRegex(
-                                    $(this).val()
-                                );
-                                column
-                                    .search(val ? '^'+val+'$' : '', true, false)
-                                    .draw();
+                var dataTable = $('#orders-table').DataTable({
+                    initComplete: function() {
+                        this.api().columns().every( function() {
+                            var column = this;
+                            var select = $('<select><option value=""></option></select>')
+                                .appendTo($(column.footer()).empty())
+                                .on('change', function() {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                        $(this).val()
+                                    );
+                                    column
+                                        .search(val ? '^'+val+'$' : '', true, false)
+                                        .draw();
+                                });
+                            column.data().unique().sort().each( function(d, j) {
+                                select.append('<option value="'+d+'">'+d+'</option>')
                             });
-                        column.data().unique().sort().each( function(d, j) {
-                            select.append('<option value="'+d+'">'+d+'</option>')
                         });
+                    },
+                    searchHighlight: true,
+                    select: true,
+                    responsive: {
+                        details: true
+                    },
+                    //responsive: true,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', /*'excel', */'pdf', 'print',
+                        $.extend(true, {}, buttonCommon, {
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: '0, 1, 2'
+                            },
+                            addClass: 'compact',
+                            text: '<i class="fa fa-file-pdf-o"></i>Excel',
+                            message: 'Yo',
+                            title: 'title'
+                        })
+                    ],
+                    "language": {
+                        "url": dataTableRussianLoc
+                    }
+                });
+
+                dataTable.on('draw', function() {
+                    var body = $(dataTable.table().body());
+                    body.unhighlight();
+                    body.highlight(dataTable.search());
+                });
+
+                var orderModalWindow = $('#modal-order-window');
+                orderModalWindow.on('show.bs.modal', function (e) {
+                    var modal = $(this);
+
+                    ajaxSpinner.show();
+                    hideModalForm();
+
+                    $.get(Routing.generate('secure_get_order_full_info', {
+                        orderId: selectedOrderId
+                    }), null, function(data) {
+                        ajaxSpinner.hide();
+                        //console.log(data);
+                        modal.find('.modal-title #modal-order-num').text(data.orderData.num);
+                        modal.find('.modal-body #modal-order-theme').text(data.orderData.theme);
+                        modal.find('.modal-body #modal-order-task').text(data.orderData.task);
+                        modal.find('.modal-body #modal-order-date-expire').text(data.orderData.dateExpire);
+                        modal.find('.modal-body #modal-order-date-create').text(data.orderData.dateCreate);
+                        modal.find('.modal-body #modal-order-remaining').text(data.orderData.remaining);
+                        modal.find('.modal-body #modal-order-originality').text(data.orderData.originality);
+                        modal.find('.modal-body #modal-order-count-sheet').text(data.orderData.countSheet);
+                        modal.find('.modal-body #modal-order-additional-info').text(data.orderData.additionalInfo);
+
+                        var tableBody = modal.find('.modal-body #modal-order-table-files tbody');
+
+                        $.each(data.orderData.files, function(index, file) {
+                            tableBody.append(
+                                '<tr>' +
+                                '<td><a href="' + file.url + '">' + file.name + '</a></td>' +
+                                '<td>' + file.size + '</td>' +
+                                '<td>' + file.dateUpload + '</td>' +
+                                '</tr>'
+                            );
+                        });
+
+                        var orderUrl = Routing.generate('secure_order_page', {
+                            orderId: data.orderData.id
+                        });
+                        modal.find('.modal-footer #modal-order-link').attr('href', orderUrl);
+
+                        showModalForm();
                     });
-                },
-                searchHighlight: true,
-                select: true,
-                responsive: {
-                    details: true
-                },
-                //responsive: true,
-                dom: 'Bfrtip',
-                buttons: [
-                    'copy', /*'excel', */'pdf', 'print',
-                    $.extend(true, {}, buttonCommon, {
-                        extend: 'excelHtml5',
-                        exportOptions: {
-                            columns: '0, 1, 2'
-                        },
-                        addClass: 'compact',
-                        text: '<i class="fa fa-file-pdf-o"></i>Excel',
-                        message: 'Yo',
-                        title: 'title'
-                    })
-                ],
-                "language": {
-                    "url": webPath
-                }
-            });
+                });
+                orderModalWindow.on('hidden.bs.modal', function (e) {
+                    var modal = $(this);
+                    modal.find('.modal-title #modal-order-num').text('');
+                    modal.find('.modal-body p').text('');
+                    modal.find('.modal-body #modal-order-table-files tbody').empty();
+                    modal.find('.modal-footer #modal-order-link').attr('href', '#');
+                });
 
-            dataTable.on('draw', function() {
-                var body = $(dataTable.table().body());
-                body.unhighlight();
-                body.highlight(dataTable.search());
-            });
-
-            dataTable.on('click', 'tbody tr', function() {
-              /*  if (dataTable.row(this, { selected: true }).any()) {
-                    dataTable.row(this).deselect();
-                }*/
-                /*else {*/
+                dataTable.on('click', 'tbody tr', function(e) {
+                    /*  if (dataTable.row(this, { selected: true }).any()) {
+                     dataTable.row(this).deselect();
+                     }*/
                     dataTable.row(this).select();
-                    //console.log(dataTable.row(this).data());
-                    console.log($(this).data('id'));
-                //}
-            });
 
-          /*  $('a.toggle-vis').on( 'click', function (e) {
-                e.preventDefault();
-                // Get the column API object
-                var column = table.column( $(this).attr('data-column') );
-                // Toggle the visibility
-                column.visible( ! column.visible() );
-            } );*/
-        });
+                    if (!$(this).hasClass('child') && !$(e.target).hasClass('sorting_1')) {
+                        selectedOrderId = $(this).data('id');
+                        //console.log(dataTable.row(this).data());
+                        orderModalWindow.modal('show');
+                    }
+                });
+
+                function showModalForm() {
+                    $('#modal-order-form').show();
+                }
+
+                function hideModalForm() {
+                    $('#modal-order-form').hide();
+                }
+
+                /*  $('a.toggle-vis').on( 'click', function (e) {
+                 e.preventDefault();
+                 // Get the column API object
+                 var column = table.column( $(this).attr('data-column') );
+                 // Toggle the visibility
+                 column.visible( ! column.visible() );
+                 } );*/
+            });
         </script>
     {% endblock %}

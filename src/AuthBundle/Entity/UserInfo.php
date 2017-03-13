@@ -2,16 +2,24 @@
 
 namespace AuthBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UserInfo
- *
  * @ORM\Table(name="user_info")
  * @ORM\Entity
  */
 class UserInfo
 {
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
     /**
      * @var string
      *
@@ -22,23 +30,16 @@ class UserInfo
     /**
      * @var string
      *
-     * @ORM\Column(name="mobile_phone", type="string", length=17, nullable=false)
+     * @ORM\Column(name="mobile_phone", type="string", length=20, nullable=false)
      */
     private $mobilePhone;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="static_phone", type="string", length=17, nullable=false)
+     * @ORM\Column(name="static_phone", type="string", length=20, nullable=false)
      */
     private $staticPhone;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="icq", type="string", length=10, nullable=false)
-     */
-    private $icq;
 
     /**
      * @var string
@@ -62,22 +63,20 @@ class UserInfo
     private $lastname;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="country_id", type="integer", nullable=false)
+     * @ORM\OneToMany(targetEntity="AuthBundle\Entity\User", mappedBy="userInfo")
      */
-    private $countryId;
+    private $user;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\Country", inversedBy="userInfo")
+     * @ORM\JoinColumn(name="country_id", referencedColumnName="id")
      */
-    private $id;
+    private $country;
 
-
+    public function __construct()
+    {
+        $this->user = new ArrayCollection();
+    }
 
     /**
      * Set skype
@@ -149,30 +148,6 @@ class UserInfo
     public function getStaticPhone()
     {
         return $this->staticPhone;
-    }
-
-    /**
-     * Set icq
-     *
-     * @param string $icq
-     *
-     * @return UserInfo
-     */
-    public function setIcq($icq)
-    {
-        $this->icq = $icq;
-
-        return $this;
-    }
-
-    /**
-     * Get icq
-     *
-     * @return string
-     */
-    public function getIcq()
-    {
-        return $this->icq;
     }
 
     /**
@@ -248,30 +223,6 @@ class UserInfo
     }
 
     /**
-     * Set countryId
-     *
-     * @param integer $countryId
-     *
-     * @return UserInfo
-     */
-    public function setCountryId($countryId)
-    {
-        $this->countryId = $countryId;
-
-        return $this;
-    }
-
-    /**
-     * Get countryId
-     *
-     * @return integer
-     */
-    public function getCountryId()
-    {
-        return $this->countryId;
-    }
-
-    /**
      * Get id
      *
      * @return integer
@@ -280,4 +231,37 @@ class UserInfo
     {
         return $this->id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+    /**
+     * @param mixed $country
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+    }
+
 }

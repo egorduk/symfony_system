@@ -1,7 +1,14 @@
 auth_bundle_routings:
-  resource: "@AuthBundle/Resources/config/routing.yml"
-  prefix: /
+    resource: "@AuthBundle/Resources/config/routing.yml"
+    prefix: /
 
 secure_bundle_routings:
-  resource: "@SecureBundle/Resources/config/routing.yml"
-  prefix: /
+    resource: "@SecureBundle/Resources/config/routing.yml"
+    prefix: /
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+oneup_uploader:
+    resource: .
+    type: uploader

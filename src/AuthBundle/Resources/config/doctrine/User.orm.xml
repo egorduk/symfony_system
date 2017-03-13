@@ -23,7 +23,11 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="dateReg" type="datetime" column="date_reg" nullable="false"/>
+    <field name="dateReg" type="datetime" column="date_reg" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
     <field name="dateConfirmRecovery" type="datetime" column="date_confirm_recovery" nullable="false"/>
     <field name="dateConfirmReg" type="datetime" column="date_confirm_reg" nullable="false"/>
     <field name="dateUploadAvatar" type="datetime" column="date_upload_avatar" nullable="false"/>
@@ -44,12 +48,12 @@
     </field>
     <field name="isActive" type="boolean" column="is_active" nullable="false">
       <options>
-        <option name="default">b'0'</option>
+        <option name="default">0</option>
       </options>
     </field>
     <field name="isConfirm" type="boolean" column="is_confirm" nullable="false">
       <options>
-        <option name="default">b'0'</option>
+        <option name="default">0</option>
       </options>
     </field>
     <field name="hashCode" type="string" column="hash_code" length="60" nullable="false">
@@ -76,22 +80,23 @@
     </field>
     <field name="isBan" type="boolean" column="is_ban" nullable="false">
       <options>
-        <option name="default">b'0'</option>
+        <option name="default">0</option>
       </options>
     </field>
     <field name="isAccessOrder" type="boolean" column="is_access_order" nullable="false">
       <options>
-        <option name="default">b'0'</option>
+        <option name="default">0</option>
       </options>
     </field>
     <field name="avatar" type="string" column="avatar" length="25" nullable="false">
       <options>
-        <option name="fixed"/>
+        <option name="default">default.png</option>
       </options>
     </field>
     <field name="ratingPoint" type="integer" column="rating_point" nullable="false">
       <options>
         <option name="unsigned"/>
+        <option name="default">0</option>
       </options>
     </field>
     <field name="rating" type="integer" column="user_rating_id" nullable="false">
@@ -104,5 +109,11 @@
         <option name="unsigned"/>
       </options>
     </field>
+    <one-to-many field="orders" target-entity="SecureBundle\Entity\UserOrder" mapped-by="user" />
+    <one-to-many target-entity="SecureBundle\Entity\OrderFile" mapped-by="user" field="files" />
+    <one-to-many target-entity="SecureBundle\Entity\UserBid" mapped-by="user" field="bids" />
+    <many-to-one field="userInfo" target-entity="AuthBundle\Entity\UserInfo" inversed-by="user">
+      <join-column name="user_info_id" referenced-column-name="id" />
+    </many-to-one>
   </entity>
 </doctrine-mapping>

@@ -1,0 +1,22 @@
+<div class="block-chat">
+    <div class="chat-wrap">
+        <div class='messages-wrap'></div>
+        <div id="panel">
+            <span class="nick"></span>
+            <textarea class="message-text"></textarea>
+            <button type='button' class='btn-send-msg btn btn-primary disabled'>Send</button>
+        </div>
+    </div>
+    <div id="sidebar">
+        <div id="count-msg"></div>
+        <div id="online">
+            {#<p style="display: none" id="client-status">{{ obj.client.login }}</p>#}
+        </div>
+        <div id="in-chat" class="hidden">
+            <p>В чате</p>
+        </div>
+        <div class="is-writing"></div>
+        <span class='icon-volume-1' id="volume-on"></span>
+        <span class='icon-volume-off-4' id="volume-off"></span>
+    </div>
+</div>

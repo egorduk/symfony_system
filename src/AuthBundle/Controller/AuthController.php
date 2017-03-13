@@ -70,8 +70,8 @@ class AuthController extends Controller
                 $em->persist($user);
                 $em->flush();
 
-                $userHelper = $this->get('auth.user_helper');
-                $userHelper->sendConfirmRegistrationMail($user);
+                $mailHelper = $this->get('secure.mail_helper');
+                $mailHelper->sendConfirmRegistrationMail($user);
 
                 return $this->redirectToRoute('login');
             } else {
@@ -108,14 +108,17 @@ class AuthController extends Controller
                 ->findOneBy(['email' => $email]);
 
             if (!is_null($user)) {
-                $userHelper = $this->get('auth.user_helper');
-                $hashCode = $userHelper->getRandomValue(60);
-                $newPassword = $userHelper->getRandomValue(8);
-                $encodePassword = $userHelper->getEncodePassword($user, $newPassword);
+                $authHelper = $this->get('auth.auth_helper');
+                $hashCode = $authHelper->getRandomValue(60);
+                $newPassword = $authHelper->getRandomValue(8);
+                $encodePassword = $authHelper->getEncodePassword($user, $newPassword);
                 $user->setHashCode($hashCode);
                 $user->setPassword($encodePassword);
                 $em->flush();
-                $userHelper->sendRecoveryPasswordMail($user, $newPassword);
+
+                $mailHelper = $this->get('secure.mail_helper');
+                $mailHelper->sendRecoveryPasswordMail($user, $newPassword);
+
                 $showWindow = true;
             }
         }
@@ -139,9 +142,9 @@ class AuthController extends Controller
      */
     public function confirmAction($typeConfirm, $hashCode, $userId)
     {
-        $userHelper = $this->get('auth.user_helper');
+        $authHelper = $this->get('auth.auth_helper');
 
-        $isCorrectUrl = $userHelper->isCorrectConfirmUrl($hashCode, $userId);
+        $isCorrectUrl = $authHelper->isCorrectConfirmUrl($hashCode, $userId);
         $isSuccess = false;
 
         if ($isCorrectUrl) {

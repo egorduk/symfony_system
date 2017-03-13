@@ -10,3 +10,7 @@ composer.lock
 !/web/json
 !/web/css
 !/web/uploads
+!/web/images
+!/web/fonts
+/web/uploads/gallery
+/src/AuthBundle/Entity/*.php~

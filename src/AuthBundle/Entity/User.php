@@ -5,7 +5,6 @@ namespace AuthBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
@@ -189,6 +188,23 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $orders;
 
+    /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\OrderFile", mappedBy="user")
+     */
+    private $files;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserBid", mappedBy="user")
+     */
+    private $bids;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\UserInfo", inversedBy="user")
+     * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id")
+     */
+    private $userInfo;
+
+    private $rawAvatar;
 
     public function __construct()
     {
@@ -204,7 +220,7 @@ class User implements AdvancedUserInterface, \Serializable
         //$this->ipReg = ip2long($_SERVER['REMOTE_ADDR']);
         $this->ipReg = 1234;
         $this->isConfirm = 0;
-        $this->isActive = true;
+        $this->isActive = 1;
         $this->isBan = 0;
         $this->isAccessOrder = 0;
         $this->recoveryPassword = '';
@@ -212,7 +228,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->role = 'ROLE_AUTHOR';
         $this->hashCode = '';
         $this->token = '';
-        $this->link_user_order = new ArrayCollection();
+        /*$this->link_user_order = new ArrayCollection();
         $this->link_openid = new ArrayCollection();
         $this->link_author_file = new ArrayCollection();
         $this->link_user_bid = new ArrayCollection();
@@ -222,8 +238,10 @@ class User implements AdvancedUserInterface, \Serializable
         $this->link_auction_user = new ArrayCollection();
         $this->link_order_file_user = new ArrayCollection();
         $this->link_user_ps = new ArrayCollection();
-        $this->link_mail_option = new ArrayCollection();
+        $this->link_mail_option = new ArrayCollection();*/
         $this->orders = new ArrayCollection();
+        $this->files = new ArrayCollection();
+        $this->bids = new ArrayCollection();
     }
 
     /**
@@ -741,5 +759,69 @@ class User implements AdvancedUserInterface, \Serializable
         $this->dateConfirmReg = new \DateTime();
         $this->isConfirm = 1;
         $this->hashCode = '';
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    /**
+     * @param mixed $files
+     */
+    public function setFiles($files)
+    {
+        $this->files = $files;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBids()
+    {
+        return $this->bids;
+    }
+
+    /**
+     * @param mixed $bids
+     */
+    public function setBids($bids)
+    {
+        $this->bids = $bids;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRawAvatar()
+    {
+        return $this->rawAvatar;
+    }
+
+    /**
+     * @param mixed $rawAvatar
+     */
+    public function setRawAvatar($rawAvatar)
+    {
+        $this->rawAvatar = $rawAvatar;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserInfo()
+    {
+        return $this->userInfo;
+    }
+
+    /**
+     * @param mixed $userInfo
+     */
+    public function setUserInfo($userInfo)
+    {
+        $this->userInfo = $userInfo;
     }
 }

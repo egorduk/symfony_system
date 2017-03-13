@@ -5,9 +5,26 @@ services:
     secure.date_time_helper:
         class: SecureBundle\Service\Helper\DateTimeHelper
 
-    secure.meta_data_helper:
-        class: SecureBundle\Service\Helper\MetaDataHelper
-
     secure.orders_helper:
         class: SecureBundle\Service\Helper\OrdersHelper
         arguments: ['@doctrine.orm.entity_manager']
+
+    secure.order_helper:
+        class: SecureBundle\Service\Helper\OrderHelper
+        arguments: ['@doctrine.orm.entity_manager', '@router', '@secure.file_helper', '@secure.date_time_helper']
+
+    secure.file_helper:
+        class: SecureBundle\Service\Helper\FileHelper
+        arguments: ['@doctrine.orm.entity_manager', '@router']
+
+    secure.user_helper:
+        class: SecureBundle\Service\Helper\UserHelper
+        arguments: ['@doctrine.orm.entity_manager', '@assets.packages']
+
+    secure.mail_helper:
+        class: SecureBundle\Service\Helper\MailHelper
+        arguments: ['@doctrine.orm.entity_manager', '%mail_options%', '@mailer']
+
+    secure.bid_helper:
+        class: SecureBundle\Service\Helper\BidHelper
+        arguments: ['@doctrine.orm.entity_manager', '@secure.date_time_helper']

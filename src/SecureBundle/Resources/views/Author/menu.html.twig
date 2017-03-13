@@ -1,65 +1,55 @@
-<div class="accordion" id="left-menu">
-    <div class="accordion-group">
-        <div class="accordion-heading">
-             <a class="accordion-toggle" href="{{ path('secure_author_homepage') }}">
-                 <i class="icon-home"></i> Домой
-             </a>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Brand</a>
         </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#leftMenu" href="#">
-                <i class="icon-user-6"></i> Профиль
-            </a>
-        </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#leftMenu" href="#collapseThree">
-                <i class="icon-docs"></i> Заказы
-            </a>
-        </div>
-        <div id="collapseThree" class="accordion-body collapse" style="height: 0; ">
-            <div class="accordion-inner">
-                <ul>
-                    <li>
-                        <a class="accordion-toggle" href="{{ path('secure_new_orders') }}">Новые</a>
-                    </li>
-                    {#<li>#}
-                    {#<a class="accordion-toggle" href="{{ path('secure_author_orders', {'type': 'bid'}) }}">Оцененные</a>#}
-                    {#</li>#}
-                    {#<li>#}
-                    {#<a class="accordion-toggle" href="{{ path('secure_author_orders', {'type': 'work'}) }}">На выполнении</a>#}
-                    {#</li>#}
-                    {#<li>#}
-                    {#<a class="accordion-toggle" href="{{ path('secure_author_orders', {'type': 'finish'}) }}">Завершенные</a>#}
-                    {#</li>#}
-                    {#<li>#}
-                    {#<a class="accordion-toggle" href="{{ path('secure_author_orders', {'type': 'favorite'}) }}">Избранные</a>#}
-                    {#</li>#}
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" href="{#{{ path('secure_author_settings', {'type': 'view'}) }}#}">
-                <i class="icon-cog"></i> Настройки
-            </a>
-        </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" href="{{ path('logout') }}">
-                <i class="icon-logout-1"></i> Выход
-            </a>
-        </div>
-    </div>
-    <div class="accordion-group">
-        <div class="accordion-heading">
-            <a class="accordion-toggle" href="">
-                <i class="icon-help"></i> Помощь
-            </a>
-        </div>
-    </div>
-</div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+                <li><a href="{{ path('secure_author_homepage') }}">Домой</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Заказы <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ path('secure_new_orders') }}">Новые</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">One more separated link</a></li>
+                    </ul>
+                </li>
+                <li><a href="{{ path('secure_author_bids') }}">Мои ставки</a></li>
+            </ul>
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="{#{{ path('secure_author_settings', {'type': 'view'}) }}#}">Настройки</a></li>
+                <li><a href="{{ path('secure_profile') }}">Профиль</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </li>
+                <li><a href="{{ path('logout') }}">Выход</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

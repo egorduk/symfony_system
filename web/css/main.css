@@ -1,47 +1,72 @@
-#left-menu .accordion-group {
-    margin-bottom: 0px;
-    border:0px;
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    border-radius: 0px;
-}
-
-#left-menu .accordion-heading {
-    height: 34px;
-    border-top: 1px solid #717171; /* inner stroke */
-    border-bottom: 1px solid #5A5A5A; /* inner stroke */
-    background-color: #353535; /* layer fill content */
-    background-image: -moz-linear-gradient(90deg, #595b59 0%, #616161 100%); /* gradient overlay */
-    background-image: -o-linear-gradient(90deg, #595b59 0%, #616161 100%); /* gradient overlay */
-    background-image: -webkit-linear-gradient(90deg, #595b59 0%, #616161 100%); /* gradient overlay */
-    background-image: linear-gradient(90deg, #595b59 0%, #616161 100%); /* gradient overlay */
-    list-style-type:none;
-}
-
-#left-menu .accordion-heading a {
-    color: #cbcbcb; /* text color */
-    text-shadow: 0 1px 0 #3b3b3b; /* drop shadow */
-    text-decoration:none;
-    font-weight:bold;
-}
-
-#left-menu .accordion-heading a:hover {
-    color:#ccc
-}
-
-#left-menu .accordion-heading .active {
-    width: 182px;
-    height: 34px;
-    border: 1px solid #5b5b5b; /* inner stroke */
-    background-color: #353535; /* layer fill content */
-    background-image: -moz-linear-gradient(90deg, #4b4b4b 0%, #555 100%); /* gradient overlay */
-    background-image: -o-linear-gradient(90deg, #4b4b4b 0%, #555 100%); /* gradient overlay */
-    background-image: -webkit-linear-gradient(90deg, #4b4b4b 0%, #555 100%); /* gradient overlay */
-    background-image: linear-gradient(90deg, #4b4b4b 0%, #555 100%); /* gradient overlay */
-}
-
-
 table.dataTable span.highlight {
     background-color: #ffff88;
 }
 
+/*---OrderPage---*/
+.file-icon {
+    background-size: 50px 50px;
+    background-repeat: no-repeat;
+    width: 60px;
+    height: 50px;
+    float: left;
+}
+
+.bmp {
+    background-image: url("../../images/file_icons/BMP.png");
+}
+
+.pdf {
+    background-image: url("../../images/file_icons/PDF.png");
+}
+
+.txt {
+    background-image: url("../../images/file_icons/TXT.png");
+}
+
+.png {
+    background-image: url("../../images/file_icons/PNG.png");
+}
+
+.doc {
+    background-image: url("../../images/file_icons/DOC.png");
+}
+
+#help-popover {
+    cursor: pointer;
+    color: #0088CC;
+}
+
+.flash-notice, .flash-success, .flash-error {
+    text-align: center;
+}
+
+#modal-order-form .form-control {
+    height: auto;
+}
+
+/*#pagerBids_center, #dialog-message-confirm-selection {
+    display: none;
+}
+#block-author {
+    width: 200px;
+    text-align: center;
+}
+#dialog-message-confirm-selection p .icon-help-3 {
+    font-size: 45px;
+    color: blue;
+}
+.class-dialog-confirm-selection #ui-id-1 {
+    color: blue;
+}
+#pagerBids {
+    height: 30px;
+}
+#volume-on, #volume-off {
+    cursor: pointer;
+    color: green;
+    display: none;
+}
+#volume-off {
+    color: red;
+}*/
+/*---OrderPage---*/

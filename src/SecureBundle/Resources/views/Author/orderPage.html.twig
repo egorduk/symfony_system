@@ -1,0 +1,144 @@
+{% extends "@Secure/layout_author.html.twig" %}
+
+{% block title %}{{ 'Просмотр заказа' | trans }}{% endblock %}
+    {% block content %}
+        <div class="col-md-6 col-md-offset-3">
+            <div id="block-about-order">
+                <ul>
+                    <li class="block-num">Номер заказа: {{ orderData.num }}</li>
+                    <li class="block-theme">Тема работы: {{ orderData.theme }}</li>
+                    <li class="block-task">Задание: {{ orderData.task }}</li>
+                    <li>Объем заказа: {{ orderData.countsheet }} стр.</li>
+                    <li>Оригинальность заказа: {{ orderData.originality }}%</li>
+                    <li>Предмет: {{ orderData.subject.childname }}</li>
+                    <li>Тип заказа: {{ orderData.type.name }}</li>
+                    <li>Статус заказа: {{ orderData.status.code }}</li>
+                    <li>Дата создания: {{ orderData.datecreate.format("d.m.Y H:i") }}</li>
+                    <li>Выполнение до: {{ orderData.dateexpire.format("d.m.Y H:i") }}</li>
+                    <li>Заказчик: <div>{{ orderData.user.rawavatar|raw }}</div>{{ orderData.user.login }}</li>
+                </ul>
+                {% if orderData.rawFiles is not empty %}
+                    <div>
+                        <p>Файлы</p>
+                        <table class="table table-striped table-bordered table-responsive" id="order-table-files">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Название</th>
+                                <th>Размер</th>
+                                <th>Загружен</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for key, file in orderData.rawFiles %}
+                                <tr>
+                                    <td>{{ key + 1 }}</td>
+                                    <td>
+                                        <div class="file-icon {{ file.extension|default('default')  }}"></div>
+                                        <div><a href="{{ file.url }}">{{ file.name }}</a></div>
+                                    </td>
+                                    <td>{{ file.size }}</td>
+                                    <td>{{ file.dateUpload }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if bidsData.statistic is not empty %}
+            <div class="col-md-3">
+                <ul>
+                    <li>{{ 'Ставок всего'|trans }}: {{ bidsData.statistic.cnt_bids }}</li>
+                    <li>{{ 'Максимальная ставка'|trans }}: {{ bidsData.statistic.max_bid }}</li>
+                    <li>{{ 'Минимальная ставка'|trans }}: {{ bidsData.statistic.min_bid }}</li>
+                </ul>
+            </div>
+        {% endif %}
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                {{ form_start(formBid, {'attr': {'id' : 'formBid'}}) }}
+                <div class="form-group">
+                    {{ form_label(formBid.fieldSum) }}
+                    {{ form_errors(formBid.fieldSum) }}
+                    <div class="input-group">
+                        {{ form_widget(formBid.fieldSum) }}
+                        <span class="input-group-addon"><i class=" icon-rouble"></i></span>
+                    </div>
+                    {{ form_label(formBid.fieldDay) }}
+                    {{ form_errors(formBid.fieldDay) }}
+                    <div class="input-group">
+                        {{ form_widget(formBid.fieldDay) }}
+                        <span class="input-group-addon"><i class="icon-clock-5"></i></span>
+                    </div>
+                    <div class="input-group">
+                        {{ form_label(formBid.isClientDate) }}
+                        {{ form_errors(formBid.isClientDate) }}
+                        {{ form_widget(formBid.isClientDate) }}
+                        <span id="help-popover" onmouseover="$(this).tooltip('show')"
+                              data-title='Установите флажок, если Вы согласны выполнить заказ в срок, указанный заказчиком'
+                              class="fa fa-question-circle-o" data-container="body" data-placement="bottom">
+                        </span>
+                    </div>
+                    {{ form_label(formBid.fieldComment) }}
+                    {{ form_errors(formBid.fieldComment) }}
+                    <div class="input-group">
+                        {{ form_widget(formBid.fieldComment) }}
+                        <span class="input-group-addon"><i class="icon-pencil-6"></i></span>
+                    </div>
+                    <br>
+                    <div class="input-group">
+                        <button type="submit" class="btn btn-success">{{ 'Поставить ставку'|trans }}</button>
+                    </div>
+                </div>
+                {{ form_end(formBid) }}
+                <div id="dialog-message-confirm-selection" title="Подтверждение выполнения заказа">
+                    <p>
+                        <span class="icon-help-3" style="float:left;"></span>
+                        {{ 'Are you agree to complete the order successful at the defined date?'|trans }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% if bidsData.bids is not empty %}
+         <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <p>История ставок</p>
+                <table class="table table-striped table-bordered table-responsive" id="table-bids">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Сумма</th>
+                        <th>Дней</th>
+                        <th>Комментарий</th>
+                        <th>Дата оценки</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for key, bid in bidsData.bids %}
+                        <tr {% if key == 0 %} class="success" {% endif %}>
+                            <td>{{ key + 1 }}</td>
+                            <td>{{ bid.sum }}</td>
+                            <td>
+                                {{ bid.day }}
+                                {% if bid.isClientDate == 1%} -
+                                    {{ 'в срок заказчика'|trans }}
+                                {% endif %}
+                            </td>
+                            <td>{{ bid.comment }}</td>
+                            <td>{{ bid.dateBid|date('d.m.Y H:i') }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+         </div>
+        {% endif %}
+    {% endblock %}
+
+    {% block javascripts_footer %}
+        {{ parent() }}
+        <script type="application/javascript" src="{{ asset('js/order.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('js/price-format.js') }}"></script>
+    {% endblock %}

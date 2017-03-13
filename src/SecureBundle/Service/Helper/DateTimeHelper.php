@@ -40,4 +40,43 @@ class DateTimeHelper
     {
         return strtotime("now");
     }
+
+    /**
+     * @param \DateTime $dateA
+     * @param \DateTime|bool $dateB
+     *
+     * @return \DateInterval|false
+     */
+    public function getDiffBetweenDates($dateA, $dateB = false)
+    {
+        if (!$dateB) {
+            $dateB = new \DateTime();
+        }
+
+        return date_diff($dateA, $dateB);
+    }
+
+    /**
+     * @param \DateTime $date
+     *
+     * @return int
+     */
+    public function isExpiredDate($date)
+    {
+        $dateDiff = date_diff(new \DateTime(), $date);
+
+        return $dateDiff->invert;
+    }
+
+
+    /**
+     * @param \DateTime $datetime
+     * @param string $format
+     *
+     * @return string
+     */
+    public function getDatetimeFormatted($datetime, $format)
+    {
+        return $datetime->format($format);
+    }
 }

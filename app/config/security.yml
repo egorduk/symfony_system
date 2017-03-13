@@ -67,7 +67,5 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/secure, roles: { ROLE_USER, ROLE_AUTHOR } }
-
-    #acl:
-    #    connection: default
+        - { path: ^/secure, roles: [ ROLE_USER, ROLE_AUTHOR ] }
+        #- { path: ^/secure, roles: ROLE_AUTHOR }

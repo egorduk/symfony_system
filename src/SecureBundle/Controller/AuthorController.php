@@ -25,22 +25,37 @@ class AuthorController extends Controller
         $sessionLifeTimestamp = $session->getMetadataBag()->getLifetime();
 
         $dateTimeHelper = $this->get('secure.date_time_helper');
-        $metaDateHelper = $this->get('secure.meta_data_helper');
+        $userHelper = $this->get('secure.user_helper');
 
         $whenLoginDate = $dateTimeHelper->getDateFromTimestamp($sessionCreatedTimestamp, "d/m/Y H:i");
         $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionCreatedTimestamp, $sessionLifeTimestamp, '+');
         $nowTimestamp = $dateTimeHelper->getCurrentTimestamp();
         $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionRemainingTimestamp, $nowTimestamp, '-');
         $remainingTime = $dateTimeHelper->getDateFromTimestamp($sessionRemainingTimestamp, "i:s");
-        $user = $metaDateHelper->setUserAvatar($user);
+        $user = $userHelper->setRawUserAvatar($user);
 
         $templateData = [
             'user' => $user,
             'whenLoginDate' => $whenLoginDate,
             'remainingTime' => $remainingTime,
-            'userRole' => $metaDateHelper->getRoleName($user->getRoles()[0]),
+            'userRole' => $userHelper->getRoleName($user->getRoles()[0]),
         ];
 
         return $templateData;
+    }
+
+    public function bidsAction(Request $request)
+    {
+        $bidHelper = $this->get('secure.bid_helper');
+
+        $bidsData = $bidHelper->getBidsWithOrdersByUser($this->getUser());
+        $bidsData = $bidHelper->setRemainingTime($bidsData);
+
+        return $this->render(
+            'SecureBundle:Author:bidsPage.html.twig',
+            [
+                'bidsData' => $bidsData,
+            ]
+        );
     }
 }

@@ -2,6 +2,8 @@
 
 namespace SecureBundle\Entity;
 
+use AuthBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,7 +31,7 @@ class UserOrder
     /**
      * @var string
      *
-     * @ORM\Column(name="theme", type="string", length=100, nullable=false)
+     * @ORM\Column(name="theme", type="string", length=255, nullable=false)
      */
     private $theme;
 
@@ -108,21 +110,28 @@ class UserOrder
      *
      * @ORM\Column(name="is_show_author", type="boolean", nullable=false)
      */
-    private $isShowAuthor;
+    private $isShownAuthor;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="is_show_client", type="boolean", nullable=false)
      */
-    private $isShowClient;
+    private $isShownClient;
 
     /**
      * @var boolean
      *
      * @ORM\Column(name="is_delay", type="boolean", nullable=false)
      */
-    private $isDelay;
+    private $isDelayed;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_hide", type="boolean", nullable=false)
+     */
+    private $isHidden;
 
     /**
      * @var string
@@ -137,6 +146,13 @@ class UserOrder
      * @ORM\Column(name="client_comment", type="string", length=100, nullable=false)
      */
     private $clientComment;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="additional_info", type="string", length=255, nullable=false)
+     */
+    private $additionalInfo;
 
     /**
      * @var integer
@@ -158,16 +174,35 @@ class UserOrder
     private $type;
 
     /**
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\StatusOrder", inversedBy="orders")
+     * @ORM\JoinColumn(name="status_order_id", referencedColumnName="id")
+     */
+    private $status;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="orders")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\StatusOrder", inversedBy="orders")
-     * @ORM\JoinColumn(name="status_order_id", referencedColumnName="id")
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\OrderFile", mappedBy="order")
      */
-    private $status;
+    private $files;
+
+    /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserBid", mappedBy="order")
+     */
+    private $bids;
+
+    private $rawFiles = '';
+    private $remainingTime = '';
+
+    public function __construct()
+    {
+        $this->files = new ArrayCollection();
+        $this->bids = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -175,6 +210,14 @@ class UserOrder
     public function getUser()
     {
         return $this->user;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 
     /**
@@ -496,9 +539,9 @@ class UserOrder
      *
      * @return UserOrder
      */
-    public function setIsShowAuthor($isShowAuthor)
+    public function setIsShownAuthor($isShowAuthor)
     {
-        $this->isShowAuthor = $isShowAuthor;
+        $this->isShownAuthor = $isShowAuthor;
 
         return $this;
     }
@@ -508,9 +551,9 @@ class UserOrder
      *
      * @return boolean
      */
-    public function getIsShowAuthor()
+    public function getIsShownAuthor()
     {
-        return $this->isShowAuthor;
+        return $this->isShownAuthor;
     }
 
     /**
@@ -520,9 +563,9 @@ class UserOrder
      *
      * @return UserOrder
      */
-    public function setIsShowClient($isShowClient)
+    public function setIsShownClient($isShowClient)
     {
-        $this->isShowClient = $isShowClient;
+        $this->isShownClient = $isShowClient;
 
         return $this;
     }
@@ -532,9 +575,9 @@ class UserOrder
      *
      * @return boolean
      */
-    public function getIsShowClient()
+    public function getIsShownClient()
     {
-        return $this->isShowClient;
+        return $this->isShownClient;
     }
 
     /**
@@ -544,9 +587,9 @@ class UserOrder
      *
      * @return UserOrder
      */
-    public function setIsDelay($isDelay)
+    public function setIsDelayed($isDelay)
     {
-        $this->isDelay = $isDelay;
+        $this->isDelayed = $isDelay;
 
         return $this;
     }
@@ -556,9 +599,9 @@ class UserOrder
      *
      * @return boolean
      */
-    public function getIsDelay()
+    public function getIsDelayed()
     {
-        return $this->isDelay;
+        return $this->isDelayed;
     }
 
     /**
@@ -633,8 +676,6 @@ class UserOrder
         return $this->clientDegree;
     }
 
-    /*
-
     /**
      * Get id
      *
@@ -643,5 +684,95 @@ class UserOrder
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIsHidden()
+    {
+        return $this->isHidden;
+    }
+
+    /**
+     * @param boolean $isHidden
+     */
+    public function setIsHidden($isHidden)
+    {
+        $this->isHidden = $isHidden;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAdditionalInfo()
+    {
+        return $this->additionalInfo;
+    }
+
+    /**
+     * @param string $additionalInfo
+     */
+    public function setAdditionalInfo($additionalInfo)
+    {
+        $this->additionalInfo = $additionalInfo;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    public function setFiles($files)
+    {
+        $this->files = $files;
+    }
+
+    /**
+     * @param array $files
+     */
+    public function setRawFiles($files)
+    {
+        $this->rawFiles = $files;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRawFiles()
+    {
+        return $this->rawFiles;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getBids()
+    {
+        return $this->bids;
+    }
+
+    public function setBids($bids)
+    {
+        $this->bids = $bids;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRemainingTime()
+    {
+        return $this->remainingTime;
+    }
+
+    /**
+     * @param string $remainingTime
+     */
+    public function setRemainingTime($remainingTime)
+    {
+        $this->remainingTime = $remainingTime;
     }
 }

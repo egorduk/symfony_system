@@ -1,13 +1,12 @@
 {% extends "SecureBundle::layout_author.html.twig" %}
 
-    {% block title %}{{ 'Homepage' }}{% endblock %}
+    {% block title %}{{ 'Homepage' | trans }}{% endblock %}
 
     {% block content %}
-
         <div class="container">
             <div class="row">
                 <div  class="col-xs-4">
-                    <div id="">{{ user.avatar | raw }}</div>
+                    <div>{{ user.rawavatar | raw }}</div>
                     <p>{{ user.login }}</p>
                     <hr style="border:solid 1px black">
                     <p>Ваш ID - {{ user.id }}</p>
@@ -22,6 +21,8 @@
                 </div>
             </div>
         </div>
-
     {% endblock %}
 
+    {% block javascripts_footer %}
+        {{ parent() }}
+    {% endblock %}

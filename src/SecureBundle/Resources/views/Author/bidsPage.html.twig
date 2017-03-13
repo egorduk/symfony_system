@@ -1,0 +1,82 @@
+{% extends "SecureBundle::layout_author.html.twig" %}
+
+{% block title %}{{ 'My bids' | trans }}{% endblock %}
+
+    {% block stylesheets %}
+        {{ parent() }}
+    {% endblock %}
+
+    {% block javascripts_head %}
+        {{ parent() }}
+        <script>
+            var dataTableRussianLoc = "{{ asset('json/DataTable/Russian.json') }}";
+        </script>
+    {% endblock %}
+
+    {% block content %}
+        <div class="col-md-12">
+            {% if bidsData is defined and bidsData is not empty %}
+            <table id="bids-table" class="display responsive" width="100%">
+                <thead>
+                <tr>
+                    <th>№ заказа</th>
+                    <th>Предмет</th>
+                    <th>Тип работы</th>
+                    <th>Тема работы</th>
+                    <th>Выполнение до</th>
+                    <th>Ставка</th>
+                    <th>Дата оценки</th>
+                    <th>На выполнение</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for bid in bidsData %}
+                    <tr data-id="{{ bid.order.id }}">
+                        <td>{{ bid.order.num }}</td>
+                        <td>{{ bid.order.subject.childname }}</td>
+                        <td>{{ bid.order.type.name }}</td>
+                        <td>{{ bid.order.theme }}</td>
+                        <td>{{ bid.order.dateexpire|date('d.m.Y H:i') }}</td>
+                        <td>{{ bid.sum }}</td>
+                        <td>{{ bid.dateBid|date('d.m.Y H:i') }}</td>
+                        <td>{{ bid.order.remainingtime }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    {% endblock %}
+    {% block javascripts_footer %}
+        <script>$(document).ready( function () {
+                var selectedOrderId;
+
+                var dataTable = $('#bids-table').DataTable({
+                    searchHighlight: true,
+                    select: true,
+                    responsive: {
+                        details: true
+                    },
+                    "language": {
+                        "url": dataTableRussianLoc
+                    }
+                });
+
+                dataTable.on('draw', function() {
+                    var body = $(dataTable.table().body());
+                    body.unhighlight();
+                    body.highlight(dataTable.search());
+                }).on('click', 'tbody tr', function(e) {
+                    dataTable.row(this).select();
+
+                    if (!$(this).hasClass('child') && !$(e.target).hasClass('sorting_1')) {
+                        selectedOrderId = $(this).data('id');
+
+                        window.location.href = Routing.generate('secure_order_page', {
+                            orderId: selectedOrderId
+                        });
+                    }
+                });
+            });
+        </script>
+    {% endblock %}

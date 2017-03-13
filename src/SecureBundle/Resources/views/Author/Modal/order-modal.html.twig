@@ -1,0 +1,78 @@
+<div class="modal fade" id="modal-order-window" tabindex="-1" role="dialog" aria-labelledby="modal-label">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div id='ajax-loader' style="position: absolute; left: 47%; top: 35%; display: none;">
+                <img src="{{ asset('images/ajax-loader.gif') }}">
+            </div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modal-label">{{ 'Заказ №' | trans }} <span id="modal-order-num"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="modal-order-form" style="display: none">
+                    <div class="form-group">
+                        <label for="modal-order-theme" class="control-label">{{ 'Тема' | trans }}:</label>
+                        <p class="form-control" id="modal-order-theme"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-order-task" class="control-label">{{ 'Задание' | trans }}:</label>
+                        <p class="form-control" id="modal-order-task"></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="modal-order-date-expire" class="control-label">{{ 'Срок сдачи' | trans }}:</label>
+                                <p class="form-control" id="modal-order-date-expire"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="modal-order-remaining" class="control-label">{{ 'Осталось до сдачи' | trans }}:</label>
+                                <p class="form-control" id="modal-order-remaining">100</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="modal-order-date-create" class="control-label">{{ 'Дата создания' | trans }}:</label>
+                                <p class="form-control" id="modal-order-date-create"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="modal-order-originality" class="control-label">{{ 'Оргинальность' | trans }} %:</label>
+                                <p class="form-control" id="modal-order-originality"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="modal-order-count-sheet" class="control-label">{{ 'Страниц' | trans }}:</label>
+                                <p class="form-control" id="modal-order-count-sheet"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="modal-order-additional-info" class="control-label">{{ 'Дополнительная информация' | trans }}:</label>
+                        <p class="form-control" id="modal-order-additional-info"></p>
+                    </div>
+                    <table class="table table-striped table-bordered table-responsive" id="modal-order-table-files">
+                        <thead>
+                        <tr>
+                            <th>Название</th>
+                            <th>Размер</th>
+                            <th>Загружен</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" href="#" id="modal-order-link" role="button">{{ 'Страница заказа' | trans }}</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Закрыть' | trans }}</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,17 +9,12 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="mobilePhone" type="string" column="mobile_phone" length="17" nullable="false">
+    <field name="mobilePhone" type="string" column="mobile_phone" length="20" nullable="false">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="staticPhone" type="string" column="static_phone" length="17" nullable="false">
-      <options>
-        <option name="fixed"/>
-      </options>
-    </field>
-    <field name="icq" type="string" column="icq" length="10" nullable="false">
+    <field name="staticPhone" type="string" column="static_phone" length="20" nullable="false">
       <options>
         <option name="fixed"/>
       </options>
@@ -39,10 +34,9 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="countryId" type="integer" column="country_id" nullable="false">
-      <options>
-        <option name="unsigned"/>
-      </options>
-    </field>
+    <one-to-many target-entity="AuthBundle\Entity\User" mapped-by="userInfo" field="user" />
+    <many-to-one field="country" target-entity="AuthBundle\Entity\Country" inversed-by="userInfo">
+      <join-column name="country_id" referenced-column-name="id" />
+    </many-to-one>
   </entity>
 </doctrine-mapping>

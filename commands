@@ -3,3 +3,7 @@ php bin/console doctrine:fixtures:load  -   load data fixtures
 php bin/console doctrine:schema:update --force  -   update db shema
 php app/console doctrine:fixtures:load --append
 php bin/console assets:install target [--symlink]
+bin/console doctrine:schema:valid  -  check entities
+bin/console fos:js-routing:debug
+bin/console fos:js-routing:dump
+bin/console debug:router
