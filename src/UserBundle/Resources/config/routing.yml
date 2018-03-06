@@ -1,0 +1,7 @@
+secure_user_homepage:
+    path: secure/user/homepage
+    defaults: { _controller: UserBundle:User:homepage }
+
+#secure_user_bids:
+#    path: secure/user/bids
+#    defaults: { _controller: SecureBundle:Author:bids }

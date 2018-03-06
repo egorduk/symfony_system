@@ -8,14 +8,20 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="login", columns={"login"}), @ORM\UniqueConstraint(name="email", columns={"email"})})
+ * @ORM\Table(name="user",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="login", columns={"login"}),
+ *     @ORM\UniqueConstraint(name="email", columns={"email"})}
+ * )
  * @ORM\Entity
  */
 class User implements AdvancedUserInterface, \Serializable
 {
+    const ROLE_USER = 'ROLE_USER';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_MANAGER = 'ROLE_MANAGER';
+    const ROLE_DIRECTOR = 'ROLE_DIRECTOR';
+
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -25,14 +31,12 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="login", type="string", length=12, nullable=false)
+     * @ORM\Column(name="login", type="string", length=12)
      */
     private $login;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="password", type="string", length=88, nullable=false)
+     * @ORM\Column(name="password", type="string", length=88)
      */
     private $password;
 
@@ -43,9 +47,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $plainPassword;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=80, unique=true, nullable=false)
+     * @ORM\Column(name="email", type="string", length=60, unique=true)
      *
      * @Assert\NotBlank()
      * @Assert\Email()
@@ -55,128 +57,117 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_reg", type="datetime", nullable=false)
+     * @ORM\Column(name="date_reg", type="datetime")
      */
     private $dateReg;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_confirm_recovery", type="datetime", nullable=false)
+     * @ORM\Column(name="date_confirm_recovery", type="datetime", nullable=true)
      */
     private $dateConfirmRecovery;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_confirm_reg", type="datetime", nullable=false)
+     * @ORM\Column(name="date_confirm_reg", type="datetime", nullable=true)
      */
     private $dateConfirmReg;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_upload_avatar", type="datetime", nullable=false)
+     * @ORM\Column(name="date_upload_avatar", type="datetime", nullable=true)
      */
     private $dateUploadAvatar;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ip_reg", type="integer", nullable=false)
+     * @ORM\Column(name="ip_reg", type="integer")
      */
     private $ipReg;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="salt", type="string", length=64, nullable=false)
+     * @ORM\Column(name="salt", type="string", length=64)
      */
     private $salt;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_active", type="boolean", nullable=false)
+     * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive = 'b\'0\'';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_confirm", type="boolean", nullable=false)
+     * @ORM\Column(name="is_confirm", type="boolean")
      */
     private $isConfirm = 'b\'0\'';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="hash_code", type="string", length=30, nullable=false)
+     * @ORM\Column(name="hash_code", type="string", length=30)
      */
     private $hashCode = '';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="token", type="string", length=30, nullable=false)
+     * @ORM\Column(name="token", type="string", length=30)
      */
     private $token;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="recovery_password", type="string", length=100, nullable=false)
+     * @ORM\Column(name="recovery_password", type="string", length=100)
      */
     private $recoveryPassword = '';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="account", type="integer", nullable=false)
+     * @ORM\Column(name="account", type="integer")
      */
     private $account;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_ban", type="boolean", nullable=false)
+     * @ORM\Column(name="is_ban", type="boolean")
      */
     private $isBan = 'b\'0\'';
 
     /**
      * @var boolean
      *
-     * @ORM\Column(name="is_access_order", type="boolean", nullable=false)
+     * @ORM\Column(name="is_access_order", type="boolean")
      */
     private $isAccessOrder = 'b\'0\'';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="avatar", type="string", length=25, nullable=false)
+     * @ORM\Column(name="avatar", type="string", length=25)
      */
     private $avatar;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="rating_point", type="integer", nullable=false)
+     * @ORM\Column(name="rating_point", type="integer")
      */
     private $ratingPoint;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="user_rating_id", type="integer", nullable=false)
+     * @ORM\Column(name="user_rating_id", type="integer", nullable=true)
      */
     private $rating;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="user_info_id", type="integer", nullable=false)
-     */
-    private $info;
 
     /**
      * @ORM\Column(name="roles", type="string")
@@ -200,7 +191,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\UserInfo", inversedBy="user")
-     * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id", nullable=true)
      */
     private $userInfo;
 
@@ -211,11 +202,11 @@ class User implements AdvancedUserInterface, \Serializable
         // may not be needed, see section on salt below
         $this->salt = md5(uniqid(null, true));
         $this->account = 0;
-        $this->avatar = "default.png";
+        $this->avatar = 'default.png';
         $this->dateReg = new \DateTime();
-        /*$this->dateConfirmRecovery = null;
+        $this->dateConfirmRecovery = null;
         $this->dateConfirmReg = null;
-        $this->dateUploadAvatar = null;*/
+        $this->dateUploadAvatar = null;
         //$this->is_active = 1;
         //$this->ipReg = ip2long($_SERVER['REMOTE_ADDR']);
         $this->ipReg = 1234;
@@ -225,9 +216,10 @@ class User implements AdvancedUserInterface, \Serializable
         $this->isAccessOrder = 0;
         $this->recoveryPassword = '';
         $this->ratingPoint = 0;
-        $this->role = 'ROLE_AUTHOR';
+        $this->role = '';
         $this->hashCode = '';
         $this->token = '';
+        $this->rating = null;
         /*$this->link_user_order = new ArrayCollection();
         $this->link_openid = new ArrayCollection();
         $this->link_author_file = new ArrayCollection();
@@ -632,37 +624,23 @@ class User implements AdvancedUserInterface, \Serializable
         return $this;
     }
 
-    /**
-     * @return integer
-     */
     public function getRole()
     {
         return $this->role;
     }
 
-    /**
-     * @param integer $info
-     *
-     * @return User
-     */
-    public function setInfo($info)
+    /*public function setInfo($info)
     {
         $this->info = $info;
 
         return $this;
     }
 
-    /**
-     * @return integer
-     */
     public function getInfo()
     {
         return $this->info;
-    }
+    }*/
 
-    /**
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
@@ -761,65 +739,41 @@ class User implements AdvancedUserInterface, \Serializable
         $this->hashCode = '';
     }
 
-    /**
-     * @return mixed
-     */
     public function getFiles()
     {
         return $this->files;
     }
 
-    /**
-     * @param mixed $files
-     */
     public function setFiles($files)
     {
         $this->files = $files;
     }
 
-    /**
-     * @return mixed
-     */
     public function getBids()
     {
         return $this->bids;
     }
 
-    /**
-     * @param mixed $bids
-     */
     public function setBids($bids)
     {
         $this->bids = $bids;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRawAvatar()
     {
         return $this->rawAvatar;
     }
 
-    /**
-     * @param mixed $rawAvatar
-     */
     public function setRawAvatar($rawAvatar)
     {
         $this->rawAvatar = $rawAvatar;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUserInfo()
     {
         return $this->userInfo;
     }
 
-    /**
-     * @param mixed $userInfo
-     */
     public function setUserInfo($userInfo)
     {
         $this->userInfo = $userInfo;

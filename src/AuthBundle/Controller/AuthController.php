@@ -4,6 +4,7 @@ namespace AuthBundle\Controller;
 
 use AuthBundle\Entity\User;
 use AuthBundle\Form\AuthorRegForm;
+use AuthBundle\Form\LoginForm;
 use AuthBundle\Form\RecoveryPasswordForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,10 +16,19 @@ class AuthController extends Controller
     /**
      * @Template()
      *
+     * @param Request $request
+     *
      * @return array
      */
-    public function loginAction()
+    public function loginAction(Request $request)
     {
+        $form = $this->createForm(LoginForm::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+        }
+
         $helper = $this->get('security.authentication_utils');
 
         return [

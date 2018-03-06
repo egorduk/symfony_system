@@ -3,7 +3,7 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('js/FileUpload/jquery.ui.widget.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/FileUpload/jquery.iframe-transport.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/FileUpload/jquery.fileupload.js') }}"></script>
+    {#<script type="text/javascript" src="{{ asset('js/FileUpload/jquery.fileupload.js') }}"></script>#}
 {% endblock %}
 
 {% block title %}{{ 'My profile' | trans }}{% endblock %}
@@ -70,14 +70,17 @@
             </div>#}
 
             <script type="text/javascript">
-                $(document).ready(function()
-                {
-                    var fileUploader = $('#file-uploader').fileupload({
+                $(document).ready(function() {
+                    var fileWrapper = $('.file-wrapper'),
+                        fileInfo = fileWrapper.find('.file-info'),
+                        fileButtons = fileWrapper.find('.file-buttons');
+
+                    $('#file-uploader').fileupload({
                         //url: 'server/php/',
                         dataType: 'json',
                         autoUpload: false,
-                        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                        maxFileSize: 999000,
+                        //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                        //maxFileSize: 999000,
                         // Enable image resizing, except for Android and Opera,
                         disableImageResize: /Android(?!.*Chrome)|Opera/
                             .test(window.navigator.userAgent),
@@ -89,11 +92,11 @@
                             unknownError: 'Unknown error'
                         },
                         add: function (e, data) {
-                            console.log(data.files);
+                            //console.log(data.files);
                             var fileData = data.files[0];
-                            $(".file-info #file-name").empty().append(fileData.name);
-                            $(".file-info #file-size").empty().append(formatFileSize(fileData.size));
-                            $('.file-buttons #btn-start').off('click').on('click', function (e) {
+                            fileInfo.find('#file-name').empty().append(fileData.name);
+                            fileInfo.find('#file-size').empty().append(formatFileSize(fileData.size));
+                            fileButtons.find('#btn-start').off('click').on('click', function (e) {
                                 e.preventDefault();
                                 data.submit();
                             })
@@ -171,32 +174,29 @@
             </script>
             <div class="row">
                 <div class="col-xs-6 col-xs-offset-3">
-                    <form id="file-uploader" enctype="multipart/form-data" data-url="{{ oneup_uploader_endpoint('gallery') }}" method="POST" >
-                        <div class="file-wrapper">
-                            <div class="file-buttons">
-                                <input type="file" name="files[]" class="">
-                                <button type="submit" class="" id="btn-start">Start upload</button>
-                                <button type="reset" class="">Cancel upload</button>
-                                <button type="button" class="">Delete</button>
-                                <input type="checkbox" class="toggle">
-                                <!-- The global file processing state -->
-                                <span class="fileupload-process"></span>
-                            </div>
-                            <div class="file-info">
-                                Filename: <div id="file-name"></div>
-                                Size: <div id="file-size"></div>
-                            </div>
-                            <!-- The global progress state -->
-                            <div class="file-progress fade" style="display: none">
-                                <!-- The global progress bar -->
-                                <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-                                <!-- The extended global progress state -->
-                                <div class="progress-extended">&nbsp;</div>
-                            </div>
-                        </div>
-                        <!-- The table listing the files available for upload/download -->
-                        <table role="presentation"><tbody class="files"></tbody></table>
-                    </form>
+                    {#<form id="file-uploader" enctype="multipart/form-data" data-url="{{ oneup_uploader_endpoint('gallery') }}" method="POST" >#}
+                        {#<div class="file-wrapper">#}
+                            {#<div class="file-buttons">#}
+                                {#<input type="file" name="files[]" class="">#}
+                                {#<button type="button" class="" id="btn-start">Start upload</button>#}
+                                {#<!-- The global file processing state -->#}
+                                {#<span class="fileupload-process"></span>#}
+                            {#</div>#}
+                            {#<div class="file-info">#}
+                                {#Filename: <div id="file-name"></div>#}
+                                {#Size: <div id="file-size"></div>#}
+                            {#</div>#}
+                            {#<!-- The global progress state -->#}
+                            {#<div class="file-progress fade" style="display: none">#}
+                                {#<!-- The global progress bar -->#}
+                                {#<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>#}
+                                {#<!-- The extended global progress state -->#}
+                                {#<div class="progress-extended">&nbsp;</div>#}
+                            {#</div>#}
+                        {#</div>#}
+                        {#<!-- The table listing the files available for upload/download -->#}
+                        {#<table role="presentation"><tbody class="files"></tbody></table>#}
+                    {#</form>#}
                 </div>
             </div>
 

@@ -1,13 +1,3 @@
-#--AuthorBundle--#
-
-secure_author_homepage:
-    path: secure/author/homepage
-    defaults: { _controller: SecureBundle:Author:homepage }
-
-secure_author_bids:
-    path: secure/author/bids
-    defaults: { _controller: SecureBundle:Author:bids }
-
 secure_manager_homepage:
     path: secure/manager/homepage
     defaults: { _controller: SecureBundle:Manager:homepage }

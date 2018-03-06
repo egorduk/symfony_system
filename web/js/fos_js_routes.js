@@ -1,1 +1,0 @@
-fos.Router.setData({"base_url":"","routes":{"secure_get_order_full_info":{"tokens":[["variable","\/","\\d+","orderId"],["text","\/secure\/order\/fullInfo"]],"defaults":[],"requirements":{"orderId":"\\d+"},"hosttokens":[]}},"prefix":"","host":"localhost","scheme":"http"});

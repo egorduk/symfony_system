@@ -15,29 +15,31 @@ class AppKernel extends Kernel
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
-            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
-            new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle(),
+            //new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
+            //new WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle(),
             new AuthBundle\AuthBundle(),
             new SecureBundle\SecureBundle(),
-            new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
+            new AdminBundle\AdminBundle(),
+            new UserBundle\UserBundle(),
+            //new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
-            new Symfony\Bundle\DebugBundle\DebugBundle(),
-            new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
-            new Sensio\Bundle\DistributionBundle\SensioDistributionBundle(),
-            new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle(),
-            new Oneup\UploaderBundle\OneupUploaderBundle()
+            //new Symfony\Bundle\DebugBundle\DebugBundle(),
+            //new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
+            //new Sensio\Bundle\DistributionBundle\SensioDistributionBundle(),
+            //new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle(),
+            //new Oneup\UploaderBundle\OneupUploaderBundle()
         ];
 
         //var_dump($this->getEnvironment());die;
 
-       /* if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
-            $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
+        if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
+            //$bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
+            $bundles[] = new Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
-            $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
-            $bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
-        }*/
+            //$bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
+            //$bundles[] = new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle();
+        }
 
         return $bundles;
     }
@@ -60,5 +62,12 @@ class AppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir().'/config/config_'.$this->getEnvironment().'.yml');
+    }
+
+    public function __construct($environment, $debug)
+    {
+        date_default_timezone_set('Europe/Minsk');
+
+        parent::__construct($environment, $debug);
     }
 }

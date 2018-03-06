@@ -154,13 +154,6 @@ class AuctionBid
         return $this->userOrderId;
     }
 
-    /**
-     * Set userId
-     *
-     * @param integer $userId
-     *
-     * @return AuctionBid
-     */
     public function setUserId($userId)
     {
         $this->userId = $userId;
@@ -168,11 +161,6 @@ class AuctionBid
         return $this;
     }
 
-    /**
-     * Get userId
-     *
-     * @return integer
-     */
     public function getUserId()
     {
         return $this->userId;

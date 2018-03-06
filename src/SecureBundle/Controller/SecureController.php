@@ -2,6 +2,7 @@
 
 namespace SecureBundle\Controller;
 
+use AuthBundle\Entity\User;
 use SecureBundle\Form\ProfileForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,10 +21,12 @@ class SecureController extends Controller
 
         $role = $user->getRoles()[0];
 
-        if ($role === 'ROLE_MANAGER') {
+        if ($role === User::ROLE_MANAGER) {
             return new RedirectResponse($this->generateUrl('secure_manager_homepage'));
-        } elseif ($role === 'ROLE_AUTHOR') {
-            return new RedirectResponse($this->generateUrl('secure_author_homepage'));
+        } elseif ($role === User::ROLE_USER) {
+            return new RedirectResponse($this->generateUrl('secure_user_homepage'));
+        } elseif ($role === User::ROLE_ADMIN) {
+            return new RedirectResponse($this->generateUrl('secure_admin_homepage'));
         }
 
         return new RedirectResponse($this->generateUrl('login'));

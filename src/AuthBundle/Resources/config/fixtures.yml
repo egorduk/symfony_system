@@ -1,0 +1,4 @@
+services:
+    AuthBundle\DataFixtures\ORM\LoadUsers:
+        arguments: ['@security.password_encoder']
+        tags: [doctrine.fixture.orm]

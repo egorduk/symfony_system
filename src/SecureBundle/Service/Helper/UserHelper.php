@@ -59,9 +59,11 @@ class UserHelper
      *
      * @return string
      */
-    public function getRoleName($role)
+    public function getRoleName($role, $isLower = false)
     {
-        return substr($role, strpos($role, '_') + 1, strlen($role));
+        $roleName = substr($role, strpos($role, '_') + 1, strlen($role));
+
+        return $isLower ? strtolower($roleName) : $roleName;
     }
 
     /**

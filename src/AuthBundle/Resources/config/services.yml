@@ -1,14 +1,10 @@
-parameters:
-#    parameter_name: value
-    mail_options:
-        mail_sender: '%mail_sender%'
-        mail_title: '%mail_title%'
-        confirm_auth_path: '%confirm_auth_path%'
+imports:
+  - { resource: '@AuthBundle/Resources/config/fixtures.yml' }
 
 services:
     auth.captcha_service:
         class: AuthBundle\Service\Captcha\Captcha
 
-    auth.auth_helper:
-        class: AuthBundle\Service\Helper\AuthHelper
+    auth.service:
+        class: AuthBundle\Service\AuthService
         arguments: ['@doctrine.orm.entity_manager', '@security.password_encoder']

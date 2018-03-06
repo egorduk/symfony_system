@@ -17,6 +17,10 @@ services:
         class: SecureBundle\Service\Helper\FileHelper
         arguments: ['@doctrine.orm.entity_manager', '@router']
 
+    secure.image_helper:
+        class: SecureBundle\Service\Helper\ImageHelper
+        arguments: ['@doctrine.orm.entity_manager', '@router', '@secure.user_helper']
+
     secure.user_helper:
         class: SecureBundle\Service\Helper\UserHelper
         arguments: ['@doctrine.orm.entity_manager', '@assets.packages']
@@ -28,3 +32,19 @@ services:
     secure.bid_helper:
         class: SecureBundle\Service\Helper\BidHelper
         arguments: ['@doctrine.orm.entity_manager', '@secure.date_time_helper']
+
+    secure.upload_file_listener_gallery:
+        class: SecureBundle\EventListener\UploadFileListener
+        arguments: ['@doctrine.orm.entity_manager', '@secure.file_helper', '@secure.image_helper', '@security.token_storage']
+        tags:
+            - { name: kernel.event_listener, event: oneup_uploader.post_persist.gallery, method: onUpload }
+
+    secure.validate_file_listener_gallery:
+        class: SecureBundle\EventListener\ValidateFileListener
+        arguments: ['@secure.file_helper']
+        tags:
+            - { name: kernel.event_listener, event: oneup_uploader.validation.gallery, method: onValidate }
+
+    secure.file_upload_error_handler:
+        arguments: ['@secure.file_helper']
+        class: SecureBundle\Service\Handler\UploadFileErrorHandler

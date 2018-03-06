@@ -2,7 +2,7 @@
 parameters:
     database_host: 127.0.0.1
     database_port: null
-    database_name: study
+    database_name: main
     database_user: root
     database_password: null
     mailer_transport: smtp
@@ -19,3 +19,7 @@ parameters:
     uploads_dir: '%kernel.root_dir%/../web/uploads'
     uploads_attachments_orders_dir: '%kernel.root_dir%/../web/uploads/attachments/orders'
     uploads_avatars_dir: '%kernel.root_dir%/../web/uploads/avatars'
+    mail_options:
+        mail_sender: '%mail_sender%'
+        mail_title: '%mail_title%'
+        confirm_auth_path: '%confirm_auth_path%'

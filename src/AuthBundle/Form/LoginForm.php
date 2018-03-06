@@ -2,7 +2,6 @@
 
 namespace AuthBundle\Form;
 
-use AuthBundle\Classes\Validate\LoginFormValidate;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,7 +23,7 @@ class LoginForm extends AbstractType
                 'constraints' => [
                     new Email(),
                     new NotBlank(),
-                    new Length(array('max' => 80)),
+                    new Length(array('max' => 60)),
                 ],
             ])
             ->add('password', PasswordType::class, [

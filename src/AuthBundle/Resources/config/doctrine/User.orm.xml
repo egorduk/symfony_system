@@ -28,9 +28,9 @@
         <option name="default">CURRENT_TIMESTAMP</option>
       </options>
     </field>
-    <field name="dateConfirmRecovery" type="datetime" column="date_confirm_recovery" nullable="false"/>
-    <field name="dateConfirmReg" type="datetime" column="date_confirm_reg" nullable="false"/>
-    <field name="dateUploadAvatar" type="datetime" column="date_upload_avatar" nullable="false"/>
+    <field name="dateConfirmRecovery" type="datetime" column="date_confirm_recovery" nullable="true"/>
+    <field name="dateConfirmReg" type="datetime" column="date_confirm_reg" nullable="true"/>
+    <field name="dateUploadAvatar" type="datetime" column="date_upload_avatar" nullable="true"/>
     <field name="ipReg" type="integer" column="ip_reg" nullable="false">
       <options>
         <option name="unsigned">1</option>
@@ -99,12 +99,7 @@
         <option name="default">0</option>
       </options>
     </field>
-    <field name="rating" type="integer" column="user_rating_id" nullable="false">
-      <options>
-        <option name="unsigned"/>
-      </options>
-    </field>
-    <field name="info" type="integer" column="user_info_id" nullable="false">
+    <field name="rating" type="integer" column="user_rating_id" nullable="true">
       <options>
         <option name="unsigned"/>
       </options>
