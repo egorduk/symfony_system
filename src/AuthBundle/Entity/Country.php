@@ -11,9 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Country
 {
+    const COUNTRY_BY_NAME = 'Беларусь';
+    const COUNTRY_BY_CODE = 'BY';
+    const COUNTRY_BY_MOBILE_CODE = '375';
+    const COUNTRY_RU_NAME = 'Россия';
+    const COUNTRY_RU_CODE = 'RU';
+    const COUNTRY_RU_MOBILE_CODE = '7';
+
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -21,23 +26,17 @@ class Country
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="code", type="string", length=255, nullable=false)
+     * @ORM\Column(name="code", type="string", length=3)
      */
     private $code;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="mobile_code", type="string", length=255, nullable=false)
+     * @ORM\Column(name="mobile_code", type="string", length=3)
      */
     private $mobileCode;
 
@@ -46,18 +45,12 @@ class Country
      */
     private $userInfo;
 
+
     public function __construct()
     {
         $this->userInfo = new ArrayCollection();
     }
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return Country
-     */
     public function setName($name)
     {
         $this->name = $name;
@@ -65,23 +58,11 @@ class Country
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Set code
-     *
-     * @param string $code
-     *
-     * @return Country
-     */
     public function setCode($code)
     {
         $this->code = $code;
@@ -89,23 +70,11 @@ class Country
         return $this;
     }
 
-    /**
-     * Get code
-     *
-     * @return string
-     */
     public function getCode()
     {
         return $this->code;
     }
 
-    /**
-     * Set mobileCode
-     *
-     * @param string $mobileCode
-     *
-     * @return Country
-     */
     public function setMobileCode($mobileCode)
     {
         $this->mobileCode = $mobileCode;
@@ -113,29 +82,16 @@ class Country
         return $this;
     }
 
-    /**
-     * Get mobileCode
-     *
-     * @return string
-     */
     public function getMobileCode()
     {
         return $this->mobileCode;
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getNameWithMobileCode()
     {
         return $this->name . ' ' . $this->mobileCode;

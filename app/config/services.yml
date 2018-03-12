@@ -1,3 +1,0 @@
-imports:
-  - { resource: '@AuthBundle/Resources/config/services.yml' }
-  - { resource: '@SecureBundle/Resources/config/services.yml' }

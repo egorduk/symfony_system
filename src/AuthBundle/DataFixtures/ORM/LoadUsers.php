@@ -5,6 +5,7 @@ namespace AuthBundle\DataFixtures\ORM;
 use AuthBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
 class LoadUsers implements ORMFixtureInterface
@@ -18,11 +19,8 @@ class LoadUsers implements ORMFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $this->loadUsers($manager);
-    }
+        $faker = Factory::create();
 
-    private function loadUsers(ObjectManager $manager)
-    {
         $user = new User();
         $user->setLogin('admin');
         $user->setEmail('admin@tut.by');
@@ -42,6 +40,26 @@ class LoadUsers implements ORMFixtureInterface
         $encodedPassword = $this->encoderService->encodePassword($user, 'test');
         $user->setPassword($encodedPassword);
         $manager->persist($user);
+
+        $roles = [
+            User::ROLE_USER,
+            User::ROLE_ADMIN,
+            User::ROLE_MANAGER,
+            User::ROLE_DIRECTOR,
+        ];
+
+        for ($i = 0; $i < 20; $i++) {
+            $user = new User();
+            $user->setLogin($faker->firstName);
+            $user->setEmail($faker->email);
+            $user->setRoles($roles[array_rand($roles)]);
+            $user->setSalt($faker->word);
+            $user->setRegisterConfirm();
+            $user->setIpReg(ip2long($faker->ipv4));
+            $encodedPassword = $this->encoderService->encodePassword($user, 'test');
+            $user->setPassword($encodedPassword);
+            $manager->persist($user);
+        }
 
         $manager->flush();
     }

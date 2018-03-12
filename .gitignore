@@ -5,7 +5,7 @@
 /web/*
 /.idea/*
 /vendor/*
-composer.lock
+#composer.lock
 !/web/js
 !/web/json
 !/web/css
@@ -14,3 +14,4 @@ composer.lock
 !/web/fonts
 /web/uploads/gallery
 /src/AuthBundle/Entity/*.php~
+/app/Resources/uploads/*

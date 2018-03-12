@@ -7,14 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="user_order", uniqueConstraints={@ORM\UniqueConstraint(name="num", columns={"num"})})
+ * @ORM\Table(name="user_order")
  * @ORM\Entity
  */
 class UserOrder
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -22,142 +20,97 @@ class UserOrder
     private $id;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="num", type="integer", nullable=false)
-     */
-    private $num;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="theme", type="string", length=255, nullable=false)
+     * @ORM\Column(name="theme", type="string", length=255)
      */
     private $theme;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="task", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="task", type="text", length=65535)
      */
     private $task;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="originality", type="integer", nullable=false)
+     * @ORM\Column(name="originality", type="integer")
      */
     private $originality;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="count_sheet", type="integer", nullable=false)
+     * @ORM\Column(name="count_sheet", type="integer")
      */
     private $countSheet;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_create", type="datetime", nullable=false)
+     * @ORM\Column(name="date_create", type="datetime")
      */
     private $dateCreate;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_expire", type="datetime", nullable=false)
+     * @ORM\Column(name="date_expire", type="datetime")
      */
     private $dateExpire;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_edit", type="datetime", nullable=false)
+     * @ORM\Column(name="date_edit", type="datetime", nullable=true)
      */
     private $dateEdit;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_complete", type="datetime", nullable=false)
+     * @ORM\Column(name="date_complete", type="datetime", nullable=true)
      */
     private $dateComplete;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_guarantee", type="datetime", nullable=false)
+     * @ORM\Column(name="date_guarantee", type="datetime", nullable=true)
      */
     private $dateGuarantee;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_cancel", type="datetime", nullable=false)
+     * @ORM\Column(name="date_cancel", type="datetime", nullable=true)
      */
     private $dateCancel;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_confirm", type="datetime", nullable=false)
+     * @ORM\Column(name="date_confirm", type="datetime", nullable=true)
      */
     private $dateConfirm;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_show_author", type="boolean", nullable=false)
+     * @ORM\Column(name="is_show_author", type="boolean")
      */
     private $isShownAuthor;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_show_client", type="boolean", nullable=false)
+     * @ORM\Column(name="is_show_client", type="boolean")
      */
     private $isShownClient;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_delay", type="boolean", nullable=false)
+     * @ORM\Column(name="is_delay", type="boolean")
      */
     private $isDelayed;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_hide", type="boolean", nullable=false)
+     * @ORM\Column(name="is_hide", type="boolean")
      */
     private $isHidden;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="files_folder", type="string", length=20, nullable=false)
+     * @ORM\Column(name="files_folder", type="string", length=20)
      */
     private $filesFolder;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="client_comment", type="string", length=100, nullable=false)
+     * @ORM\Column(name="client_comment", type="string", length=100, nullable=true)
      */
     private $clientComment;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="additional_info", type="string", length=255, nullable=false)
+     * @ORM\Column(name="additional_info", type="string", length=255, nullable=true)
      */
     private $additionalInfo;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="client_degree", type="integer", nullable=false)
+     * @ORM\Column(name="client_degree", type="integer", nullable=true)
      */
     private $clientDegree;
 
@@ -195,86 +148,70 @@ class UserOrder
      */
     private $bids;
 
-    private $rawFiles = '';
-    private $remainingTime = '';
+    private $rawFiles = null;
+    private $remaining = null;
+    private $maxBid = 0;
+    private $minBid = 0;
+    private $cntBids = 0;
 
     public function __construct()
     {
+        $this->isDelayed = 0;
+        $this->isHidden = 0;
+        $this->isShownAuthor = 1;
+        $this->isShownClient = 1;
+
         $this->files = new ArrayCollection();
         $this->bids = new ArrayCollection();
     }
 
-    /**
-     * @return mixed
-     */
+
     public function getUser()
     {
         return $this->user;
     }
 
-    /**
-     * @param User $user
-     */
     public function setUser(User $user)
     {
         $this->user = $user;
     }
 
-    /**
-     * @return mixed
-     */
     public function getStatus()
     {
         return $this->status;
     }
 
-    /**
-     * @return mixed
-     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
     public function getType()
     {
         return $this->type;
     }
 
-    /**
-     * @return mixed
-     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
     public function getSubject()
     {
         return $this->subject;
     }
 
-    /**
-     * Set num
-     *
-     * @param integer $num
-     *
-     * @return UserOrder
-     */
-    public function setNum($num)
+    public function setSubject($subject)
     {
-        $this->num = $num;
+        $this->subject = $subject;
 
         return $this;
     }
 
-    /**
-     * Get num
-     *
-     * @return integer
-     */
-    public function getNum()
-    {
-        return $this->num;
-    }
-
-    /**
-     * Set theme
-     *
-     * @param string $theme
-     *
-     * @return UserOrder
-     */
     public function setTheme($theme)
     {
         $this->theme = $theme;
@@ -282,23 +219,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get theme
-     *
-     * @return string
-     */
     public function getTheme()
     {
         return $this->theme;
     }
 
-    /**
-     * Set task
-     *
-     * @param string $task
-     *
-     * @return UserOrder
-     */
     public function setTask($task)
     {
         $this->task = $task;
@@ -306,23 +231,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get task
-     *
-     * @return string
-     */
     public function getTask()
     {
         return $this->task;
     }
 
-    /**
-     * Set originality
-     *
-     * @param integer $originality
-     *
-     * @return UserOrder
-     */
     public function setOriginality($originality)
     {
         $this->originality = $originality;
@@ -330,23 +243,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get originality
-     *
-     * @return integer
-     */
     public function getOriginality()
     {
         return $this->originality;
     }
 
-    /**
-     * Set countSheet
-     *
-     * @param integer $countSheet
-     *
-     * @return UserOrder
-     */
     public function setCountSheet($countSheet)
     {
         $this->countSheet = $countSheet;
@@ -354,23 +255,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get countSheet
-     *
-     * @return integer
-     */
     public function getCountSheet()
     {
         return $this->countSheet;
     }
 
-    /**
-     * Set dateCreate
-     *
-     * @param \DateTime $dateCreate
-     *
-     * @return UserOrder
-     */
     public function setDateCreate($dateCreate)
     {
         $this->dateCreate = $dateCreate;
@@ -378,23 +267,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get dateCreate
-     *
-     * @return \DateTime
-     */
     public function getDateCreate()
     {
         return $this->dateCreate;
     }
 
-    /**
-     * Set dateExpire
-     *
-     * @param \DateTime $dateExpire
-     *
-     * @return UserOrder
-     */
     public function setDateExpire($dateExpire)
     {
         $this->dateExpire = $dateExpire;
@@ -402,23 +279,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get dateExpire
-     *
-     * @return \DateTime
-     */
     public function getDateExpire()
     {
         return $this->dateExpire;
     }
 
-    /**
-     * Set dateEdit
-     *
-     * @param \DateTime $dateEdit
-     *
-     * @return UserOrder
-     */
     public function setDateEdit($dateEdit)
     {
         $this->dateEdit = $dateEdit;
@@ -426,23 +291,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get dateEdit
-     *
-     * @return \DateTime
-     */
     public function getDateEdit()
     {
         return $this->dateEdit;
     }
 
-    /**
-     * Set dateComplete
-     *
-     * @param \DateTime $dateComplete
-     *
-     * @return UserOrder
-     */
     public function setDateComplete($dateComplete)
     {
         $this->dateComplete = $dateComplete;
@@ -450,23 +303,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get dateComplete
-     *
-     * @return \DateTime
-     */
     public function getDateComplete()
     {
         return $this->dateComplete;
     }
 
-    /**
-     * Set dateGuarantee
-     *
-     * @param \DateTime $dateGuarantee
-     *
-     * @return UserOrder
-     */
     public function setDateGuarantee($dateGuarantee)
     {
         $this->dateGuarantee = $dateGuarantee;
@@ -474,23 +315,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get dateGuarantee
-     *
-     * @return \DateTime
-     */
     public function getDateGuarantee()
     {
         return $this->dateGuarantee;
     }
 
-    /**
-     * Set dateCancel
-     *
-     * @param \DateTime $dateCancel
-     *
-     * @return UserOrder
-     */
     public function setDateCancel($dateCancel)
     {
         $this->dateCancel = $dateCancel;
@@ -498,23 +327,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get dateCancel
-     *
-     * @return \DateTime
-     */
     public function getDateCancel()
     {
         return $this->dateCancel;
     }
 
-    /**
-     * Set dateConfirm
-     *
-     * @param \DateTime $dateConfirm
-     *
-     * @return UserOrder
-     */
     public function setDateConfirm($dateConfirm)
     {
         $this->dateConfirm = $dateConfirm;
@@ -522,23 +339,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get dateConfirm
-     *
-     * @return \DateTime
-     */
     public function getDateConfirm()
     {
         return $this->dateConfirm;
     }
 
-    /**
-     * Set isShowAuthor
-     *
-     * @param boolean $isShowAuthor
-     *
-     * @return UserOrder
-     */
     public function setIsShownAuthor($isShowAuthor)
     {
         $this->isShownAuthor = $isShowAuthor;
@@ -546,23 +351,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get isShowAuthor
-     *
-     * @return boolean
-     */
     public function getIsShownAuthor()
     {
         return $this->isShownAuthor;
     }
 
-    /**
-     * Set isShowClient
-     *
-     * @param boolean $isShowClient
-     *
-     * @return UserOrder
-     */
     public function setIsShownClient($isShowClient)
     {
         $this->isShownClient = $isShowClient;
@@ -570,23 +363,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get isShowClient
-     *
-     * @return boolean
-     */
     public function getIsShownClient()
     {
         return $this->isShownClient;
     }
 
-    /**
-     * Set isDelay
-     *
-     * @param boolean $isDelay
-     *
-     * @return UserOrder
-     */
     public function setIsDelayed($isDelay)
     {
         $this->isDelayed = $isDelay;
@@ -594,23 +375,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get isDelay
-     *
-     * @return boolean
-     */
     public function getIsDelayed()
     {
         return $this->isDelayed;
     }
 
-    /**
-     * Set filesFolder
-     *
-     * @param string $filesFolder
-     *
-     * @return UserOrder
-     */
     public function setFilesFolder($filesFolder)
     {
         $this->filesFolder = $filesFolder;
@@ -618,23 +387,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get filesFolder
-     *
-     * @return string
-     */
     public function getFilesFolder()
     {
         return $this->filesFolder;
     }
 
-    /**
-     * Set clientComment
-     *
-     * @param string $clientComment
-     *
-     * @return UserOrder
-     */
     public function setClientComment($clientComment)
     {
         $this->clientComment = $clientComment;
@@ -642,23 +399,11 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get clientComment
-     *
-     * @return string
-     */
     public function getClientComment()
     {
         return $this->clientComment;
     }
 
-    /**
-     * Set clientDegree
-     *
-     * @param integer $clientDegree
-     *
-     * @return UserOrder
-     */
     public function setClientDegree($clientDegree)
     {
         $this->clientDegree = $clientDegree;
@@ -666,61 +411,36 @@ class UserOrder
         return $this;
     }
 
-    /**
-     * Get clientDegree
-     *
-     * @return integer
-     */
     public function getClientDegree()
     {
         return $this->clientDegree;
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return boolean
-     */
     public function isIsHidden()
     {
         return $this->isHidden;
     }
 
-    /**
-     * @param boolean $isHidden
-     */
     public function setIsHidden($isHidden)
     {
         $this->isHidden = $isHidden;
     }
 
-    /**
-     * @return string
-     */
     public function getAdditionalInfo()
     {
         return $this->additionalInfo;
     }
 
-    /**
-     * @param string $additionalInfo
-     */
     public function setAdditionalInfo($additionalInfo)
     {
         $this->additionalInfo = $additionalInfo;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\Collection
-     */
     public function getFiles()
     {
         return $this->files;
@@ -731,25 +451,16 @@ class UserOrder
         $this->files = $files;
     }
 
-    /**
-     * @param array $files
-     */
     public function setRawFiles($files)
     {
         $this->rawFiles = $files;
     }
 
-    /**
-     * @return array
-     */
     public function getRawFiles()
     {
         return $this->rawFiles;
     }
 
-    /**
-     * @return \Doctrine\Common\Collections\Collection
-     */
     public function getBids()
     {
         return $this->bids;
@@ -760,19 +471,43 @@ class UserOrder
         $this->bids = $bids;
     }
 
-    /**
-     * @return string
-     */
-    public function getRemainingTime()
+    public function getRemaining()
     {
-        return $this->remainingTime;
+        return $this->remaining;
     }
 
-    /**
-     * @param string $remainingTime
-     */
-    public function setRemainingTime($remainingTime)
+    public function setRemaining($remaining)
     {
-        $this->remainingTime = $remainingTime;
+        $this->remaining = $remaining;
+    }
+
+    public function getMaxBid()
+    {
+        return $this->maxBid;
+    }
+
+    public function setMaxBid($maxBid)
+    {
+        $this->maxBid = $maxBid;
+    }
+
+    public function getMinBid()
+    {
+        return $this->minBid;
+    }
+
+    public function setMinBid($minBid)
+    {
+        $this->minBid = $minBid;
+    }
+
+    public function getCntBids()
+    {
+        return $this->cntBids;
+    }
+
+    public function setCntBids($cntBids)
+    {
+        $this->cntBids = $cntBids;
     }
 }

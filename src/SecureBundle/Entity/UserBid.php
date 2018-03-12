@@ -3,6 +3,7 @@
 namespace SecureBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="user_bid")
@@ -11,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 class UserBid
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -20,74 +19,63 @@ class UserBid
     private $id;
 
     /**
-     * @var integer
+     * @ORM\Column(name="sum", type="integer")
      *
-     * @ORM\Column(name="sum", type="integer", nullable=false)
+     * @Assert\NotBlank()
+     * @Assert\Length(max="7")
+     * @Assert\Type("digit")
      */
     private $sum;
 
     /**
-     * @var integer
+     * @ORM\Column(name="day", type="integer")
      *
-     * @ORM\Column(name="day", type="integer", nullable=false)
+     * @Assert\Length(max="3")
+     * @Assert\Type("digit")
      */
-    private $day = 0;
+    private $day;
 
     /**
-     * @var string
+     * @ORM\Column(name="comment", type="string", length=50, nullable=true)
      *
-     * @ORM\Column(name="comment", type="string", length=50, nullable=false)
+     * @Assert\Length(max="50")
      */
     private $comment;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_bid", type="datetime", nullable=false)
+     * @ORM\Column(name="date_bid", type="datetime")
      */
     private $dateBid;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_client_date", type="boolean", nullable=false)
+     * @ORM\Column(name="is_client_date", type="boolean")
      */
-    private $isClientDate = 0;
+    private $isClientDate;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_show_author", type="boolean", nullable=false)
+     * @ORM\Column(name="is_show_author", type="boolean")
      */
-    private $isShowAuthor = 1;
+    private $isShowAuthor;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_show_client", type="boolean", nullable=false)
+     * @ORM\Column(name="is_show_client", type="boolean")
      */
-    private $isShowClient = 1;
+    private $isShowClient;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_select_client", type="boolean", nullable=false)
+     * @ORM\Column(name="is_select_client", type="boolean")
      */
-    private $isSelectClient = 0;
+    private $isSelectClient;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_confirm_author", type="boolean", nullable=false)
+     * @ORM\Column(name="is_confirm_author", type="boolean")
      */
-    private $isConfirmAuthor = 0;
+    private $isConfirmAuthor;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_confirm_fail", type="boolean", nullable=false)
+     * @ORM\Column(name="is_confirm_fail", type="boolean")
      */
-    private $isConfirmFail = 0;
+    private $isConfirmFail;
 
     /**
      * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="bids")
@@ -101,18 +89,19 @@ class UserBid
      */
     private $order;
 
+
     public function __construct()
     {
         $this->dateBid = new \DateTime();
+        $this->isConfirmFail = 0;
+        $this->isConfirmAuthor = 0;
+        $this->isSelectClient = 0;
+        $this->isClientDate = 0;
+        $this->day = 0;
+        $this->isShowAuthor = 1;
+        $this->isShowClient = 1;
     }
 
-    /**
-     * Set sum
-     *
-     * @param integer $sum
-     *
-     * @return UserBid
-     */
     public function setSum($sum)
     {
         $this->sum = $sum;
@@ -120,23 +109,11 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get sum
-     *
-     * @return integer
-     */
     public function getSum()
     {
         return $this->sum;
     }
 
-    /**
-     * Set day
-     *
-     * @param integer $day
-     *
-     * @return UserBid
-     */
     public function setDay($day)
     {
         $this->day = $day;
@@ -144,23 +121,11 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get day
-     *
-     * @return integer
-     */
     public function getDay()
     {
         return $this->day;
     }
 
-    /**
-     * Set comment
-     *
-     * @param string $comment
-     *
-     * @return UserBid
-     */
     public function setComment($comment)
     {
         $this->comment = $comment;
@@ -168,23 +133,11 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get comment
-     *
-     * @return string
-     */
     public function getComment()
     {
         return $this->comment;
     }
 
-    /**
-     * Set dateBid
-     *
-     * @param \DateTime $dateBid
-     *
-     * @return UserBid
-     */
     public function setDateBid($dateBid)
     {
         $this->dateBid = $dateBid;
@@ -192,23 +145,11 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get dateBid
-     *
-     * @return \DateTime
-     */
     public function getDateBid()
     {
         return $this->dateBid;
     }
 
-    /**
-     * Set isClientDate
-     *
-     * @param boolean $isClientDate
-     *
-     * @return UserBid
-     */
     public function setIsClientDate($isClientDate)
     {
         $this->isClientDate = $isClientDate;
@@ -216,23 +157,11 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get isClientDate
-     *
-     * @return boolean
-     */
     public function getIsClientDate()
     {
         return $this->isClientDate;
     }
 
-    /**
-     * Set isShowAuthor
-     *
-     * @param boolean $isShowAuthor
-     *
-     * @return UserBid
-     */
     public function setIsShowAuthor($isShowAuthor)
     {
         $this->isShowAuthor = $isShowAuthor;
@@ -240,23 +169,11 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get isShowAuthor
-     *
-     * @return boolean
-     */
     public function getIsShowAuthor()
     {
         return $this->isShowAuthor;
     }
 
-    /**
-     * Set isShowClient
-     *
-     * @param boolean $isShowClient
-     *
-     * @return UserBid
-     */
     public function setIsShowClient($isShowClient)
     {
         $this->isShowClient = $isShowClient;
@@ -264,23 +181,11 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get isShowClient
-     *
-     * @return boolean
-     */
     public function getIsShowClient()
     {
         return $this->isShowClient;
     }
 
-    /**
-     * Set isSelectClient
-     *
-     * @param boolean $isSelectClient
-     *
-     * @return UserBid
-     */
     public function setIsSelectClient($isSelectClient)
     {
         $this->isSelectClient = $isSelectClient;
@@ -288,23 +193,11 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get isSelectClient
-     *
-     * @return boolean
-     */
     public function getIsSelectClient()
     {
         return $this->isSelectClient;
     }
 
-    /**
-     * Set isConfirmAuthor
-     *
-     * @param boolean $isConfirmAuthor
-     *
-     * @return UserBid
-     */
     public function setIsConfirmAuthor($isConfirmAuthor)
     {
         $this->isConfirmAuthor = $isConfirmAuthor;
@@ -312,23 +205,11 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get isConfirmAuthor
-     *
-     * @return boolean
-     */
     public function getIsConfirmAuthor()
     {
         return $this->isConfirmAuthor;
     }
 
-    /**
-     * Set isConfirmFail
-     *
-     * @param boolean $isConfirmFail
-     *
-     * @return UserBid
-     */
     public function setIsConfirmFail($isConfirmFail)
     {
         $this->isConfirmFail = $isConfirmFail;
@@ -336,53 +217,31 @@ class UserBid
         return $this;
     }
 
-    /**
-     * Get isConfirmFail
-     *
-     * @return boolean
-     */
     public function getIsConfirmFail()
     {
         return $this->isConfirmFail;
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUser()
     {
         return $this->user;
     }
 
-    /**
-     * @param mixed $user
-     */
     public function setUser($user)
     {
         $this->user = $user;
     }
 
-    /**
-     * @return mixed
-     */
     public function getOrder()
     {
         return $this->order;
     }
 
-    /**
-     * @param mixed $order
-     */
     public function setOrder($order)
     {
         $this->order = $order;

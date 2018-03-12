@@ -1,7 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: services.yml }
+    - { resource: repositories.yml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -13,6 +13,10 @@ assetic:
     use_controller: '%kernel.debug%'
     filters:
         cssrewrite: ~
+
+services:
+    db: '@doctrine.dbal.default_connection'
+    em: '@doctrine.orm.entity_manager'
 
 web_profiler:
     toolbar: true
@@ -71,8 +75,10 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
-        naming_strategy: doctrine.orm.naming_strategy.underscore
-        auto_mapping: true
+        entity_managers:
+            default:
+                repository_factory: secure.service.repository_factory
+                auto_mapping: true
 
 # Swiftmailer Configuration
 swiftmailer:

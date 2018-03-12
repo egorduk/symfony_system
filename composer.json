@@ -52,7 +52,8 @@
     "doctrine/dbal": "^2.5",
     "doctrine/orm": "^2.5",
     "doctrine/doctrine-bundle": "^1.8",
-    "doctrine/doctrine-fixtures-bundle": "^3.0"
+    "doctrine/doctrine-fixtures-bundle": "^3.0",
+    "fzaninotto/faker": "^1.7"
   },
   "require-dev": {
     "cache/integration-tests": "dev-master",

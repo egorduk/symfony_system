@@ -1,24 +1,21 @@
 <?php
 
-namespace SecureBundle\Service\Helper;
+namespace SecureBundle\Service;
 
 use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\UserBid;
 use SecureBundle\Entity\UserOrder;
 
-class BidHelper
+class BidService
 {
     private $em;
-    private $dth;
+    private $dateTimeService;
 
-    /**
-     * @param EntityManager $em
-     */
-    public function __construct(EntityManager $em, DateTimeHelper $dth)
+    public function __construct(EntityManager $em, DateTimeService $dateTimeService)
     {
         $this->em = $em;
-        $this->dth = $dth;
+        $this->dateTimeService = $dateTimeService;
     }
 
     /**
@@ -38,8 +35,10 @@ class BidHelper
             ->andWhere('ub.isShowAuthor = 1')
             ->andWhere('ub.isShowClient = 1')
             ->groupBy('uo.id')
-            ->setParameter('orderId', $orderId)
-            ->setParameter('now', new \DateTime())
+            ->setParameters([
+                'orderId' => $orderId,
+                'now' => new \DateTime(),
+            ])
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -61,21 +60,16 @@ class BidHelper
             ->getResult();
     }
 
-    /**
-     * @param UserBid[] $bids
-     *
-     * @return UserBid[]
-     */
-    public function setRemainingTime($bids)
+    /*public function setRemainingTime($bids)
     {
         foreach ($bids as $key => $bid) {
             $dateExpire = $bid->getOrder()->getDateExpire();
-            $diff = $this->dth->getDiffBetweenDates($dateExpire);
+            $diff = $this->dateTimeService->getDiffBetweenDates($dateExpire);
             $bid->getOrder()->setRemainingTime($diff->format('%d дн. %h ч. %i мин.'));
         }
 
         return $bids;
-    }
+    }*/
 
     public function getUserBids(User $user, UserOrder $order)
     {
@@ -93,28 +87,34 @@ class BidHelper
     }
 
     /**
-     * @param array $formData
+     * @param UserBid $bid
      * @param UserOrder $order
      * @param User $user
+     *
+     * @return bool
      */
-    public function createAuthorBid($formData, UserOrder $order, User $user)
+    public function createBid(UserBid $bid, UserOrder $order, User $user)
     {
-        $sum = $formData['fieldSum'];
-        $sum = str_replace(' ', '', $sum);
-        $comment = $formData['fieldComment'];
-        $day = $formData['fieldDay'];
-        $isClientDate = $formData['isClientDate'];
+        $bid->setUser($user);
+        $bid->setOrder($order);
 
-        $userBid = new UserBid();
-        $userBid->setUser($user);
-        $userBid->setOrder($order);
-        $userBid->setSum($sum);
+        $sum = str_replace(' ', '', $bid->getSum());
+        $bid->setSum($sum);
 
-        (!is_null($comment)) ? $userBid->setComment($comment) : $userBid->setComment('');
+        $day = $bid->getDay();
+        $isClientDate = $bid->getIsClientDate();
 
-        (!is_null($day) && !$isClientDate) ? $userBid->setDay($day) : $userBid->setIsClientDate(1);
+        if (is_null($day) && $isClientDate) {
+            $day = $this->dateTimeService
+                ->getDiffBetweenDatesInDays($order->getDateExpire(), $order->getDateCreate());
+            $bid->setIsClientDate(1);
+        }
 
-        $this->em->persist($userBid);
+        $bid->setDay($day);
+
+        $this->em->persist($bid);
         $this->em->flush();
+
+        return true;
     }
 }

@@ -16,10 +16,14 @@ parameters:
     mail_sender: egorduk@yandex.com
     mail_title: Study
     web_dir: '%kernel.root_dir%/../web'
-    uploads_dir: '%kernel.root_dir%/../web/uploads'
-    uploads_attachments_orders_dir: '%kernel.root_dir%/../web/uploads/attachments/orders'
-    uploads_avatars_dir: '%kernel.root_dir%/../web/uploads/avatars'
+    #uploads_dir: '%kernel.root_dir%/../web/uploads'
+
+    #uploads_avatars_dir: '%kernel.root_dir%/../web/uploads/avatars'
     mail_options:
         mail_sender: '%mail_sender%'
         mail_title: '%mail_title%'
         confirm_auth_path: '%confirm_auth_path%'
+    file_upload_dir: '%kernel.root_dir%/Resources/uploads'
+    file_upload_dir_fixtures: '%kernel.root_dir%/Resources/uploads/fixtures'
+    #file_upload_dir_order_attachments: '%kernel.root_dir%/Resources/uploads/attachments/orders'
+    file_upload_dir_order_attachments: '%kernel.root_dir%/Resources/uploads'

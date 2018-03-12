@@ -1,73 +1,126 @@
-{#{% extends "TwigBundle::layout.html.twig" %}#}
 {% extends "::base.html.twig" %}
 
-{% block title %}{% endblock %}
 {% block head %}
     {% block stylesheets %}
         <!-- <link href="{{ asset('bundles/css/window.css') }}" rel="stylesheet" />
         <link href="{{ asset('bundles/css/select2.css') }}" rel="stylesheet" />-->
-        {#<link href="{{ asset('bundles/css/fontello.css') }}" rel="stylesheet" charset="UTF-8"/>#}
-        {# <link href="{{ asset('bundles/css/style_orders.css') }}" rel="stylesheet">
-         <link href="{{ asset('bundles/css/style_order.css') }}" rel="stylesheet">#}
-        {#<link href="{{ asset('css/main.css') }}" rel="stylesheet" charset="UTF-8"/>#}
-        {% stylesheets 'css/main.css' filter='cssrewrite' %}
-        <link rel="stylesheet" href="{{ asset_url }}" />
-        {% endstylesheets %}
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.0/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.css">
-        {{ parent() }}
+        {#<link href="{{ asset('bundles/css/fontello.css') }}" rel="stylesheet" charset="UTF-8"/>
+        <link href="{{ asset('bundles/css/style_orders.css') }}" rel="stylesheet">
+        <link href="{{ asset('bundles/css/style_order.css') }}" rel="stylesheet">#}
     {% endblock %}
-    {% block javascripts_head %}
+    {% block javascripts %}
+      {#  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+        <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.0.0.js"></script>#}
+        {#<script type="text/javascript" src="{{ asset('bundles/js/bootstrap.js') }}"></script>#}
         <!--<script type="text/javascript" src="{{ asset('bundles/js/jquery-2.1.0.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/js/jquery-ui-1.10.4.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/js/jquery-migrate-1.0.0.js') }}"></script>-->
         <!--<script type="text/javascript" src="{{ asset('bundles/js/tinymce/tiny_mce.js') }}"></script>
         <script type="text/javascript" src="{{ asset('bundles/js/select2.min.js') }}"></script>-->
-
-        <script src="https://code.jquery.com/jquery-3.1.1.js" integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA=" crossorigin="anonymous"></script>
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/v/bs-3.3.7/jq-2.2.4/jszip-2.5.0/pdfmake-0.1.18/dt-1.10.13/af-2.1.3/b-1.2.4/b-colvis-1.2.4/b-flash-1.2.4/b-html5-1.2.4/b-print-1.2.4/cr-1.3.2/fc-3.2.2/fh-3.1.2/kt-2.2.0/r-2.1.0/rr-1.2.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>
-        <script type="text/javascript" charset="utf8" src="{{ asset('js/DataTable/highlight.js') }}"></script>
-        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
-        <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-        <script type="text/javascript" charset="utf8" src="{{ asset('js/spinner.js') }}"></script>
     {% endblock %}
 {% endblock %}
+
+{% block title '' %}
+
 {% block header %}
     <div class="row">
-        <div class="col-md-12" style="height:30px">
-            {% for flash_message in app.session.flashBag.get('notice') %}
-                <div class="flash-notice">
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            {% for flash_message in app.session.flashBag.get('success') %}
-                <div class="flash-success">
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
-            {% for flash_message in app.session.flashBag.get('error') %}
-                <div class="flash-error">
-                    {{ flash_message }}
-                </div>
-            {% endfor %}
+        <div class="col-md-12" style="height:10px">
             <p align="center"></p>
         </div>
     </div>
 {% endblock %}
+
 {% block body %}
     <div class="row">
-        {{ include('@Secure/Author/menu.html.twig') }}
-    </div>
-    <div class="row">
-        {% block content %}{% endblock %}
-    </div>
-{% endblock %}
-    {% block footer %}
-        <div class="row">
-            <div class="col-md-12" style="height:50px">
-                <p align="center"></p>
+        <div class="col-md-2">
+            <div class="" id="">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" href="{{ path('secure_user_homepage') }}">
+                            <i class="icon-home"></i> Домой
+                        </a>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#leftMenu" href="#collapseTwo">
+                            <i class="icon-user-6"></i> Профиль
+                        </a>
+                    </div>
+                    <div id="collapseTwo" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <ul>
+                                <li>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_profile', {'type': 'view'}) }}">Просмотр</a>
+                                </li>
+                                <li>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_profile', {'type': 'edit'}) }}">Изменение
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#leftMenu" href="#collapseThree">
+                            <i class="icon-docs"></i> Заказы
+                        </a>
+                    </div>
+                    <div id="collapseThree" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <ul>
+                                <li>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'new'}) }}">Новые</a>
+                                </li>
+                                <li>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'bid'}) }}">Оцененные</a>
+                                </li>
+                                <li>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'work'}) }}">На выполнении</a>
+                                </li>
+                                <li>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'finish'}) }}">Завершенные</a>
+                                </li>
+                                <li>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'favorite'}) }}">Избранные</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle"href="{{ path('secure_user_settings', {'type': 'view'}) }}">
+                            <i class="icon-cog"></i> Настройки
+                        </a>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" href="{{ path('logout') }}">
+                            <i class="icon-logout-1"></i> Выход
+                        </a>
+                    </div>
+                </div>
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" href="">
+                            <i class="icon-help"></i> Помощь
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    {% endblock %}
-    {% block javascripts_footer %}
-        {#<script type="application/javascript" src="{{ asset('js/app.js') }}"></script>#}
-    {% endblock %}
+        <div class="col-md-10">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+    <div class="">
+        <div class="col-md-12" style="height:100px">
+            <p align="center"></p>
+        </div>
+    </div>
+{% endblock %}

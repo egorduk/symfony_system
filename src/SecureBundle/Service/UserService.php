@@ -1,13 +1,13 @@
 <?php
 
-namespace SecureBundle\Service\Helper;
+namespace SecureBundle\Service;
 
 use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
 
-class UserHelper
+class UserService
 {
     private $em;
     private $webDir;

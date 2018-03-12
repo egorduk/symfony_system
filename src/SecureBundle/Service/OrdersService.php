@@ -1,21 +1,15 @@
 <?php
 
-namespace SecureBundle\Service\Helper;
+namespace SecureBundle\Service;
 
-use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
-use SecureBundle\Entity\OrderFile;
 use SecureBundle\Entity\StatusOrder;
-use SecureBundle\Entity\SubjectOrder;
 use SecureBundle\Entity\UserOrder;
 
-class OrdersHelper
+class OrdersService
 {
     private $em;
 
-    /**
-     * @param EntityManager $em
-     */
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
@@ -32,11 +26,16 @@ class OrdersHelper
 
         return $qb->select('uo')
             ->from(UserOrder::class, 'uo')
-            //->innerJoin(StatusOrder::class, 'so', 'WITH', 'uo.status = so')
+            ->innerJoin(StatusOrder::class, 'so', 'WITH', 'uo.status = so')
             //->innerJoin(SubjectOrder::class, 'sj', 'WITH', 'uo.subject = sj')
             //->innerJoin(User::class, 'u', 'WITH', 'uo.user = u')
             //->leftJoin(OrderFile::class, 'f', 'WITH', 'f.order = uo')
+            ->where('so.code = :status')
+            ->setParameters(['status' => StatusOrder::STATUS_ORDER_NEW_CODE])
             ->orderBy('uo.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+
        /* return $qb->select('uo')
             ->from(StatusOrder::class, 'uo')*/
             //->innerJoin(StatusOrder::class, 'so', 'WITH', 'uo.status = so')
@@ -62,7 +61,7 @@ class OrdersHelper
             //->setParameter('code', array_values(array('sa')))
             //->setFirstResult($firstRowIndex)
             //->setMaxResults($rowsPerPage)
-            ->getQuery()
-            ->getResult();
+            //->getQuery()
+            //->getResult();
     }
 }

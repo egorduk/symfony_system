@@ -8,14 +8,6 @@ secure_new_orders:
     path: secure/orders/new
     defaults: { _controller: SecureBundle:Order:newOrders }
 
-secure_order_page:
-    path: secure/order/{orderId}
-    defaults: { _controller: SecureBundle:Order:orderPage }
-    requirements:
-        orderId: '\d+'
-    options:
-        expose: true
-
 secure_get_order_full_info:
     path: secure/order/fullInfo/{orderId}
     defaults: { _controller: SecureBundle:Order:getOrderFullInfo }

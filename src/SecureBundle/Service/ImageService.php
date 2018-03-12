@@ -1,6 +1,6 @@
 <?php
 
-namespace SecureBundle\Service\Helper;
+namespace SecureBundle\Service;
 
 use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -8,7 +8,7 @@ use SecureBundle\Entity\OrderFile;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 
-class ImageHelper
+class ImageService
 {
     private $width = 0;
     private $height = 0;
@@ -18,7 +18,7 @@ class ImageHelper
      * @param EntityManager $em
      * @param Router $router
      */
-    public function __construct(EntityManager $em, Router $router, UserHelper $uh)
+    public function __construct(EntityManager $em, Router $router, UserService $uh)
     {
         $this->em = $em;
         $this->router = $router;

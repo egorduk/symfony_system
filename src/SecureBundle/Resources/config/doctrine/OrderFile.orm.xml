@@ -9,13 +9,21 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="dateUpload" type="datetime" column="date_upload" nullable="false"/>
+    <field name="dateUpload" type="datetime" column="date_upload" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
     <field name="size" type="string" column="size" length="10" nullable="false">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="isDelete" type="boolean" column="is_delete" nullable="false"/>
+    <field name="isDelete" type="boolean" column="is_delete" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
     <many-to-one field="order" target-entity="SecureBundle\Entity\UserOrder" inversed-by="files">
       <join-column name="order_id" referenced-column-name="id" />
     </many-to-one>

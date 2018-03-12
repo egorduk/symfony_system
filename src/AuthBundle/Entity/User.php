@@ -83,8 +83,6 @@ class User implements AdvancedUserInterface, \Serializable
     private $dateUploadAvatar;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="ip_reg", type="integer")
      */
     private $ipReg;

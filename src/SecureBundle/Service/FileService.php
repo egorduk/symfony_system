@@ -1,12 +1,12 @@
 <?php
 
-namespace SecureBundle\Service\Helper;
+namespace SecureBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\OrderFile;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
-class FileHelper
+class FileService
 {
     protected $errorMessages = [
         1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
@@ -56,8 +56,10 @@ class FileHelper
             ->from(OrderFile::class, 'f')
             ->where('f.id = :fileId')
             ->andWhere('f.isDelete = :isDelete')
-            ->setParameter('fileId', $fileId)
-            ->setParameter('isDelete', 0)
+            ->setParameters([
+                'fileId' => $fileId,
+                'isDelete' => 0,
+            ])
             ->getQuery()
             ->getOneOrNullResult();
     }

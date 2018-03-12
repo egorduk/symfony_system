@@ -1,0 +1,72 @@
+{% extends 'UserBundle::layout.html.twig' %}
+
+{% block title %}{{ 'Просмотр заказа' | trans }}{% endblock %}
+    {% block content %}
+        <div class="col-md-6 col-md-offset-3">
+            <div id="block-about-order">
+                <ul>
+                    <li class="block-num">Номер заказа: {{ order.id }}</li>
+                    <li class="block-theme">Тема работы: {{ order.theme }}</li>
+                    <li class="block-task">Задание: {{ order.task }}</li>
+                    <li>Объем заказа: {{ order.countsheet }} стр.</li>
+                    <li>Оригинальность заказа: {{ order.originality }}%</li>
+                    <li>Предмет: {{ order.subject.name }}</li>
+                    <li>Тип заказа: {{ order.type.name }}</li>
+                    <li>Статус заказа: {{ order.status.name }}</li>
+                    <li>Дата создания: {{ order.datecreate.format('d.m.Y H:i') }}</li>
+                    <li>Выполнение до: {{ order.dateexpire.format('d.m.Y H:i') }}</li>
+                    <li>Заказчик: <div>{{ order.user.rawavatar | raw }}</div>{{ order.user.login }}</li>
+                </ul>
+            </div>
+            <div>
+                {% include 'UserBundle:User/partials:orderFiles.html.twig' with {'order': order} %}
+            </div>
+            <div>
+                {% include 'UserBundle:User/partials:orderBids.html.twig' with {'bidsData': bidsData} %}
+            </div>
+        </div>
+        <div>
+            {% include 'UserBundle:User/partials:orderBidForm.html.twig' with {'formBid': formBid} %}
+        </div>
+        {#     {% if bidsData.bids is not empty %}
+              <div class="row">
+                 <div class="col-md-4 col-md-offset-4">
+                     <p>История ставок</p>
+                     <table class="table table-striped table-bordered table-responsive" id="table-bids">
+                         <thead>
+                         <tr>
+                             <th>#</th>
+                             <th>Сумма</th>
+                             <th>Дней</th>
+                             <th>Комментарий</th>
+                             <th>Дата оценки</th>
+                         </tr>
+                         </thead>
+                         <tbody>
+                         {% for key, bid in bidsData.bids %}
+                             <tr {% if key == 0 %} class="success" {% endif %}>
+                                 <td>{{ key + 1 }}</td>
+                                 <td>{{ bid.sum }}</td>
+                                 <td>
+                                     {{ bid.day }}
+                                     {% if bid.isClientDate == 1%} -
+                                         {{ 'в срок заказчика'|trans }}
+                                     {% endif %}
+                                 </td>
+                                 <td>{{ bid.comment }}</td>
+                                 <td>{{ bid.dateBid|date('d.m.Y H:i') }}</td>
+                             </tr>
+                         {% endfor %}
+                         </tbody>
+                     </table>
+                 </div>
+              </div>
+             {% endif %}#}
+    {% endblock %}
+
+{#
+    {% block javascripts_footer %}
+        {{ parent() }}
+        <script type="application/javascript" src="{{ asset('js/order.js') }}"></script>
+        <script type="application/javascript" src="{{ asset('js/price-format.js') }}"></script>
+    {% endblock %}#}

@@ -3,6 +3,7 @@
 namespace SecureBundle\Controller;
 
 use AuthBundle\Entity\User;
+use SecureBundle\Entity\OrderFile;
 use SecureBundle\Form\ProfileForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SecureController extends Controller
 {
@@ -42,18 +44,18 @@ class SecureController extends Controller
     {
         $filePath = '';
         $filename = '';
-        $fileHelper = $this->get('secure.file_helper');
 
-        if ($type === 'attachments') {
-            $file = $fileHelper->getFileById($fileId);
+        if ($type === OrderFile::ATTACHMENTS_TYPE) {
+            $file = $this->get('secure.service.files')->getFileById($fileId);
             $filename = $file->getName();
-            $orderId = $file->getOrder()->getId();
-            $uploadsOrdersDir = $this->getParameter('uploads_attachments_orders_dir');
-            $filePath = $uploadsOrdersDir . DIRECTORY_SEPARATOR . $orderId . DIRECTORY_SEPARATOR . $filename;
+            $uploadsOrdersDir = $this->getParameter('file_upload_dir_order_attachments');
+            //$orderId = $file->getOrder()->getId();
+            //$filePath = $uploadsOrdersDir . DIRECTORY_SEPARATOR . $orderId . DIRECTORY_SEPARATOR . $filename;
+            $filePath = $uploadsOrdersDir . DIRECTORY_SEPARATOR . $filename;
         }
 
         if (!file_exists($filePath)) {
-            throw $this->createNotFoundException();
+            throw new NotFoundHttpException();
         }
 
         $response = new BinaryFileResponse($filePath);

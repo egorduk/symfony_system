@@ -14,7 +14,7 @@
         <option name="unsigned"/>
       </options>
     </field>
-    <field name="comment" type="string" column="comment" length="50" nullable="false">
+    <field name="comment" type="string" column="comment" length="50" nullable="true">
       <options>
         <option name="fixed"/>
       </options>

@@ -31,11 +31,7 @@
     <field name="dateConfirmRecovery" type="datetime" column="date_confirm_recovery" nullable="true"/>
     <field name="dateConfirmReg" type="datetime" column="date_confirm_reg" nullable="true"/>
     <field name="dateUploadAvatar" type="datetime" column="date_upload_avatar" nullable="true"/>
-    <field name="ipReg" type="integer" column="ip_reg" nullable="false">
-      <options>
-        <option name="unsigned">1</option>
-      </options>
-    </field>
+    <field name="ipReg" type="integer" column="ip_reg" nullable="false"/>
     <field name="salt" type="string" column="salt" length="64" nullable="false">
       <options>
         <option name="fixed"/>

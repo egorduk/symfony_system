@@ -10,9 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class OrderFile
 {
+    const ATTACHMENTS_TYPE = 'attachments';
+
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -20,30 +20,22 @@ class OrderFile
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="name", type="string", length=50)
      */
     private $name;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="date_upload", type="datetime", nullable=false)
+     * @ORM\Column(name="date_upload", type="datetime")
      */
     private $dateUpload;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="size", type="string", length=10, nullable=false)
+     * @ORM\Column(name="size", type="string", length=10)
      */
     private $size;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="is_delete", type="boolean", nullable=false)
+     * @ORM\Column(name="is_delete", type="boolean")
      */
     private $isDelete;
 
@@ -59,13 +51,13 @@ class OrderFile
      */
     private $user;
 
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return OrderFile
-     */
+
+    public function __construct()
+    {
+        $this->isDelete = 0;
+        $this->dateUpload = new \DateTime();
+    }
+
     public function setName($name)
     {
         $this->name = $name;
@@ -73,23 +65,11 @@ class OrderFile
         return $this;
     }
 
-    /**
-     * Get name
-     *
-     * @return string
-     */
     public function getName()
     {
         return $this->name;
     }
 
-    /**
-     * Set dateUpload
-     *
-     * @param \DateTime $dateUpload
-     *
-     * @return OrderFile
-     */
     public function setDateUpload($dateUpload)
     {
         $this->dateUpload = $dateUpload;
@@ -97,23 +77,11 @@ class OrderFile
         return $this;
     }
 
-    /**
-     * Get dateUpload
-     *
-     * @return \DateTime
-     */
     public function getDateUpload()
     {
         return $this->dateUpload;
     }
 
-    /**
-     * Set size
-     *
-     * @param string $size
-     *
-     * @return OrderFile
-     */
     public function setSize($size)
     {
         $this->size = $size;
@@ -121,23 +89,11 @@ class OrderFile
         return $this;
     }
 
-    /**
-     * Get size
-     *
-     * @return string
-     */
     public function getSize()
     {
         return $this->size;
     }
 
-    /**
-     * Set isDelete
-     *
-     * @param boolean $isDelete
-     *
-     * @return OrderFile
-     */
     public function setIsDelete($isDelete)
     {
         $this->isDelete = $isDelete;
@@ -145,53 +101,31 @@ class OrderFile
         return $this;
     }
 
-    /**
-     * Get isDelete
-     *
-     * @return boolean
-     */
     public function getIsDelete()
     {
         return $this->isDelete;
     }
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
     public function getOrder()
     {
         return $this->order;
     }
 
-    /**
-     * @param mixed $order
-     */
     public function setOrder($order)
     {
         $this->order = $order;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUser()
     {
         return $this->user;
     }
 
-    /**
-     * @param mixed $user
-     */
     public function setUser($user)
     {
         $this->user = $user;

@@ -1,0 +1,43 @@
+<div>
+    {{ form_start(formBid, {'attr': {'id' : 'formBid'}}) }}
+    <div class="form-group">
+        {{ form_label(formBid.sum) }}
+        {{ form_errors(formBid.sum) }}
+        <div class="input-group">
+            {{ form_widget(formBid.sum) }}
+            <span class="input-group-addon"><i class=" icon-rouble"></i></span>
+        </div>
+        {{ form_label(formBid.day) }}
+        {{ form_errors(formBid.day) }}
+        <div class="input-group">
+            {{ form_widget(formBid.day) }}
+            <span class="input-group-addon"><i class="icon-clock-5"></i></span>
+        </div>
+        <div class="input-group">
+            {{ form_label(formBid.isClientDate) }}
+            {{ form_errors(formBid.isClientDate) }}
+            {{ form_widget(formBid.isClientDate) }}
+            <span id="help-popover" onmouseover="$(this).tooltip('show')"
+                  data-title='Установите флажок, если Вы согласны выполнить заказ в срок, указанный заказчиком'
+                  class="fa fa-question-circle-o" data-container="body" data-placement="bottom">
+            </span>
+        </div>
+        {{ form_label(formBid.comment) }}
+        {{ form_errors(formBid.comment) }}
+        <div class="input-group">
+            {{ form_widget(formBid.comment) }}
+            <span class="input-group-addon"><i class="icon-pencil-6"></i></span>
+        </div>
+        <br>
+        <div class="input-group">
+            <button type="submit" class="btn btn-success">{{ 'Поставить ставку'|trans }}</button>
+        </div>
+    </div>
+    {{ form_end(formBid) }}
+    <div id="dialog-message-confirm-selection" title="Подтверждение выполнения заказа">
+        <p>
+            <span class="icon-help-3" style="float:left;"></span>
+            {{ 'Are you agree to complete the order successful at the defined date?' | trans }}
+        </p>
+    </div>
+</div>

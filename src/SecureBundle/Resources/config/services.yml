@@ -1,50 +1,52 @@
-parameters:
-#    parameter_name: value
-
 services:
-    secure.date_time_helper:
-        class: SecureBundle\Service\Helper\DateTimeHelper
+    secure.service.date_time:
+        class: SecureBundle\Service\DateTimeService
 
-    secure.orders_helper:
-        class: SecureBundle\Service\Helper\OrdersHelper
-        arguments: ['@doctrine.orm.entity_manager']
+    secure.service.orders:
+        class: SecureBundle\Service\OrdersService
+        arguments: ['@em']
 
-    secure.order_helper:
-        class: SecureBundle\Service\Helper\OrderHelper
-        arguments: ['@doctrine.orm.entity_manager', '@router', '@secure.file_helper', '@secure.date_time_helper']
+    secure.service.repository_factory:
+        class: SecureBundle\Factory\EntityRepositoryFactory
+        arguments: ['%entity_repositories%']
+    secure.service.order:
+        class: SecureBundle\Service\OrderService
+        arguments: ['@em', '@router', '@secure.service.files', '@secure.service.date_time']
 
-    secure.file_helper:
-        class: SecureBundle\Service\Helper\FileHelper
-        arguments: ['@doctrine.orm.entity_manager', '@router']
+    secure.service.files:
+        class: SecureBundle\Service\FileService
+        arguments: ['@em', '@router']
+
+    secure.service.bid:
+        class: SecureBundle\Service\BidService
+        arguments: ['@em', '@secure.service.date_time']
+
+
 
     secure.image_helper:
-        class: SecureBundle\Service\Helper\ImageHelper
-        arguments: ['@doctrine.orm.entity_manager', '@router', '@secure.user_helper']
+        class: SecureBundle\Service\ImageService
+        arguments: ['@doctrine.orm.entity_manager', '@router', '@secure.service.user']
 
-    secure.user_helper:
-        class: SecureBundle\Service\Helper\UserHelper
+    secure.service.user:
+        class: SecureBundle\Service\UserService
         arguments: ['@doctrine.orm.entity_manager', '@assets.packages']
 
     secure.mail_helper:
-        class: SecureBundle\Service\Helper\MailHelper
+        class: SecureBundle\Service\MailService
         arguments: ['@doctrine.orm.entity_manager', '%mail_options%', '@mailer']
-
-    secure.bid_helper:
-        class: SecureBundle\Service\Helper\BidHelper
-        arguments: ['@doctrine.orm.entity_manager', '@secure.date_time_helper']
 
     secure.upload_file_listener_gallery:
         class: SecureBundle\EventListener\UploadFileListener
-        arguments: ['@doctrine.orm.entity_manager', '@secure.file_helper', '@secure.image_helper', '@security.token_storage']
+        arguments: ['@doctrine.orm.entity_manager', '@secure.service.files', '@secure.image_helper', '@security.token_storage']
         tags:
             - { name: kernel.event_listener, event: oneup_uploader.post_persist.gallery, method: onUpload }
 
     secure.validate_file_listener_gallery:
         class: SecureBundle\EventListener\ValidateFileListener
-        arguments: ['@secure.file_helper']
+        arguments: ['@secure.service.files']
         tags:
             - { name: kernel.event_listener, event: oneup_uploader.validation.gallery, method: onValidate }
 
     secure.file_upload_error_handler:
-        arguments: ['@secure.file_helper']
+        arguments: ['@secure.service.files']
         class: SecureBundle\Service\Handler\UploadFileErrorHandler

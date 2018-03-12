@@ -1,0 +1,9 @@
+{% if bidsData.statistic is not empty %}
+    <div class="col-md-3">
+        <ul>
+            <li>{{ 'Ставок всего' | trans }}: {{ bidsData.statistic.cnt_bids }}</li>
+            <li>{{ 'Максимальная ставка' | trans }}: {{ bidsData.statistic.max_bid }}</li>
+            <li>{{ 'Минимальная ставка' | trans }}: {{ bidsData.statistic.min_bid }}</li>
+        </ul>
+    </div>
+{% endif %}

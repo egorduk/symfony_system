@@ -2,6 +2,26 @@ secure_user_homepage:
     path: secure/user/homepage
     defaults: { _controller: UserBundle:User:homepage }
 
+secure_user_profile:
+    path: secure/user/profile
+    defaults: { _controller: UserBundle:User:profile }
+
+secure_user_orders:
+    path: secure/user/orders/{type}
+    defaults: { _controller: UserBundle:User:orders }
+
+secure_user_settings:
+    path: secure/user/profile
+    defaults: { _controller: UserBundle:User:settings }
+
+secure_user_order_page:
+    path: secure/user/order/{orderId}
+    defaults: { _controller: UserBundle:User:orderPage }
+    requirements:
+        orderId: '\d+'
+    options:
+        expose: true
+
 #secure_user_bids:
 #    path: secure/user/bids
 #    defaults: { _controller: SecureBundle:Author:bids }

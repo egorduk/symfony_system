@@ -4,36 +4,47 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="skype" type="string" column="skype" length="20" nullable="false">
+    <field name="skype" type="string" column="skype" length="20" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="mobilePhone" type="string" column="mobile_phone" length="20" nullable="false">
+    <field name="mobilePhone" type="string" column="mobile_phone" length="20" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="staticPhone" type="string" column="static_phone" length="20" nullable="false">
+    <field name="staticPhone" type="string" column="static_phone" length="20" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="username" type="string" column="username" length="20" nullable="false">
+    <field name="userName" type="string" column="username" length="20" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="surname" type="string" column="surname" length="20" nullable="false">
+    <field name="surName" type="string" column="surname" length="20" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="lastname" type="string" column="lastname" length="20" nullable="false">
+    <field name="lastName" type="string" column="lastname" length="20" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
+    <field name="account" type="string" column="account" length="30" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="bic" type="string" column="bic" length="15" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dateBirthday" type="string" column="date_birthday" length="15" nullable="true"/>
     <one-to-many target-entity="AuthBundle\Entity\User" mapped-by="userInfo" field="user" />
     <many-to-one field="country" target-entity="AuthBundle\Entity\Country" inversed-by="userInfo">
       <join-column name="country_id" referenced-column-name="id" />

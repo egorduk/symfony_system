@@ -1,0 +1,3 @@
+parameters:
+    entity_repositories:
+        SecureBundle\Entity\UserOrder: SecureBundle\Repository\UserOrderRepository

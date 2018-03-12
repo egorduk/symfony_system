@@ -1,11 +1,11 @@
 <?php
 
-namespace SecureBundle\Service\Helper;
+namespace SecureBundle\Service;
 
 use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
-class MailHelper
+class MailService
 {
     private $em;
     private $options;

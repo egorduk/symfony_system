@@ -1,0 +1,5 @@
+services:
+    secure.repository.user_order:
+        class: Doctrine\Common\Persistence\ObjectRepository
+        factory: ['@doctrine', getRepository]
+        arguments: ['%user_order_entity%']

@@ -1,56 +1,28 @@
 <?php
 
-namespace SecureBundle\Service\Helper;
+namespace SecureBundle\Service;
 
 use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\OrderFile;
 use SecureBundle\Entity\UserBid;
 use SecureBundle\Entity\UserOrder;
+use SecureBundle\Service\DateTimeService;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
-class OrderHelper
+class OrderService
 {
     private $em;
     private $router;
     private $fh;
     private $dth;
 
-    /**
-     * @param EntityManager $em
-     * @param Router $router
-     * @param FileHelper $fh
-     * @param DateTimeHelper $dth
-     */
-    public function __construct(EntityManager $em, Router $router, FileHelper $fh, DateTimeHelper $dth)
+    public function __construct(EntityManager $em, Router $router, FileService $fh, DateTimeService $dth)
     {
         $this->em = $em;
         $this->router = $router;
         $this->fh = $fh;
         $this->dth = $dth;
-    }
-
-    /**
-     * @param int $orderId
-     * @param int $isHidden
-     *
-     * @return UserOrder
-     */
-    public function getOrderById($orderId, $isHidden = false)
-    {
-        $qb = $this->em->createQueryBuilder();
-
-        return $qb->select('uo')
-            ->from(UserOrder::class, 'uo')
-            //->innerJoin(StatusOrder::class, 'so', 'WITH', 'uo.status = so')
-            //->innerJoin(SubjectOrder::class, 'sj', 'WITH', 'uo.subject = sj')
-            //->innerJoin(User::class, 'u', 'WITH', 'uo.user = u')
-            ->where('uo.id = :orderId')
-            ->andWhere('uo.isHidden = :isHide')
-            ->setParameter('orderId', $orderId)
-            ->setParameter('isHide', $isHidden)
-            ->getQuery()
-            ->getOneOrNullResult();
     }
 
     /**
@@ -91,7 +63,7 @@ class OrderHelper
                 'name' => $file->getName(),
                 'dateUpload' => $this->dth->getDatetimeFormatted($file->getDateUpload(), 'd.m.Y H:i'),
                 'size' => $file->getSize(),
-                'url' => $this->fh->getFileUrl($file->getId(), 'attachments'),
+                'url' => $this->fh->getFileUrl($file->getId(), OrderFile::ATTACHMENTS_TYPE),
                 'extension' => $this->fh->getFileExtension($file->getName()),
             ];
         }

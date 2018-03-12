@@ -1,8 +1,8 @@
 <?php
 
-namespace SecureBundle\Service\Helper;
+namespace SecureBundle\Service;
 
-class DateTimeHelper
+class DateTimeService
 {
     /**
      * @param int $timestamp
@@ -16,8 +16,8 @@ class DateTimeHelper
     }
 
     /**
-     * @param int $sessionCreatedTimestamp
-     * @param int $sessionLifeTimestamp
+     * @param int $aTimestamp
+     * @param int $bTimestamp
      * @param string $operation
      *
      * @return int
@@ -57,6 +57,17 @@ class DateTimeHelper
     }
 
     /**
+     * @param \DateTime $dateA
+     * @param \DateTime $dateB
+     *
+     * @return int
+     */
+    public function getDiffBetweenDatesInDays($dateA, $dateB)
+    {
+        return $this->getDiffBetweenDates($dateA, $dateB)->format('%d');
+    }
+
+    /**
      * @param \DateTime $date
      *
      * @return int
@@ -67,7 +78,6 @@ class DateTimeHelper
 
         return $dateDiff->invert;
     }
-
 
     /**
      * @param \DateTime $datetime

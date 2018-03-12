@@ -12,8 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
 class UserInfo
 {
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -21,46 +19,49 @@ class UserInfo
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="skype", type="string", length=20, nullable=false)
+     * @ORM\Column(name="skype", type="string", length=20, nullable=true)
      */
     private $skype;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="mobile_phone", type="string", length=20, nullable=false)
+     * @ORM\Column(name="mobile_phone", type="string", length=20, nullable=true)
      */
     private $mobilePhone;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="static_phone", type="string", length=20, nullable=false)
+     * @ORM\Column(name="static_phone", type="string", length=20, nullable=true)
      */
     private $staticPhone;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="username", type="string", length=20, nullable=false)
+     * @ORM\Column(name="username", type="string", length=20, nullable=true)
      */
-    private $username;
+    private $userName;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="surname", type="string", length=20, nullable=false)
+     * @ORM\Column(name="surname", type="string", length=20, nullable=true)
      */
-    private $surname;
+    private $surName;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=20, nullable=false)
+     * @ORM\Column(name="lastname", type="string", length=20, nullable=true)
      */
-    private $lastname;
+    private $lastName;
+
+    /**
+     * @ORM\Column(name="account", type="string", length=30, nullable=true)
+     */
+    private $account;
+
+    /**
+     * @ORM\Column(name="bic", type="string", length=20, nullable=true)
+     */
+    private $bic;
+
+    /**
+     * @ORM\Column(name="date_birthday", type="date", nullable=true)
+     */
+    private $dateBirthday;
 
     /**
      * @ORM\OneToMany(targetEntity="AuthBundle\Entity\User", mappedBy="userInfo")
@@ -73,18 +74,12 @@ class UserInfo
      */
     private $country;
 
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
     }
 
-    /**
-     * Set skype
-     *
-     * @param string $skype
-     *
-     * @return UserInfo
-     */
     public function setSkype($skype)
     {
         $this->skype = $skype;
@@ -92,23 +87,11 @@ class UserInfo
         return $this;
     }
 
-    /**
-     * Get skype
-     *
-     * @return string
-     */
     public function getSkype()
     {
         return $this->skype;
     }
 
-    /**
-     * Set mobilePhone
-     *
-     * @param string $mobilePhone
-     *
-     * @return UserInfo
-     */
     public function setMobilePhone($mobilePhone)
     {
         $this->mobilePhone = $mobilePhone;
@@ -116,23 +99,11 @@ class UserInfo
         return $this;
     }
 
-    /**
-     * Get mobilePhone
-     *
-     * @return string
-     */
     public function getMobilePhone()
     {
         return $this->mobilePhone;
     }
 
-    /**
-     * Set staticPhone
-     *
-     * @param string $staticPhone
-     *
-     * @return UserInfo
-     */
     public function setStaticPhone($staticPhone)
     {
         $this->staticPhone = $staticPhone;
@@ -140,128 +111,93 @@ class UserInfo
         return $this;
     }
 
-    /**
-     * Get staticPhone
-     *
-     * @return string
-     */
     public function getStaticPhone()
     {
         return $this->staticPhone;
     }
 
-    /**
-     * Set username
-     *
-     * @param string $username
-     *
-     * @return UserInfo
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    /**
-     * Get username
-     *
-     * @return string
-     */
-    public function getUsername()
-    {
-        return $this->username;
-    }
-
-    /**
-     * Set surname
-     *
-     * @param string $surname
-     *
-     * @return UserInfo
-     */
-    public function setSurname($surname)
-    {
-        $this->surname = $surname;
-
-        return $this;
-    }
-
-    /**
-     * Get surname
-     *
-     * @return string
-     */
-    public function getSurname()
-    {
-        return $this->surname;
-    }
-
-    /**
-     * Set lastname
-     *
-     * @param string $lastname
-     *
-     * @return UserInfo
-     */
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    /**
-     * Get lastname
-     *
-     * @return string
-     */
-    public function getLastname()
-    {
-        return $this->lastname;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUser()
     {
         return $this->user;
     }
 
-    /**
-     * @param mixed $user
-     */
     public function setUser($user)
     {
         $this->user = $user;
     }
 
-    /**
-     * @return mixed
-     */
     public function getCountry()
     {
         return $this->country;
     }
 
-    /**
-     * @param mixed $country
-     */
     public function setCountry($country)
     {
         $this->country = $country;
     }
 
+    public function getUserName()
+    {
+        return $this->userName;
+    }
+
+    public function setUserName($userName)
+    {
+        $this->userName = $userName;
+    }
+
+    public function getSurName()
+    {
+        return $this->surName;
+    }
+
+    public function setSurName($surName)
+    {
+        $this->surName = $surName;
+    }
+
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    public function getAccount()
+    {
+        return $this->account;
+    }
+
+    public function setAccount($account)
+    {
+        $this->account = $account;
+    }
+
+    public function getBic()
+    {
+        return $this->bic;
+    }
+
+    public function setBic($bic)
+    {
+        $this->bic = $bic;
+    }
+
+    public function getDateBirthday()
+    {
+        return $this->dateBirthday;
+    }
+
+    public function setDateBirthday($dateBirthday)
+    {
+        $this->dateBirthday = $dateBirthday;
+    }
 }

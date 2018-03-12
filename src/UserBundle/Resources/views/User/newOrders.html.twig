@@ -1,4 +1,4 @@
-{% extends "SecureBundle::layout_author.html.twig" %}
+{% extends "UserBundle::layout.html.twig" %}
 
 {% block title %}{{ 'New orders' }}{% endblock %}
 
@@ -6,12 +6,12 @@
         {{ parent() }}
     {% endblock %}
 
-    {% block javascripts_head %}
+    {#{% block javascripts_head %}
         {{ parent() }}
         <script>
             var dataTableRussianLoc = "{{ asset('json/DataTable/Russian.json') }}";
         </script>
-    {% endblock %}
+    {% endblock %}#}
 
     {% block content %}
         <div class="col-md-12">
@@ -23,8 +23,10 @@
                     <th>Тип работы</th>
                     <th>Тема работы</th>
                     <th>Выполнение до</th>
+                    <th>До сдачи</th>
                     <th>Max ставка</th>
                     <th>Min ставка</th>
+                    <th>Ставок</th>
                     <th>Создан</th>
                     <th>Статус</th>
                     <th>Действия</th>
@@ -37,8 +39,10 @@
                     <th>Тип работы</th>
                     <th>Тема работы</th>
                     <th>Выполнение до</th>
+                    <th>До сдачи</th>
                     <th>Max ставка</th>
                     <th>Min ставка</th>
+                    <th>Ставок</th>
                     <th>Создан</th>
                     <th>Статус</th>
                     <th>Действия</th>
@@ -47,15 +51,17 @@
                 <tbody>
                 {% for order in orders %}
                     <tr data-id="{{ order.id }}">
-                        <td>{{ order.num }}</td>
-                        <td>{{ order.subject.childname }}</td>
+                        <td><a href="{{ path('secure_user_order_page', {'orderId': order.id })  }}">{{ order.id }}</a></td>
+                        <td>{{ order.subject.name }}</td>
                         <td>{{ order.type.name }}</td>
                         <td>{{ order.theme }}</td>
                         <td>{{ order.dateexpire|date('d.m.Y H:i') }}</td>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.id }}</td>
+                        <td>{{ order.remaining }}</td>
+                        <td>{{ order.maxBid }}</td>
+                        <td>{{ order.minBid }}</td>
+                        <td>{{ order.cntBids }}</td>
                         <td>{{ order.datecreate|date('d.m.Y H:i') }}</td>
-                        <td>{{ order.status.code }}</td>
+                        <td>{{ order.status.name }}</td>
                         <td>
                             <button>Отказаться</button>
                             <button>Скрыть</button>
@@ -69,7 +75,7 @@
                 Launch demo modal
             </button>
 
-            {{ include('@Secure/Author/Modal/order-modal.html.twig') }}
+            {#{{ include('@Secure/Author/Modal/order-modal.html.twig') }}#}
         </div>
     {% endblock %}
     {% block javascripts_footer %}

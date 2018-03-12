@@ -11,9 +11,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SubjectOrder
 {
+    const TECH_SECTION_NAME = 'Технические';
+    const TECH_SECTION_CODE = 'tech';
+    const NATURAL_SECTION_NAME = 'Естественные';
+    const NATURAL_SECTION_CODE = 'natural';
+    const REAL_SECTION_NAME = 'Общественные и гуманитарные';
+    const REAL_SECTION_CODE = 'social';
+
     /**
-     * @var integer
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -21,84 +26,73 @@ class SubjectOrder
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="child_name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="name", type="string", length=50)
      */
-    private $childName;
+    private $name;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="parent_name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="code", type="string", length=6)
      */
-    private $parentName;
+    private $code;
+
+    /**
+     * @ORM\Column(name="parent_id", type="integer", nullable=true)
+     */
+    private $parentId;
 
     /**
      * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserOrder", mappedBy="subject")
      */
     private $orders;
 
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
     }
 
-    /**
-     * Set childName
-     *
-     * @param string $childName
-     *
-     * @return SubjectOrder
-     */
-    public function setChildName($childName)
-    {
-        $this->childName = $childName;
-
-        return $this;
-    }
-
-    /**
-     * Get childName
-     *
-     * @return string
-     */
-    public function getChildName()
-    {
-        return $this->childName;
-    }
-
-    /**
-     * Set parentName
-     *
-     * @param string $parentName
-     *
-     * @return SubjectOrder
-     */
-    public function setParentName($parentName)
-    {
-        $this->parentName = $parentName;
-
-        return $this;
-    }
-
-    /**
-     * Get parentName
-     *
-     * @return string
-     */
-    public function getParentName()
-    {
-        return $this->parentName;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function getParentId()
+    {
+        return $this->parentId;
+    }
+
+    public function setParentId($parentId)
+    {
+        $this->parentId = $parentId;
+    }
+
+    public function getOrders()
+    {
+        return $this->orders;
+    }
+
+    public function setOrders($orders)
+    {
+        $this->orders = $orders;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function setCode($code)
+    {
+        $this->code = $code;
     }
 }

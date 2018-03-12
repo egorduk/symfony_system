@@ -7,21 +7,24 @@
     <title>{% block title %}{% endblock %}</title>
     {% block head %}
         {% block stylesheets %}
-            <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
+            {#<link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
             {% stylesheets
             'css/main.css'
             'css/information-window.css'
             'css/bootstrap-flatly-3.3.7.min.css' %}
             <link rel="stylesheet" href="{{ asset_url }}" />
-            {% endstylesheets %}
+            {% endstylesheets %}#}
         {% endblock %}
         {% block javascripts_head %}{% endblock %}
     {% endblock %}
     {#<link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />#}
 </head>
 <body>
-<div id="container">
+<div class="container">
     {% block header %}{% endblock %}
+    <div class="row">
+        {{ include('default/_flash_messages.html.twig') }}
+    </div>
     {% block body %}{% endblock %}
     <footer>
         {% block footer %}{% endblock %}

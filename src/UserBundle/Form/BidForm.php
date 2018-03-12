@@ -1,16 +1,14 @@
 <?php
 
-namespace SecureBundle\Form;
+namespace UserBundle\Form;
 
+use SecureBundle\Entity\UserBid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -22,14 +20,9 @@ class BidForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('fieldSum', TextType::class, [
+            ->add('sum', TextType::class, [
                 'required' => true,
                 'label' => 'Сумма'/*, 'data' => $options['data']->fieldSum*/,
-                'constraints' => [
-                    new NotBlank(),
-                    new Length(array('max' => 7)),
-                    new Type('digit'),
-                ],
                 'attr' => [
                     'class' => 'form-control',
                     'maxlength' => 7,
@@ -40,13 +33,9 @@ class BidForm extends AbstractType
                     'title' => 'Только числа',
                 ],
             ])
-            ->add('fieldDay', TextType::class, [
+            ->add('day', TextType::class, [
                 'required' => false,
-                'label'=>'Количество дней',/* 'data' => $options['data']->fieldDay, */
-                'constraints' => [
-                    new Length(array('max' => 3)),
-                    new Type('digit'),
-                ],
+                'label' => 'Количество дней',/* 'data' => $options['data']->fieldDay, */
                 'attr' => [
                     'class' => 'form-control',
                     'maxlength' => 3,
@@ -57,12 +46,9 @@ class BidForm extends AbstractType
                     'title' => 'Только числа'
                 ],
             ])
-            ->add('fieldComment', TextareaType::class, [
+            ->add('comment', TextareaType::class, [
                 'required' => false,
-                'label'=>'Комментарий',/* 'data' => $options['data']->fieldComment,*/
-                'constraints' => [
-                    new Length(array('max' => 150)),
-                ],
+                'label' => 'Комментарий',/* 'data' => $options['data']->fieldComment,*/
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Введите комментарий для заказчика',
@@ -72,7 +58,7 @@ class BidForm extends AbstractType
                 ],
             ])
             ->add('isClientDate', CheckboxType::class, [
-                'label'=>'В срок заказчика',/* 'data' => filter_var($options['data']->is_client_date, FILTER_VALIDATE_BOOLEAN),*/
+                'label' => 'В срок заказчика',/* 'data' => filter_var($options['data']->is_client_date, FILTER_VALIDATE_BOOLEAN),*/
                 'required' => false,
                 'attr' => [
                     'class' => '',
@@ -90,12 +76,15 @@ class BidForm extends AbstractType
          });*/
     }
 
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+           'data_class' => UserBid::class,
+        ]);
+    }
+
     public function getName()
     {
         return $this->formName;
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
     }
 }

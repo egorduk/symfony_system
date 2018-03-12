@@ -1,10 +1,7 @@
-imports:
-  - { resource: '@AuthBundle/Resources/config/fixtures.yml' }
-
 services:
     auth.captcha_service:
         class: AuthBundle\Service\Captcha\Captcha
 
     auth.service:
         class: AuthBundle\Service\AuthService
-        arguments: ['@doctrine.orm.entity_manager', '@security.password_encoder']
+        arguments: ['@em', '@security.password_encoder']

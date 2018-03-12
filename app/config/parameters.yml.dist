@@ -24,6 +24,8 @@ parameters:
     mail_sender: egorduk@yandex.com
     mail_title: Study
     web_dir: "%kernel.root_dir%/../web"
-    uploads_dir: "%kernel.root_dir%/../web/uploads"
-    uploads_attachments_orders_dir: "%kernel.root_dir%/../web/uploads/attachments/orders"
-    uploads_avatars_dir: "%kernel.root_dir%/../web/uploads/avatars"
+    #uploads_dir: "%kernel.root_dir%/../web/uploads"
+    #uploads_attachments_orders_dir: "%kernel.root_dir%/../web/uploads/attachments/orders"
+    #uploads_avatars_dir: "%kernel.root_dir%/../web/uploads/avatars"
+    file_upload_dir: '%kernel.root_dir%/Resources/uploads'
+    file_upload_dir_fixtures: '%kernel.root_dir%/Resources/uploads/fixtures'

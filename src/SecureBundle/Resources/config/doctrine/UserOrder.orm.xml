@@ -1,17 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
   <entity name="SecureBundle\Entity\UserOrder" table="user_order">
-    <unique-constraints>
-      <unique-constraint name="num" columns="num"/>
-    </unique-constraints>
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="num" type="integer" column="num" nullable="false">
-      <options>
-        <option name="unsigned">1</option>
-      </options>
-    </field>
     <field name="theme" type="string" column="theme" length="255" nullable="false">
       <options>
         <option name="fixed"/>
@@ -22,7 +14,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="additionalInfo" type="text" column="additional_info" length="255" nullable="false">
+    <field name="additionalInfo" type="text" column="additional_info" length="255" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
@@ -30,37 +22,59 @@
     <field name="originality" type="integer" column="originality" nullable="false">
       <options>
         <option name="unsigned">1</option>
+        <option name="default">0</option>
       </options>
     </field>
     <field name="countSheet" type="integer" column="count_sheet" nullable="false">
       <options>
         <option name="unsigned">1</option>
+        <option name="default">1</option>
       </options>
     </field>
-    <field name="dateCreate" type="datetime" column="date_create" nullable="false"/>
+    <field name="dateCreate" type="datetime" column="date_create" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
     <field name="dateExpire" type="datetime" column="date_expire" nullable="false"/>
-    <field name="dateEdit" type="datetime" column="date_edit" nullable="false"/>
-    <field name="dateComplete" type="datetime" column="date_complete" nullable="false"/>
-    <field name="dateGuarantee" type="datetime" column="date_guarantee" nullable="false"/>
-    <field name="dateCancel" type="datetime" column="date_cancel" nullable="false"/>
-    <field name="dateConfirm" type="datetime" column="date_confirm" nullable="false"/>
-    <field name="isShownAuthor" type="boolean" column="is_show_author" nullable="false"/>
-    <field name="isShownClient" type="boolean" column="is_show_client" nullable="false"/>
-    <field name="isHidden" type="boolean" column="is_hide" nullable="false"/>
-    <field name="isDelayed" type="boolean" column="is_delay" nullable="false"/>
+    <field name="dateEdit" type="datetime" column="date_edit" nullable="true"/>
+    <field name="dateComplete" type="datetime" column="date_complete" nullable="true"/>
+    <field name="dateGuarantee" type="datetime" column="date_guarantee" nullable="true"/>
+    <field name="dateCancel" type="datetime" column="date_cancel" nullable="true"/>
+    <field name="dateConfirm" type="datetime" column="date_confirm" nullable="true"/>
+    <field name="isShownAuthor" type="boolean" column="is_show_author" nullable="false">
+      <options>
+          <option name="default">1</option>
+      </options>
+    </field>
+    <field name="isShownClient" type="boolean" column="is_show_client" nullable="false">
+        <options>
+            <option name="default">1</option>
+        </options>
+    </field>
+    <field name="isHidden" type="boolean" column="is_hide" nullable="false">
+        <options>
+            <option name="default">0</option>
+        </options>
+    </field>
+    <field name="isDelayed" type="boolean" column="is_delay" nullable="false">
+        <options>
+            <option name="default">0</option>
+        </options>
+    </field>
     <field name="filesFolder" type="string" column="files_folder" length="20" nullable="false">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="clientComment" type="string" column="client_comment" length="100" nullable="false">
+    <field name="clientComment" type="string" column="client_comment" length="100" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="clientDegree" type="integer" column="client_degree" nullable="false">
+    <field name="clientDegree" type="integer" column="client_degree" nullable="true">
       <options>
-        <option name="unsigned"/>
+        <option name="unsigned">1</option>
       </options>
     </field>
     <many-to-one field="status" target-entity="SecureBundle\Entity\StatusOrder" inversed-by="orders">
