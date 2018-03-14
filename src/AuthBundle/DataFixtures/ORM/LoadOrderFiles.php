@@ -23,11 +23,12 @@ class LoadOrderFiles implements ORMFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $orders = $this->orderRepository->getValuationOrders();
+        //$orders = $this->orderRepository->getValuationOrders();
+        $orders = $this->orderRepository->findAll();
 
         $faker = Factory::create();
 
-        for ($i = 0; $i < 40; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $file = new OrderFile();
             $file->setOrder($order = $orders[array_rand($orders)]);
             $file->setUser($order->getUser());

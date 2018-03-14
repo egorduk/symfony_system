@@ -62,22 +62,16 @@ class User implements AdvancedUserInterface, \Serializable
     private $dateReg;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_confirm_recovery", type="datetime", nullable=true)
      */
     private $dateConfirmRecovery;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_confirm_reg", type="datetime", nullable=true)
      */
     private $dateConfirmReg;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_upload_avatar", type="datetime", nullable=true)
      */
     private $dateUploadAvatar;
@@ -93,29 +87,21 @@ class User implements AdvancedUserInterface, \Serializable
     private $salt;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="is_active", type="boolean")
      */
     private $isActive = 'b\'0\'';
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="is_confirm", type="boolean")
      */
     private $isConfirm = 'b\'0\'';
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="hash_code", type="string", length=30)
      */
     private $hashCode = '';
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="token", type="string", length=30)
      */
     private $token;
@@ -126,36 +112,26 @@ class User implements AdvancedUserInterface, \Serializable
     private $recoveryPassword = '';
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="account", type="integer")
      */
     private $account;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="is_ban", type="boolean")
      */
-    private $isBan = 'b\'0\'';
+    private $isBan;
 
     /**
-     * @var boolean
-     *
      * @ORM\Column(name="is_access_order", type="boolean")
      */
-    private $isAccessOrder = 'b\'0\'';
+    private $isAccessOrder;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="avatar", type="string", length=25)
      */
     private $avatar;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="rating_point", type="integer")
      */
     private $ratingPoint;
@@ -211,7 +187,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->isConfirm = 0;
         $this->isActive = 1;
         $this->isBan = 0;
-        $this->isAccessOrder = 0;
+        $this->isAccessOrder = 1;
         $this->recoveryPassword = '';
         $this->ratingPoint = 0;
         $this->role = '';

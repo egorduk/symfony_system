@@ -8,7 +8,7 @@ secure_user_profile:
 
 secure_user_orders:
     path: secure/user/orders/{type}
-    defaults: { _controller: UserBundle:User:orders }
+    defaults: { _controller: UserBundle:User:ordersPage }
 
 secure_user_settings:
     path: secure/user/profile

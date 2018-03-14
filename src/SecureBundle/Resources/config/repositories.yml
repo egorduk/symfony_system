@@ -3,3 +3,8 @@ services:
         class: Doctrine\Common\Persistence\ObjectRepository
         factory: ['@doctrine', getRepository]
         arguments: ['%user_order_entity%']
+
+    secure.repository.status_order:
+        class: Doctrine\Common\Persistence\ObjectRepository
+        factory: ['@doctrine', getRepository]
+        arguments: ['%status_order_entity%']

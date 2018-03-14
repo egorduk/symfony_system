@@ -22,7 +22,8 @@ class LoadUserBids implements ORMFixtureInterface
     {
         $userRepository = $manager->getRepository(User::class);
         $users = $userRepository->findBy(['role' => User::ROLE_USER]);
-        $orders = $this->orderRepository->getValuationOrders();
+        //$orders = $this->orderRepository->getValuationOrders();
+        $orders = $this->orderRepository->findAll();
 
         $faker = Factory::create();
 
@@ -34,6 +35,12 @@ class LoadUserBids implements ORMFixtureInterface
             $bid->setComment($faker->text(50));
             $bid->setSum($faker->numberBetween(0, 10000));
             $bid->setOrder($orders[array_rand($orders)]);
+
+            if (rand(0, 1)) {
+                $bid->setIsClientDate(1);
+            } else {
+                $bid->setIsClientDate(0);
+            }
 
             $manager->persist($bid);
         }

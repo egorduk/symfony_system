@@ -81,7 +81,7 @@
     </field>
     <field name="isAccessOrder" type="boolean" column="is_access_order" nullable="false">
       <options>
-        <option name="default">0</option>
+        <option name="default">1</option>
       </options>
     </field>
     <field name="avatar" type="string" column="avatar" length="25" nullable="false">

@@ -1,0 +1,45 @@
+{% macro ordersTable(type) %}
+    {% set statusUserOrderBid = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_BID') %}
+    {% set statusUserOrderFinish = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_FINISH') %}
+    {% set statusOrderWork = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_WORK_CODE') %}
+    {% set statusOrderGuarantee = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_GUARANTEE_CODE') %}
+    {% set statusOrderNew = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_NEW_CODE') %}
+    {% set statusOrderCompleted = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_COMPLETED_CODE') %}
+    {% set statusOrderAuction = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_AUCTION_CODE') %}
+    {% set statusOrderAssigned = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_ASSIGNED_CODE') %}
+
+    <tr>
+        <th>№ заказа</th>
+        <th>Предмет</th>
+        <th>Тип работы</th>
+        <th>Тема работы</th>
+        {% if type == statusUserOrderBid %}
+            <th>Оценен</th>
+            <th>Ставка</th>
+        {% endif %}
+        {% if type != statusOrderGuarantee and type != statusUserOrderFinish %}
+            <th>Выполнение до</th>
+            <th>До сдачи</th>
+        {% endif %}
+        {% if type != statusOrderWork and type != statusUserOrderFinish and type != statusOrderGuarantee %}
+            <th>Max ставка</th>
+            <th>Min ставка</th>
+            <th>Ставок</th>
+        {% endif %}
+        {% if type == statusOrderGuarantee %}
+            <th>На гарантии до</th>
+            <th>Срок гарантии</th>
+            <th>Завершен</th>
+        {% endif %}
+        {% if type == statusUserOrderFinish %}
+            <th>В работе с</th>
+            <th>Завершен</th>
+            <th>Затрачено дней</th>
+        {% endif %}
+        <th>Создан</th>
+        {% if type == statusOrderNew %}
+            <th>Статус</th>
+        {% endif %}
+        <th>Действия</th>
+    </tr>
+{% endmacro %}

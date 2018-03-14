@@ -179,4 +179,10 @@ class FileService
         return $uploadDir . $this->get_user_path() . $versionPath . $fileName;*/
         return '';
     }
+
+    public function getSizeFile($bytes) {
+        $label = array('B', 'KB', 'MB', 'GB');
+        for ($i = 0; $bytes >= 1024 && $i < (count($label) - 1); $bytes /= 1024, $i++);
+        return(round($bytes, 1) . " " . $label[$i]);
+    }
 }

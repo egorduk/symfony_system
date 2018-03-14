@@ -1,2 +1,3 @@
 parameters:
     user_order_entity: SecureBundle\Entity\UserOrder
+    status_order_entity: SecureBundle\Entity\StatusOrder

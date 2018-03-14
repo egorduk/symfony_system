@@ -13,16 +13,19 @@ class StatusOrder
 {
     const STATUS_ORDER_NEW = 'Новый';
     const STATUS_ORDER_NEW_CODE = 'new';
-    const STATUS_ORDER_ASSIGNED = 'Закреплен';
-    const STATUS_ORDER_ASSIGNED_CODE = 'assigned';
     const STATUS_ORDER_AUCTION = 'На оценке';
     const STATUS_ORDER_AUCTION_CODE = 'auction';
-    const STATUS_ORDER_COMPLETED = 'Завершен';
-    const STATUS_ORDER_COMPLETED_CODE = 'completed';
+    const STATUS_ORDER_ASSIGNED = 'Закреплен';
+    const STATUS_ORDER_ASSIGNED_CODE = 'assigned';
     const STATUS_ORDER_WORK = 'В работе';
     const STATUS_ORDER_WORK_CODE = 'work';
+    const STATUS_ORDER_COMPLETED = 'Завершен';
+    const STATUS_ORDER_COMPLETED_CODE = 'completed';
     const STATUS_ORDER_GUARANTEE = 'На гарантии';
     const STATUS_ORDER_GUARANTEE_CODE = 'guarantee';
+
+    const STATUS_USER_ORDER_BID = 'bid';
+    const STATUS_USER_ORDER_FINISH = 'finish';
 
     /**
      * @ORM\Column(name="id", type="integer")

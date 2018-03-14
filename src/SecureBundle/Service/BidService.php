@@ -19,13 +19,13 @@ class BidService
     }
 
     /**
-     * @param int $orderId
+     * @param UserOrder $order
      *
-     * @return array|null
+     * @return mixed
      */
-    public function getMaxMinCntBids($orderId)
+    public function getMaxMinCntBids(UserOrder $order)
     {
-        return $this->em
+        /*return $this->em
             ->createQueryBuilder()
             ->select('MAX(ub.sum) as max_bid, MIN(ub.sum) as min_bid, COUNT(ub.id) as cnt_bids')
             ->from(UserBid::class, 'ub')
@@ -38,6 +38,20 @@ class BidService
             ->setParameters([
                 'orderId' => $orderId,
                 'now' => new \DateTime(),
+            ])
+            ->getQuery()
+            ->getOneOrNullResult();*/
+
+        return $this->em
+            ->createQueryBuilder()
+            ->select('MAX(ub.sum) as max_bid, MIN(ub.sum) as min_bid, COUNT(ub.id) as cnt_bids')
+            ->from(UserBid::class, 'ub')
+            ->where('ub.order = :order')
+            ->andWhere('ub.isShownUser = 1')
+            ->andWhere('ub.isShownOthers = 1')
+            ->groupBy('ub.order')
+            ->setParameters([
+                'order' => $order,
             ])
             ->getQuery()
             ->getOneOrNullResult();
@@ -79,11 +93,41 @@ class BidService
             ->from(UserBid::class, 'ub')
             ->where('ub.user = :user')
             ->andWhere('ub.order = :order')
+            ->andWhere('ub.isShownOthers = 1')
+            ->andWhere('ub.isShownUser = 1')
             ->orderBy('ub.dateBid', 'DESC')
-            ->setParameter('user', $user)
-            ->setParameter('order', $order)
+            ->setParameters([
+                'user' => $user,
+                'order' => $order,
+            ])
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @param UserOrder $order
+     *
+     * @return mixed
+     */
+    public function getLastUserBid(User $user, UserOrder $order)
+    {
+        return $this->em
+            ->createQueryBuilder()
+            ->select('ub.day, ub.sum, ub.dateBid, ub.comment, ub.isClientDate')
+            ->from(UserBid::class, 'ub')
+            ->where('ub.user = :user')
+            ->andWhere('ub.order = :order')
+            ->andWhere('ub.isShownOthers = 1')
+            ->andWhere('ub.isShownUser = 1')
+            ->orderBy('ub.dateBid', 'DESC')
+            ->setParameters([
+                'user' => $user,
+                'order' => $order,
+            ])
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**
@@ -104,9 +148,9 @@ class BidService
         $day = $bid->getDay();
         $isClientDate = $bid->getIsClientDate();
 
-        if (is_null($day) && $isClientDate) {
+        if (/*is_null($day) && */$isClientDate) {
             $day = $this->dateTimeService
-                ->getDiffBetweenDatesInDays($order->getDateExpire(), $order->getDateCreate());
+                ->getDiffBetweenDatesInDays($order->getDateExpire());
             $bid->setIsClientDate(1);
         }
 

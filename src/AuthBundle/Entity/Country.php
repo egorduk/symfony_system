@@ -94,6 +94,6 @@ class Country
 
     public function getNameWithMobileCode()
     {
-        return $this->name . ' ' . $this->mobileCode;
+        return $this->name . ' +' . $this->mobileCode;
     }
 }

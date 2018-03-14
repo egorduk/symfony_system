@@ -1,0 +1,438 @@
+{% extends 'UserBundle::layout.html.twig' %}
+
+{#{% block javascripts_head %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('js/FileUpload/jquery.ui.widget.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/FileUpload/jquery.iframe-transport.js') }}"></script>
+    #}{#<script type="text/javascript" src="{{ asset('js/FileUpload/jquery.fileupload.js') }}"></script>#}{#
+{% endblock %}#}
+
+{% block title %}{{ 'Профиль' | trans }}{% endblock %}
+    {% block content %}
+        {#   <link href="{{ asset('bundles/css/window.css') }}" rel="stylesheet" />
+           <link href="{{ asset('bundles/css/select2.css') }}" rel="stylesheet" />
+           <script type="text/javascript" src="{{ asset('bundles/js/bootstrap-maxlength.min.js') }}"></script>
+           <script type="text/javascript" src="{{ asset('bundles/js/select2.min.js') }}"></script>#}
+        <div class="container">
+            {#{% if formProfile is defined and formProfile is not empty %}#}
+           {# <div class="row">
+                <div  class="col-xs-5 col-xs-offset-4">
+                    <p>{{ user.rawavatar | raw }}</p>
+                    <p>ID: {{ user.id }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Ник: {{ user.login }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Email: {{ user.email }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Skype: {{ user.userInfo.skype }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Имя: {{ user.userInfo.username }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Фамилия: {{ user.userInfo.surname }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Отчество: {{ user.userInfo.lastname }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Номер мобильного телефона: {{ user.userInfo.mobilephone }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Номер стационарного телефона: {{ user.userInfo.staticphone }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Статус: {{ userRole }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Дата регистрации в системе: {{ user.datereg.format("d.m.Y H:i") }}</p>
+                    <hr style="border:solid 1px black">
+                    <p>Страна: <img src='{{ asset('images/flags_icons/') }}{{ user.userInfo.country.code }}.png' alt='{{ user.userInfo.country.name }}' title='{{ user.userInfo.country.name }}' style="width: 60px"></p>
+                    <hr style="border:solid 1px black">
+                    <p>{{ 'Access to orders' | trans }}:
+                        {% if (user.isaccessorder == 1) %} <span class="fa fa-check-circle" style="color: #008000"></span>
+                        {% else %} <span style="color: #FF0000" class="fa fa-minus-circle"></span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>#}
+            {#{% else %}#}
+            {#<div class="row">
+                {% if if showWindow is defined and showWindow is not empty %}
+                    <div class="row">
+                        <div id="modal-window">
+                            <div id="success-window">
+                                <div class="Message Message--green" id="js-timer">
+                                    <div class="Message-icon">
+                                        <i class="fa fa-check"></i>
+                                    </div>
+                                    <div class="Message-body">
+                                        <p align="center">Данные сохранены!</p>
+                                    </div>
+                                    <button class="Message-close js-messageClose"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>#}
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var fileWrapper = $('.file-wrapper'),
+                        fileInfo = fileWrapper.find('.file-info'),
+                        fileButtons = fileWrapper.find('.file-buttons');
+
+                    $('#file-uploader').fileupload({
+                        //url: 'server/php/',
+                        dataType: 'json',
+                        autoUpload: false,
+                        //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                        //maxFileSize: 999000,
+                        // Enable image resizing, except for Android and Opera,
+                        disableImageResize: /Android(?!.*Chrome)|Opera/
+                            .test(window.navigator.userAgent),
+                        previewMaxWidth: 100,
+                        previewMaxHeight: 100,
+                        previewCrop: true,
+                        limitMultiFileUploads: 1,
+                        messages: {
+                            unknownError: 'Unknown error'
+                        },
+                        add: function (e, data) {
+                            //console.log(data.files);
+                            var fileData = data.files[0];
+                            fileInfo.find('#file-name').empty().append(fileData.name);
+                            fileInfo.find('#file-size').empty().append(formatFileSize(fileData.size));
+                            fileButtons.find('#btn-start').off('click').on('click', function (e) {
+                                e.preventDefault();
+                                data.submit();
+                            })
+                        },
+                        done: function (e, data) {
+                            console.log(data.result);
+                        },
+                        progressall: function (e, data) {
+                            //console.log(data.loaded);
+                            var progress = parseInt(data.loaded / data.total * 100, 10);
+                            $('#progress .bar').css(
+                                'width',
+                                progress + '%'
+                            );
+                        },
+                        /*done: function (e, data) {
+                            alert('1');
+                            $.each(data.result.files, function (index, file) {
+                                $('<p/>').text(file.name).appendTo(document.body);
+                            });
+                        }*/
+                    }).on('fileuploadprogress', function (e, data) {
+                        console.log(data.files);
+                    });
+
+                    function formatFileSize(bytes) {
+                        if (typeof bytes !== 'number') {
+                            return '';
+                        }
+
+                        if (bytes >= 1000000000) {
+                            return (bytes / 1000000000).toFixed(2) + ' GB';
+                        }
+
+                        if (bytes >= 1000000) {
+                            return (bytes / 1000000).toFixed(2) + ' MB';
+                        }
+
+                        return (bytes / 1000).toFixed(2) + ' KB';
+                    }
+                    function formatBitrate (bits) {
+                        if (typeof bits !== 'number') {
+                            return '';
+                        }
+
+                        if (bits >= 1000000000) {
+                            return (bits / 1000000000).toFixed(2) + ' Gbit/s';
+                        }
+
+                        if (bits >= 1000000) {
+                            return (bits / 1000000).toFixed(2) + ' Mbit/s';
+                        }
+
+                        if (bits >= 1000) {
+                            return (bits / 1000).toFixed(2) + ' kbit/s';
+                        }
+
+                        return bits.toFixed(2) + ' bit/s';
+                    }
+                    function formatTime (seconds) {
+                        var date = new Date(seconds * 1000),
+                            days = Math.floor(seconds / 86400);
+
+                        days = days ? days + 'd ' : '';
+
+                        return days +
+                            ('0' + date.getUTCHours()).slice(-2) + ':' +
+                            ('0' + date.getUTCMinutes()).slice(-2) + ':' +
+                            ('0' + date.getUTCSeconds()).slice(-2);
+                    }
+                    function formatPercentage (floatValue) {
+                        return (floatValue * 100).toFixed(2) + ' %';
+                    }
+                });
+            </script>
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-3">
+                    {#<form id="file-uploader" enctype="multipart/form-data" data-url="{{ oneup_uploader_endpoint('gallery') }}" method="POST" >#}
+                        {#<div class="file-wrapper">#}
+                            {#<div class="file-buttons">#}
+                                {#<input type="file" name="files[]" class="">#}
+                                {#<button type="button" class="" id="btn-start">Start upload</button>#}
+                                {#<!-- The global file processing state -->#}
+                                {#<span class="fileupload-process"></span>#}
+                            {#</div>#}
+                            {#<div class="file-info">#}
+                                {#Filename: <div id="file-name"></div>#}
+                                {#Size: <div id="file-size"></div>#}
+                            {#</div>#}
+                            {#<!-- The global progress state -->#}
+                            {#<div class="file-progress fade" style="display: none">#}
+                                {#<!-- The global progress bar -->#}
+                                {#<div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>#}
+                                {#<!-- The extended global progress state -->#}
+                                {#<div class="progress-extended">&nbsp;</div>#}
+                            {#</div>#}
+                        {#</div>#}
+                        {#<!-- The table listing the files available for upload/download -->#}
+                        {#<table role="presentation"><tbody class="files"></tbody></table>#}
+                    {#</form>#}
+                </div>
+            </div>
+        <div class="row">
+            <p>ID: {{ user.id }}</p>
+            <hr style="border:solid 1px black">
+            <p>Логин: {{ user.login }}</p>
+            <hr style="border:solid 1px black">
+            <p>Email: {{ user.email }}</p>
+            <hr style="border:solid 1px black">
+            <p>Дата регистрации в системе: {{ user.datereg.format("d.m.Y H:i") }}</p>
+            <hr style="border:solid 1px black">
+            <p>{{ 'Access to orders' | trans }}:
+                {% if (user.isaccessorder == 1) %} <span class="fa fa-check-circle" style="color: #008000">1</span>
+                {% else %} <span style="color: #FF0000" class="fa fa-minus-circle">0</span>
+                {% endif %}
+            </p>
+        </div>
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-3">
+                    {{ form_start(formProfile, {'attr': {'id' : 'formProfile'}}) }}
+                    <div class="form-group">
+                        <p id="user-avatar">{{ user.rawavatar | raw }}</p>
+                        {{ form_start(formProfile) }}
+                        <div class="input-group form-group">
+                            <label for="btn-change-avatar" class="btn btn-success"><span class="icon-trash-1">&nbspИзменить</span></label>
+                            <input type="button" id="btn-change-avatar" class="hidden">
+                        </div>
+                        <div id="block-change-avatar" style="display: none">
+                            <div id="block-upload-avatar" style="display: none">
+                                {#{% include "PunkAveFileUploaderBundle:Default:upload_avatar_template.html.twig" %}#}
+                                <div class="input-group">
+                                    <div class="file-uploader-avatar"></div>
+                                </div>
+                            </div>
+                            <div id="block-choose-man-avatar" style="display: none">
+                                <p><img src='/study/web/uploads/avatars/default_m.jpg' align='middle' alt='Мужской аватар' width='100px' height='auto' class='thumbnail'></p>
+                            </div>
+                            <div id="block-choose-woman-avatar" style="display: none">
+                                <p><img src='/study/web/uploads/avatars/default_w.jpg' align='middle' alt='Мужской аватар' width='100px' height='auto' class='thumbnail'></p>
+                            </div>
+                            {{ form_label(formProfile.selectorAvatarOptions) }}
+                            {{ form_errors(formProfile.selectorAvatarOptions) }}
+                            <div class="input-group">
+                                {{ form_widget(formProfile.selectorAvatarOptions) }}
+                            </div>
+                        </div>
+                        {{ form_label(formProfile.username) }}
+                        {{ form_errors(formProfile.username) }}
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="icon-fontsize-1"></i></span>
+                            {{ form_widget(formProfile.username) }}
+                        </div>
+                        {{ form_label(formProfile.surname) }}
+                        {{ form_errors(formProfile.surname) }}
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="icon-fontsize-1"></i></span>
+                            {{ form_widget(formProfile.surname) }}
+                        </div>
+                        {{ form_label(formProfile.lastname) }}
+                        {{ form_errors(formProfile.lastname) }}
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="icon-fontsize-1"></i></span>
+                            {{ form_widget(formProfile.lastname) }}
+                        </div>
+                        {{ form_label(formProfile.skype) }}
+                        {{ form_errors(formProfile.skype) }}
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="icon-skype-1"></i></span>
+                            {{ form_widget(formProfile.skype) }}
+                        </div>
+                        {% block form_mobile_tel %}
+                            {{ form_label(formProfile.mobilePhone) }}
+                            {{ form_errors(formProfile.mobilePhone) }}
+                            {{ form_errors(formProfile.country) }}
+                            <div class="row">
+                                <div class="form-group col-xs-3">
+                                    <div class="input-group">
+                                        {{ form_widget(formProfile.country) }}
+                                    </div>
+                                </div>
+                                <div class="form-group col-xs-9 reset-padding">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="icon-mobile-alt"></i></span>
+                                        {{ form_widget(formProfile.mobilePhone) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endblock %}
+                        {{ form_label(formProfile.staticPhone) }}
+                        {{ form_errors(formProfile.staticPhone) }}
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="icon-phone-3"></i></span>
+                            {{ form_widget(formProfile.staticPhone) }}
+                        </div>
+                        {{ form_label(formProfile.account) }}
+                        {{ form_errors(formProfile.account) }}
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="icon-fontsize-1"></i></span>
+                            {{ form_widget(formProfile.account) }}
+                        </div>
+                        {{ form_label(formProfile.bic) }}
+                        {{ form_errors(formProfile.bic) }}
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="icon-fontsize-1"></i></span>
+                            {{ form_widget(formProfile.bic) }}
+                        </div>
+                        {{ form_label(formProfile.dateBirthday) }}
+                        {{ form_errors(formProfile.dateBirthday) }}
+                        <div class="input-group form-group">
+                            <span class="input-group-addon"><i class="icon-fontsize-1"></i></span>
+                            {{ form_widget(formProfile.dateBirthday) }}
+                        </div>
+                        {% if (user.isaccessorder == 0) %}
+                            <div class="input-group">
+                                <div class="file-uploader"></div>
+                            </div>
+                        {% endif %}
+                        <div class="input-group">
+                            <button type="submit" class="btn btn-success">{{ 'Сохранить'|trans }}</button>
+                            <button type="reset" class="btn btn-default">{{ 'Отмена'|trans }}</button>
+                        </div>
+                    </div>
+                    {{ form_end(formProfile) }}
+                </div>
+            </div>
+            {#{% endif %}#}
+            <script>
+                $(document).ready(function() {
+                    //$.fn.button.noConflict();
+                    /*var customAvatarOption = $("#formProfile_selectorAvatarOptions_2");
+                    var manAvatarOption = $("#formProfile_selectorAvatarOptions_0");
+                    var womanAvatarOption = $("#formProfile_selectorAvatarOptions_1");
+                    if (customAvatarOption[0].checked) {
+                        $("#block-upload-avatar").show();
+                    }
+                    if (manAvatarOption[0].checked) {
+                        $("#block-choose-man-avatar").show();
+                    }
+                    if (womanAvatarOption[0].checked) {
+                        $("#block-choose-woman-avatar").show();
+                    }*/
+                    function format(state) {
+                        /*var a = state.text;
+                         var ind = a.indexOf('+');
+                         var code = a.substring(ind);*/
+                        return "<img title='" + state.text + "' class='flag' src='{{ asset('bundles/images/flags/') }}" + state.id.toLowerCase() + ".png'/>";
+                    }
+                    /*$("#formProfile_selectorCountry").select2({
+                        minimumResultsForSearch: -1,
+                        formatResult: format,
+                        formatSelection: format,
+                        escapeMarkup: function(m) { return m; }
+                    });*/
+                    {% if (user.isaccessorder == 0) %}
+                    $("#help-popover").popover({
+                        html : true,
+                        content : function() {
+                            return "Для получения доступа к заказам требуется пройти <a href=''>процедуру подтверждения личности</a>";
+                        }
+                    });
+                   /* new PunkAveFileUploader({
+                        'viewUrl': {{ ('/study/web/uploads/author/' ~ user.id)| json_encode | raw }},
+                        'el': '.file-uploader',
+                        'delaySubmitWhileUploading': '.edit-form',
+                        'errorCallback': function(errorObj) {
+                            if (errorObj.error == 'maxNumberOfFiles') {
+                                alert("Maximum uploaded files exceeded!");
+                            }
+                        }
+                    });*/
+                    {% endif %}
+                    {#{% if (showWindow) %}#}
+                    function closeMessage(el) {
+                        el.addClass('is-hidden');
+                    }
+                    $('.js-messageClose').on('click', function(e) {
+                        closeMessage($(this).closest('.Message'));
+                    });
+                    setTimeout(function() {
+                        closeMessage($('#js-timer'));
+                    }, 3000);
+                    {#{% endif %}#}
+                  /*  var avatarFileUploader = new PunkAveFileUploader({
+                        'el': '.file-uploader-avatar',
+                        'delaySubmitWhileUploading': '.edit-form',
+                        'errorCallback': function(errorObj) {
+                            if (errorObj.error == 'maxNumberOfFiles') {
+                                alert("Maximum uploaded files exceeded!");
+                            } else if (errorObj.error == 'acceptFileTypes') {
+                                alert("Такой тип файла запрещен!");
+                            } else if (errorObj.error == 'minFileSize') {
+                                alert("Файл слишком маленький!");
+                            } else if (errorObj.error == 'maxFileSize') {
+                                alert("Файл слишком большой!");
+                            } else if (errorObj.error == 'incorrectImage') {
+                                alert("Файл с проблемой!");
+                            }
+                        }
+                    });*/
+                    $(".file-uploader-avatar").bind('fileuploaddone', function (e, data) {
+                        //window.location = location.href;
+                        //console.log(data.result[data.result.length-1]);
+                        var url = data.result[data.result.length-1].url;
+                        $("#user-avatar").find('img').attr('src', url);
+
+                    });
+                    /*manAvatarOption.click(function() {
+                        $("#block-upload-avatar").hide();
+                        $("#block-choose-man-avatar").show();
+                        $("#block-choose-woman-avatar").hide();
+                    });
+                    womanAvatarOption.click(function() {
+                        $("#block-upload-avatar").hide();
+                        $("#block-choose-woman-avatar").show();
+                        $("#block-choose-man-avatar").hide();
+                    });
+                    customAvatarOption.click(function() {
+                        $("#block-upload-avatar").show();
+                        $("#block-choose-man-avatar").hide();
+                        $("#block-choose-woman-avatar").hide();
+                    });*/
+                    /*$("#btn-change-avatar").click(function() {
+                        $("#block-change-avatar").toggle();
+                    });
+                    $("input[id^=formProfile_field]").maxlength({
+                        alwaysShow: true
+                    });*/
+                    /*$("#formProfile_fieldUsername, #formProfile_fieldSurname, #formProfile_fieldLastname").maxlength({
+                     alwaysShow: true
+                     });*/
+                });
+            </script>
+            {#<script type="text/javascript" src="{{ asset('bundles/js/underscore.js') }}"></script>#}
+            {#<script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/jquery.fileupload.js') }}"></script>#}
+            {#<script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/jquery.iframe-transport.js') }}"></script>#}
+            {#<script type="text/javascript" src="{{ asset('bundles/punkavefileuploader/js/FileUploader.js') }}"></script>#}
+        </div>
+    {% endblock %}

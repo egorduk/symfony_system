@@ -29,12 +29,12 @@
       <option name="default">0</option>
     </options>
     </field>
-    <field name="isShowAuthor" type="boolean" column="is_show_author" nullable="false">
+    <field name="isShownUser" type="boolean" column="is_show_user" nullable="false">
       <options>
         <option name="default">1</option>
       </options>
     </field>
-    <field name="isShowClient" type="boolean" column="is_show_client" nullable="false">
+    <field name="isShownOthers" type="boolean" column="is_show_others" nullable="false">
       <options>
         <option name="default">1</option>
       </options>

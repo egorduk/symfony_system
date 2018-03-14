@@ -1,4 +1,6 @@
-{% extends "UserBundle::layout.html.twig" %}
+{% extends 'UserBundle::layout.html.twig' %}
+
+{% import '@User/User/macros/ordersTable.html.twig' as macros %}
 
 {% block title %}{{ 'New orders' }}{% endblock %}
 
@@ -6,47 +8,14 @@
         {{ parent() }}
     {% endblock %}
 
-    {#{% block javascripts_head %}
-        {{ parent() }}
-        <script>
-            var dataTableRussianLoc = "{{ asset('json/DataTable/Russian.json') }}";
-        </script>
-    {% endblock %}#}
-
     {% block content %}
         <div class="col-md-12">
             <table id="orders-table" class="display responsive" width="100%">
                 <thead>
-                <tr>
-                    <th>№ заказа</th>
-                    <th>Предмет</th>
-                    <th>Тип работы</th>
-                    <th>Тема работы</th>
-                    <th>Выполнение до</th>
-                    <th>До сдачи</th>
-                    <th>Max ставка</th>
-                    <th>Min ставка</th>
-                    <th>Ставок</th>
-                    <th>Создан</th>
-                    <th>Статус</th>
-                    <th>Действия</th>
-                </tr>
+                {{ macros.ordersTable(type) }}
                 </thead>
                 <tfoot>
-                <tr>
-                    <th>№ заказа</th>
-                    <th>Предмет</th>
-                    <th>Тип работы</th>
-                    <th>Тема работы</th>
-                    <th>Выполнение до</th>
-                    <th>До сдачи</th>
-                    <th>Max ставка</th>
-                    <th>Min ставка</th>
-                    <th>Ставок</th>
-                    <th>Создан</th>
-                    <th>Статус</th>
-                    <th>Действия</th>
-                </tr>
+                {{ macros.ordersTable(type) }}
                 </tfoot>
                 <tbody>
                 {% for order in orders %}
@@ -55,13 +24,33 @@
                         <td>{{ order.subject.name }}</td>
                         <td>{{ order.type.name }}</td>
                         <td>{{ order.theme }}</td>
-                        <td>{{ order.dateexpire|date('d.m.Y H:i') }}</td>
-                        <td>{{ order.remaining }}</td>
-                        <td>{{ order.maxBid }}</td>
-                        <td>{{ order.minBid }}</td>
-                        <td>{{ order.cntBids }}</td>
-                        <td>{{ order.datecreate|date('d.m.Y H:i') }}</td>
-                        <td>{{ order.status.name }}</td>
+                        {% if type == statusUserOrderBid %}
+                            <td>{{ order.lastBid.dateBid | date('d.m.Y H:i') }}</td>
+                            <td>{{ order.lastBid.sum }}</td>
+                        {% endif %}
+                        {% if type != statusOrderGuarantee and type != statusUserOrderFinish %}
+                            <td>{{ order.dateexpire | date('d.m.Y H:i') }}</td>
+                            <td>{{ order.remainingExpire }}</td>
+                        {% endif %}
+                        {% if type != statusOrderWork and type != statusUserOrderFinish and type != statusOrderGuarantee %}
+                            <td>{{ order.maxBid | default('-') }}</td>
+                            <td>{{ order.minBid | default('-') }}</td>
+                            <td>{{ order.cntBids | default('-') }}</td>
+                        {% endif %}
+                        {% if type == statusOrderGuarantee %}
+                            <td>{{ order.dateGuarantee | date('d.m.Y H:i') }}</td>
+                            <td>{{ order.remainingGuarantee }}</td>
+                            <td>{{ order.dateComplete | date('d.m.Y H:i') }}</td>
+                        {% endif %}
+                        {% if type == statusUserOrderFinish %}
+                            <td>{{ order.dateConfirm | date('d.m.Y H:i') }}</td>
+                            <td>{{ order.dateComplete | date('d.m.Y H:i') }}</td>
+                            <td>{{ order.spentDays }}</td>
+                        {% endif %}
+                        <td>{{ order.datecreate | date('d.m.Y H:i') }}</td>
+                        {% if type == statusOrderNew %}
+                            <td>{{ order.status.name }}</td>
+                        {% endif %}
                         <td>
                             <button>Отказаться</button>
                             <button>Скрыть</button>
@@ -80,21 +69,21 @@
     {% endblock %}
     {% block javascripts_footer %}
         <script>$(document).ready( function () {
-            var selectedOrderId,
-                ajaxSpinner = Spinner,
-                buttonCommon = {
-                    exportOptions: {
-                        format: {
-                            body: function(data, row, column, node) {
-                                // Strip $ from salary column to make it numeric
-                                return column === 10 ?
-                                    //data.replace( /[$,]/g, '' ) :
-                                    '' :
-                                    data;
+                var selectedOrderId,
+                    ajaxSpinner = Spinner,
+                    buttonCommon = {
+                        exportOptions: {
+                            format: {
+                                body: function(data, row, column, node) {
+                                    // Strip $ from salary column to make it numeric
+                                    return column === 10 ?
+                                        //data.replace( /[$,]/g, '' ) :
+                                        '' :
+                                        data;
+                                }
                             }
                         }
-                    }
-                };
+                    };
 
                 var dataTable = $('#orders-table').DataTable({
                     initComplete: function() {

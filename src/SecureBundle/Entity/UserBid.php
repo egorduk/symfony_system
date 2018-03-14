@@ -53,14 +53,14 @@ class UserBid
     private $isClientDate;
 
     /**
-     * @ORM\Column(name="is_show_author", type="boolean")
+     * @ORM\Column(name="is_show_others", type="boolean")
      */
-    private $isShowAuthor;
+    private $isShownOthers;
 
     /**
-     * @ORM\Column(name="is_show_client", type="boolean")
+     * @ORM\Column(name="is_show_user", type="boolean")
      */
-    private $isShowClient;
+    private $isShownUser;
 
     /**
      * @ORM\Column(name="is_select_client", type="boolean")
@@ -98,8 +98,8 @@ class UserBid
         $this->isSelectClient = 0;
         $this->isClientDate = 0;
         $this->day = 0;
-        $this->isShowAuthor = 1;
-        $this->isShowClient = 1;
+        $this->isShownOthers = 1;
+        $this->isShownUser = 1;
     }
 
     public function setSum($sum)
@@ -162,30 +162,6 @@ class UserBid
         return $this->isClientDate;
     }
 
-    public function setIsShowAuthor($isShowAuthor)
-    {
-        $this->isShowAuthor = $isShowAuthor;
-
-        return $this;
-    }
-
-    public function getIsShowAuthor()
-    {
-        return $this->isShowAuthor;
-    }
-
-    public function setIsShowClient($isShowClient)
-    {
-        $this->isShowClient = $isShowClient;
-
-        return $this;
-    }
-
-    public function getIsShowClient()
-    {
-        return $this->isShowClient;
-    }
-
     public function setIsSelectClient($isSelectClient)
     {
         $this->isSelectClient = $isSelectClient;
@@ -245,5 +221,25 @@ class UserBid
     public function setOrder($order)
     {
         $this->order = $order;
+    }
+
+    public function getIsShownOthers()
+    {
+        return $this->isShownOthers;
+    }
+
+    public function setIsShownOthers($isShownOthers)
+    {
+        $this->isShownOthers = $isShownOthers;
+    }
+
+    public function getIsShownUser()
+    {
+        return $this->isShownUser;
+    }
+
+    public function setIsShownUser($isShownUser)
+    {
+        $this->isShownUser = $isShownUser;
     }
 }

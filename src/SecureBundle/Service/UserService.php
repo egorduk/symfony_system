@@ -3,6 +3,7 @@
 namespace SecureBundle\Service;
 
 use AuthBundle\Entity\User;
+use AuthBundle\Entity\UserInfo;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
@@ -81,9 +82,13 @@ class UserService
         return $user;
     }
 
-    public function updateProfile($formData)
+    public function updateProfile(UserInfo $userInfo)
     {
-        $this->em->persist($formData);
+        if ($date = $userInfo->getDateBirthday()) {
+            //$userInfo->setDateBirthday($date->getDate());
+        }
+
+        $this->em->persist($userInfo);
         $this->em->flush();
     }
 }

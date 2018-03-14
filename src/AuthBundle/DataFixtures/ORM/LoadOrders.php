@@ -32,7 +32,10 @@ class LoadOrders implements ORMFixtureInterface
             $order->setClientDegree(rand(0, 10));
             $order->setCountSheet(rand(1, 200));
             $order->setDateCreate($dateCreate = $this->randomDate());
-            $order->setDateExpire($this->randomDate($dateCreate));
+            $order->setDateConfirm($dateConfirm = $this->randomDate($dateCreate));
+            $order->setDateGuarantee($dateGuarantee = $this->randomDate($dateConfirm));
+            $order->setDateComplete($dateComplete = $this->randomDate($dateGuarantee));
+            $order->setDateExpire($dateExpire = $this->randomDate($dateComplete));
             $order->setOriginality(rand(0, 100));
             $order->setTask($faker->text());
             $order->setTheme($faker->text(255));

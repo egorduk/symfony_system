@@ -1,4 +1,13 @@
-{% extends "::base.html.twig" %}
+{% extends '::base.html.twig' %}
+
+{% set statusUserOrderBid = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_BID') %}
+{% set statusUserOrderFinish = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_FINISH') %}
+{% set statusOrderWork = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_WORK_CODE') %}
+{% set statusOrderGuarantee = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_GUARANTEE_CODE') %}
+{% set statusOrderNew = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_NEW_CODE') %}
+{% set statusOrderCompleted = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_COMPLETED_CODE') %}
+{% set statusOrderAuction = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_AUCTION_CODE') %}
+{% set statusOrderAssigned = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_ASSIGNED_CODE') %}
 
 {% block head %}
     {% block stylesheets %}
@@ -79,10 +88,10 @@
                                     <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'work'}) }}">На выполнении</a>
                                 </li>
                                 <li>
-                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'finish'}) }}">Завершенные</a>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'guarantee'}) }}">На гарантии</a>
                                 </li>
                                 <li>
-                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'favorite'}) }}">Избранные</a>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'finish'}) }}">Завершенные</a>
                                 </li>
                             </ul>
                         </div>

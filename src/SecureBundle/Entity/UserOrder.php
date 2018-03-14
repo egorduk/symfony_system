@@ -75,14 +75,14 @@ class UserOrder
     private $dateConfirm;
 
     /**
-     * @ORM\Column(name="is_show_author", type="boolean")
+     * @ORM\Column(name="is_show_user", type="boolean")
      */
-    private $isShownAuthor;
+    private $isShownUser;
 
     /**
-     * @ORM\Column(name="is_show_client", type="boolean")
+     * @ORM\Column(name="is_shown_others", type="boolean")
      */
-    private $isShownClient;
+    private $isShownOthers;
 
     /**
      * @ORM\Column(name="is_delay", type="boolean")
@@ -149,17 +149,20 @@ class UserOrder
     private $bids;
 
     private $rawFiles = null;
-    private $remaining = null;
+    private $remainingExpire = null;
+    private $remainingGuarantee = null;
     private $maxBid = 0;
     private $minBid = 0;
     private $cntBids = 0;
+    private $lastBid = null;
+    private $spentDays = 0;
 
     public function __construct()
     {
         $this->isDelayed = 0;
         $this->isHidden = 0;
-        $this->isShownAuthor = 1;
-        $this->isShownClient = 1;
+        $this->isShownOthers = 1;
+        $this->isShownUser = 1;
 
         $this->files = new ArrayCollection();
         $this->bids = new ArrayCollection();
@@ -344,30 +347,6 @@ class UserOrder
         return $this->dateConfirm;
     }
 
-    public function setIsShownAuthor($isShowAuthor)
-    {
-        $this->isShownAuthor = $isShowAuthor;
-
-        return $this;
-    }
-
-    public function getIsShownAuthor()
-    {
-        return $this->isShownAuthor;
-    }
-
-    public function setIsShownClient($isShowClient)
-    {
-        $this->isShownClient = $isShowClient;
-
-        return $this;
-    }
-
-    public function getIsShownClient()
-    {
-        return $this->isShownClient;
-    }
-
     public function setIsDelayed($isDelay)
     {
         $this->isDelayed = $isDelay;
@@ -471,14 +450,14 @@ class UserOrder
         $this->bids = $bids;
     }
 
-    public function getRemaining()
+    public function getRemainingExpire()
     {
-        return $this->remaining;
+        return $this->remainingExpire;
     }
 
-    public function setRemaining($remaining)
+    public function setRemainingExpire($remainingExpire)
     {
-        $this->remaining = $remaining;
+        $this->remainingExpire = $remainingExpire;
     }
 
     public function getMaxBid()
@@ -509,5 +488,85 @@ class UserOrder
     public function setCntBids($cntBids)
     {
         $this->cntBids = $cntBids;
+    }
+
+    public function getLastBid()
+    {
+        return $this->lastBid;
+    }
+
+    public function setLastBid($lastBid)
+    {
+        $this->lastBid = $lastBid;
+    }
+
+    public function isNew()
+    {
+        return $this->status->getCode() === StatusOrder::STATUS_ORDER_NEW_CODE;
+    }
+
+    public function isGuarantee()
+    {
+        return $this->status->getCode() === StatusOrder::STATUS_ORDER_GUARANTEE_CODE;
+    }
+
+    public function isWork()
+    {
+        return $this->status->getCode() === StatusOrder::STATUS_ORDER_WORK_CODE;
+    }
+
+    public function isAuction()
+    {
+        return $this->status->getCode() === StatusOrder::STATUS_ORDER_AUCTION_CODE;
+    }
+
+    public function isAssigned()
+    {
+        return $this->status->getCode() === StatusOrder::STATUS_ORDER_ASSIGNED_CODE;
+    }
+
+    public function isCompleted()
+    {
+        return $this->status->getCode() === StatusOrder::STATUS_ORDER_COMPLETED_CODE;
+    }
+
+    public function getIsShownUser()
+    {
+        return $this->isShownUser;
+    }
+
+    public function setIsShownUser($isShownUser)
+    {
+        $this->isShownUser = $isShownUser;
+    }
+
+    public function getIsShownOthers()
+    {
+        return $this->isShownOthers;
+    }
+
+    public function setIsShownOthers($isShownOthers)
+    {
+        $this->isShownOthers = $isShownOthers;
+    }
+
+    public function getRemainingGuarantee()
+    {
+        return $this->remainingGuarantee;
+    }
+
+    public function setRemainingGuarantee($remainingGuarantee)
+    {
+        $this->remainingGuarantee = $remainingGuarantee;
+    }
+
+    public function getSpentDays()
+    {
+        return $this->spentDays;
+    }
+
+    public function setSpentDays($spentDays)
+    {
+        $this->spentDays = $spentDays;
     }
 }

@@ -42,12 +42,12 @@
     <field name="dateGuarantee" type="datetime" column="date_guarantee" nullable="true"/>
     <field name="dateCancel" type="datetime" column="date_cancel" nullable="true"/>
     <field name="dateConfirm" type="datetime" column="date_confirm" nullable="true"/>
-    <field name="isShownAuthor" type="boolean" column="is_show_author" nullable="false">
+    <field name="isShownOthers" type="boolean" column="is_show_others" nullable="false">
       <options>
           <option name="default">1</option>
       </options>
     </field>
-    <field name="isShownClient" type="boolean" column="is_show_client" nullable="false">
+    <field name="isShownUser" type="boolean" column="is_show_user" nullable="false">
         <options>
             <option name="default">1</option>
         </options>

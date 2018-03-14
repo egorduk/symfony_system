@@ -2,27 +2,38 @@
 
 namespace SecureBundle\Service;
 
-use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\OrderFile;
-use SecureBundle\Entity\UserBid;
+use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Entity\UserOrder;
-use SecureBundle\Service\DateTimeService;
+use SecureBundle\Repository\StatusOrderRepository;
+use SecureBundle\Repository\UserOrderRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class OrderService
+class UserOrderService
 {
     private $em;
     private $router;
-    private $fh;
+    private $fileService;
     private $dth;
+    private $statusOrderRepository;
+    private $userOrderRepository;
 
-    public function __construct(EntityManager $em, Router $router, FileService $fh, DateTimeService $dth)
-    {
+    public function __construct(
+        EntityManager $em,
+        Router $router,
+        FileService $fileService,
+        DateTimeService $dth,
+        StatusOrderRepository $statusOrderRepository,
+        UserOrderRepository $userOrderRepository
+    ) {
         $this->em = $em;
         $this->router = $router;
-        $this->fh = $fh;
+        $this->fileService = $fileService;
         $this->dth = $dth;
+        $this->statusOrderRepository = $statusOrderRepository;
+        $this->userOrderRepository = $userOrderRepository;
     }
 
     /**
@@ -62,9 +73,9 @@ class OrderService
                 'id' => $file->getId(),
                 'name' => $file->getName(),
                 'dateUpload' => $this->dth->getDatetimeFormatted($file->getDateUpload(), 'd.m.Y H:i'),
-                'size' => $file->getSize(),
-                'url' => $this->fh->getFileUrl($file->getId(), OrderFile::ATTACHMENTS_TYPE),
-                'extension' => $this->fh->getFileExtension($file->getName()),
+                'size' => $this->fileService->getSizeFile($file->getSize()),
+                'url' => $this->fileService->getFileUrl($file->getId(), OrderFile::ATTACHMENTS_TYPE),
+                'extension' => $this->fileService->getFileExtension($file->getName()),
             ];
         }
 
@@ -81,5 +92,22 @@ class OrderService
         $remaining = $this->dth->getDiffBetweenDates($date);
 
         return $remaining->format('%d дн. %h ч. %i мин.');
+    }
+
+    /**
+     * @param UserOrder $order
+     * @param string $newStatus
+     */
+    public function changeStatusOrder(UserOrder $order, $newStatus)
+    {
+        $status = $this->statusOrderRepository->findOneBy(['code' => $newStatus]);
+
+        if (!$status instanceof StatusOrder) {
+            throw new NotFoundHttpException();
+        }
+
+        $order->setStatus($status);
+
+        $this->userOrderRepository->save($order, true);
     }
 }

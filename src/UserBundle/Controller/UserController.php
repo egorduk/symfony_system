@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UserBundle\Form\BidForm;
+use UserBundle\Form\ProfileForm;
 
 class UserController extends Controller
 {
@@ -50,31 +51,42 @@ class UserController extends Controller
 
     public function bidsAction(Request $request)
     {
-       /* $bidHelper = $this->get('secure.bid_helper');
+        /* $bidHelper = $this->get('secure.bid_helper');
 
-        $bidsData = $bidHelper->getBidsWithOrdersByUser($this->getUser());
-        $bidsData = $bidHelper->setRemainingTime($bidsData);
+         $bidsData = $bidHelper->getBidsWithOrdersByUser($this->getUser());
+         $bidsData = $bidHelper->setRemainingTime($bidsData);
 
-        return $this->render(
-            'SecureBundle:Author:bidsPage.html.twig',
-            [
-                'bidsData' => $bidsData,
-            ]
-        );*/
+         return $this->render(
+             'SecureBundle:Author:bidsPage.html.twig',
+             [
+                 'bidsData' => $bidsData,
+             ]
+         );*/
     }
 
     /**
+     * @Template()
+     *
      * @param Request $request
      * @param string $type
      *
-     * @return Response
+     * @return array
      */
-    public function ordersAction(Request $request, $type)
+    public function ordersPageAction(Request $request, $type)
     {
         $orders = null;
+        $user = $this->getUser();
 
         if ($type === StatusOrder::STATUS_ORDER_NEW_CODE) {
-            $orders = $this->get('secure.repository.user_order')->getValuationOrders();
+            $orders = $this->get('secure.repository.user_order')->getValuationOrders($user);
+        } else if ($type === StatusOrder::STATUS_USER_ORDER_BID) {
+            $orders = $this->get('secure.repository.user_order')->getEvaluatedOrders($user);
+        } else if ($type === StatusOrder::STATUS_ORDER_WORK_CODE) {
+            $orders = $this->get('secure.repository.user_order')->getWorkOrders($user);
+        } else if ($type === StatusOrder::STATUS_ORDER_GUARANTEE_CODE) {
+            $orders = $this->get('secure.repository.user_order')->getGuaranteeOrders($user);
+        } else if ($type === StatusOrder::STATUS_USER_ORDER_FINISH) {
+            $orders = $this->get('secure.repository.user_order')->getCompletedOrders($user);
         }
 
         $dateTimeService = $this->get('secure.service.date_time');
@@ -82,22 +94,26 @@ class UserController extends Controller
 
         /* @var UserOrder $order */
         foreach ($orders as $order) {
-            $remaining = $dateTimeService
-                ->getDiffBetweenDates($order->getDateExpire(), $order->getDateCreate())
-                ->format('%d дн. %h ч. %i мин.');
-
-            $data = $bidService->getMaxMinCntBids($order->getId());
-            $order->setMaxBid($data['max_bid']);
-            $order->setMinBid($data['min_bid']);
-            $order->setCntBids($data['cnt_bids']);
-            $order->setRemaining($remaining);
+            if ($type === StatusOrder::STATUS_USER_ORDER_BID) {
+                $lastBid = $bidService->getLastUserBid($user, $order);
+                $order->setLastBid($lastBid);
+            } else if ($type === StatusOrder::STATUS_ORDER_GUARANTEE_CODE) {
+                $order->setRemainingGuarantee($dateTimeService->getRemainingGuaranteeTime($order));
+            } elseif ($type === StatusOrder::STATUS_USER_ORDER_FINISH) {
+                $order->setSpentDays($dateTimeService->getSpentDays($order));
+            } else {
+                $data = $bidService->getMaxMinCntBids($order);
+                $order->setMaxBid($data['max_bid']);
+                $order->setMinBid($data['min_bid']);
+                $order->setCntBids($data['cnt_bids']);
+                $order->setRemainingExpire($dateTimeService->getRemainingExpireTime($order));
+            }
         }
 
-        return $this->render(
-            'UserBundle:User:newOrders.html.twig', [
-                'orders' => $orders,
-            ]
-        );
+        return [
+            'orders' => $orders,
+            'type' => $type,
+        ];
     }
 
     public function settingsAction(Request $request)
@@ -105,9 +121,43 @@ class UserController extends Controller
 
     }
 
+    /**
+     * @Template()
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
     public function profileAction(Request $request)
     {
+        $user = $this->getUser();
 
+        $userService = $this->get('secure.service.user');
+
+        $user = $userService->setRawUserAvatar($user);
+
+        $formProfile = $this->createForm(ProfileForm::class, $user->getUserInfo());
+        $formProfile->handleRequest($request);
+
+        if ($formProfile->isSubmitted() && $formProfile->isValid()) {
+            $userInfo = $formProfile->getData();
+            $userService->updateProfile($userInfo);
+
+            $this->addFlash(
+                'success',
+                'Profile was updated!'
+            );
+        }
+
+        //$helper = $this->get('oneup_uploader.templating.uploader_helper');
+        //$endpoint = $helper->endpoint('gallery');
+        //dump($endpoint);die;
+
+        return [
+            'user' => $user,
+            'userRole' => $userService->getRoleName($user->getRoles()[0]),
+            'formProfile' => $formProfile->createView(),
+        ];
     }
 
     /**
@@ -125,18 +175,31 @@ class UserController extends Controller
             throw new NotFoundHttpException();
         }
 
+        $dateTimeService = $this->get('secure.service.date_time');
         $orderService = $this->get('secure.service.order');
+        $bidService = $this->get('secure.service.bid');
+
         $files = $orderService->prepareFiles($order->getFiles());
         $order->setRawFiles($files);
+
+        if ($order->isGuarantee()) {
+            $order->setRemainingGuarantee($dateTimeService->getRemainingGuaranteeTime($order));
+        } elseif ($order->isWork() || $order->isAssigned() || $order->isAuction() || $order->isNew()) {
+            $order->setRemainingExpire($dateTimeService->getRemainingExpireTime($order));
+        } elseif ($order->isCompleted()) {
+            $order->setSpentDays($dateTimeService->getSpentDays($order));
+        }
 
         $formBid = $this->createForm(BidForm::class);
         $formBid->handleRequest($request);
 
-        $bidService = $this->get('secure.service.bid');
-
         if ($formBid->isSubmitted() && $formBid->isValid()) {
             $bid = $formBid->getData();
             $isSuccess = $bidService->createBid($bid, $order, $this->getUser());
+
+            if ($order->isNew()) {
+                $orderService->changeStatusOrder($order, StatusOrder::STATUS_ORDER_AUCTION_CODE);
+            }
 
             if ($isSuccess) {
                 $this->addFlash(
@@ -146,24 +209,22 @@ class UserController extends Controller
             }
         }
 
-        $bidsData['statistic'] = $bidService->getMaxMinCntBids($order->getId());
+        $bidsData['statistic'] = $bidService->getMaxMinCntBids($order);
 
         //$customer = $orderData->getUser();
         //$userHelper = $this->get('secure.user_helper');
         //$customer = $userHelper->setRawUserAvatar($customer);
         //$orderData->setUser($customer);
 
-        //$bidsData['bids'] = $bidHelper->getUserBids($this->getUser(), $orderData);
-       /* foreach ($bidsData['bids'] as $key => $bid) {
-            if ($bid['isClientDate']) {
-                $bid['day'] = $dateTimeHelper->getDiffBetweenDates(
-                    $bid['dateBid'],
-                    $orderData->getDateExpire()
-                )->format('%d');
+         $bidsData['bids'] = $bidService->getUserBids($this->getUser(), $order);
 
-                $bidsData['bids'][$key] = $bid;
-            }
-        }*/
+         foreach ($bidsData['bids'] as $key => $bid) {
+             if ($bid['isClientDate']) {
+                 //$bid['day'] = $dateTimeService->getDiffBetweenDatesInDays($order->getDateExpire());
+
+                 $bidsData['bids'][$key] = $bid;
+             }
+         }
 
         return $this->render(
             'UserBundle:User:orderPage.html.twig', [

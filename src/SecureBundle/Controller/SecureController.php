@@ -69,12 +69,7 @@ class SecureController extends Controller
         return $response;
     }
 
-    /**
-     * @Template()
-     *
-     * @return array
-     */
-    public function profileAction(Request $request)
+    /*public function profileAction(Request $request)
     {
         $user = $this->getUser();
 
@@ -109,5 +104,5 @@ class SecureController extends Controller
         //dump($endpoint);die;
 
         return $templateData;
-    }
+    }*/
 }

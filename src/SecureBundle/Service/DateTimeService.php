@@ -2,8 +2,12 @@
 
 namespace SecureBundle\Service;
 
+use SecureBundle\Entity\UserOrder;
+
 class DateTimeService
 {
+    const REMAINING_FORMAT = '%d дн. %d ч. %d мин.';
+
     /**
      * @param int $timestamp
      * @param string $format
@@ -38,7 +42,7 @@ class DateTimeService
      */
     public function getCurrentTimestamp()
     {
-        return strtotime("now");
+        return strtotime('now');
     }
 
     /**
@@ -53,18 +57,27 @@ class DateTimeService
             $dateB = new \DateTime();
         }
 
-        return date_diff($dateA, $dateB);
+        return $dateA->diff($dateB);
+
+        //return date_diff($dateA, $dateB);
     }
 
     /**
      * @param \DateTime $dateA
-     * @param \DateTime $dateB
+     * @param \DateTime|bool $dateB
      *
      * @return int
      */
-    public function getDiffBetweenDatesInDays($dateA, $dateB)
+    public function getDiffBetweenDatesInDays(\DateTime $dateA, $dateB = false)
     {
-        return $this->getDiffBetweenDates($dateA, $dateB)->format('%d');
+        if (!$dateB) {
+            $dateB = new \DateTime();
+        }
+
+        $diff = $dateA->getTimestamp() - $dateB->getTimestamp();
+
+        return floor($diff / (3600 * 24));
+        //return $this->getDiffBetweenDates($dateA, $dateB)->format('%d');
     }
 
     /**
@@ -88,5 +101,25 @@ class DateTimeService
     public function getDatetimeFormatted($datetime, $format)
     {
         return $datetime->format($format);
+    }
+
+    public function getRemainingGuaranteeTime(UserOrder $order)
+    {
+        $diff = $this->getDiffBetweenDates($order->getDateComplete(), $order->getDateGuarantee());
+
+        return sprintf(self::REMAINING_FORMAT, $diff->days, $diff->h, $diff->i);
+    }
+
+    public function getRemainingExpireTime(UserOrder $order)
+    {
+        $diff = $this->getDiffBetweenDates($order->getDateExpire());
+
+        //return $diff->days . ' дн. ' . $diff->h . ' ч. ' . $diff->m . ' мин.';
+        return sprintf(self::REMAINING_FORMAT, $diff->days, $diff->h, $diff->i);
+    }
+
+    public function getSpentDays(UserOrder $order)
+    {
+        return $this->getDiffBetweenDatesInDays($order->getDateComplete(), $order->getDateConfirm());
     }
 }

@@ -9,9 +9,16 @@ services:
     secure.service.repository_factory:
         class: SecureBundle\Factory\EntityRepositoryFactory
         arguments: ['%entity_repositories%']
+
     secure.service.order:
-        class: SecureBundle\Service\OrderService
-        arguments: ['@em', '@router', '@secure.service.files', '@secure.service.date_time']
+        class: SecureBundle\Service\UserOrderService
+        arguments:
+            - '@em'
+            - '@router'
+            - '@secure.service.files'
+            - '@secure.service.date_time'
+            - '@secure.repository.status_order'
+            - '@secure.repository.user_order'
 
     secure.service.files:
         class: SecureBundle\Service\FileService
