@@ -24,7 +24,7 @@ class Company
     private $name;
 
     /**
-     * @ORM\Column(name="slug", type="string", length=8)
+     * @ORM\Column(name="slug", type="string", length=10)
      */
     private $slug;
 
@@ -74,7 +74,7 @@ class Company
     private $isBlocked;
 
     /**
-     * @ORM\Column(name="reason_block", type="boolean", nullable=true)
+     * @ORM\Column(name="reason_block", type="string", length=100, nullable=true)
      */
     private $blockedReason;
 

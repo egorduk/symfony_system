@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="SecureBundle\Entity\Company" table="company">
+        <id name="id" type="integer" column="id">
+            <generator strategy="IDENTITY"/>
+        </id>
+        <field name="name" type="string" column="name" length="50" nullable="false">
+            <options>
+                <option name="fixed"/>
+            </options>
+        </field>
+        <field name="slug" type="string" column="slug" length="10" nullable="false">
+            <options>
+                <option name="fixed"/>
+            </options>
+        </field>
+        <field name="phone" type="string" column="phone" length="20" nullable="false">
+            <options>
+                <option name="fixed"/>
+            </options>
+        </field>
+        <field name="skype" type="string" column="skype" length="20" nullable="false">
+            <options>
+                <option name="fixed"/>
+            </options>
+        </field>
+        <field name="email" type="string" column="email" length="80" nullable="false">
+            <options>
+                <option name="fixed"/>
+            </options>
+        </field>
+        <field name="director" type="string" column="director" length="50" nullable="false">
+            <options>
+                <option name="fixed"/>
+            </options>
+        </field>
+        <field name="address" type="string" column="address" length="100" nullable="false">
+            <options>
+                <option name="fixed"/>
+            </options>
+        </field>
+        <field name="blockedReason" type="string" column="reason_block" length="100" nullable="true">
+            <options>
+                <option name="fixed"/>
+            </options>
+        </field>
+        <field name="dateRegistration" type="datetime" column="date_reg" nullable="false">
+            <options>
+                <option name="default">CURRENT_TIMESTAMP</option>
+            </options>
+        </field>
+        <field name="dateBlocked" type="datetime" column="date_block" nullable="true"/>
+        <field name="isBlocked" type="boolean" column="is_block" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <field name="sum" type="decimal" column="sum" nullable="false">
+            <options>
+                <option name="default">0</option>
+            </options>
+        </field>
+        <one-to-many field="users" target-entity="AuthBundle\Entity\User" mapped-by="company" />
+    </entity>
+</doctrine-mapping>
