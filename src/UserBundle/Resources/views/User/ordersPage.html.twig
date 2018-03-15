@@ -28,11 +28,11 @@
                             <td>{{ order.lastBid.dateBid | date('d.m.Y H:i') }}</td>
                             <td>{{ order.lastBid.sum }}</td>
                         {% endif %}
-                        {% if type != statusOrderGuarantee and type != statusUserOrderFinish %}
+                        {% if type != statusOrderGuarantee and type != statusUserOrderFinish and type != statusUserOrderAssign %}
                             <td>{{ order.dateexpire | date('d.m.Y H:i') }}</td>
                             <td>{{ order.remainingExpire }}</td>
                         {% endif %}
-                        {% if type != statusOrderWork and type != statusUserOrderFinish and type != statusOrderGuarantee %}
+                        {% if type != statusOrderWork and type != statusUserOrderFinish and type != statusOrderGuarantee and type != statusUserOrderAssign %}
                             <td>{{ order.maxBid | default('-') }}</td>
                             <td>{{ order.minBid | default('-') }}</td>
                             <td>{{ order.cntBids | default('-') }}</td>
@@ -46,6 +46,13 @@
                             <td>{{ order.dateConfirm | date('d.m.Y H:i') }}</td>
                             <td>{{ order.dateComplete | date('d.m.Y H:i') }}</td>
                             <td>{{ order.spentDays }}</td>
+                        {% endif %}
+                        {% if type == statusUserOrderAssign %}
+                            <td>{{ order.remainingExpireWithDays | date('d.m.Y H:i') }}</td>
+                            <td>{{ order.selectedBid.sum }}</td>
+                            <td>{{ order.selectedBid.day }}</td>
+                            <td>{{ order.selectedBid.dateBid | date('d.m.Y H:i') }}</td>
+                            <td>{{ order.selectedBid.isClientDate }}</td>
                         {% endif %}
                         <td>{{ order.datecreate | date('d.m.Y H:i') }}</td>
                         {% if type == statusOrderNew %}

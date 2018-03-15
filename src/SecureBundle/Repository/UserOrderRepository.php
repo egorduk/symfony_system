@@ -155,6 +155,34 @@ class UserOrderRepository extends EntityRepository
     }
 
     /**
+     * @param User $user
+     *
+     * @return array
+     */
+    public function getAssignedOrders(User $user)
+    {
+        return $this->_em
+            ->createQueryBuilder()
+            ->select('uo')
+            ->from(UserOrder::class, 'uo')
+            ->innerJoin(StatusOrder::class, 'so', 'WITH', 'uo.status = so')
+            ->innerJoin(UserBid::class, 'ub', 'WITH', 'ub.order = uo')
+            ->where('so.code = :code')
+            ->andWhere('ub.user = :user')
+            ->andWhere('ub.isShownOthers = 1')
+            ->andWhere('ub.isShownUser = 1')
+            ->andWhere('ub.isSelected = 1')
+            ->andWhere('ub.isRejected = 0')
+            ->setParameters([
+                'code' => StatusOrder::STATUS_ORDER_ASSIGNED_CODE,
+                'user' => $user,
+            ])
+            ->orderBy('uo.dateEdit', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * @param UserOrder $object
      * @param bool $flush
      *

@@ -81,6 +81,8 @@ class UserController extends Controller
             $orders = $this->get('secure.repository.user_order')->getValuationOrders($user);
         } else if ($type === StatusOrder::STATUS_USER_ORDER_BID) {
             $orders = $this->get('secure.repository.user_order')->getEvaluatedOrders($user);
+        } else if ($type === StatusOrder::STATUS_USER_ORDER_ASSIGN) {
+            $orders = $this->get('secure.repository.user_order')->getAssignedOrders($user);
         } else if ($type === StatusOrder::STATUS_ORDER_WORK_CODE) {
             $orders = $this->get('secure.repository.user_order')->getWorkOrders($user);
         } else if ($type === StatusOrder::STATUS_ORDER_GUARANTEE_CODE) {
@@ -97,10 +99,16 @@ class UserController extends Controller
             if ($type === StatusOrder::STATUS_USER_ORDER_BID) {
                 $lastBid = $bidService->getLastUserBid($user, $order);
                 $order->setLastBid($lastBid);
-            } else if ($type === StatusOrder::STATUS_ORDER_GUARANTEE_CODE) {
+            } elseif ($type === StatusOrder::STATUS_ORDER_GUARANTEE_CODE) {
                 $order->setRemainingGuarantee($dateTimeService->getRemainingGuaranteeTime($order));
             } elseif ($type === StatusOrder::STATUS_USER_ORDER_FINISH) {
                 $order->setSpentDays($dateTimeService->getSpentDays($order));
+            } elseif ($type === StatusOrder::STATUS_ORDER_WORK_CODE) {
+                $order->setRemainingExpire($dateTimeService->getRemainingExpireTime($order));
+            } elseif ($type === StatusOrder::STATUS_USER_ORDER_ASSIGN) {
+                $selectedBid = $bidService->getSelectedUserBid($user, $order);
+                $order->setSelectedBid($selectedBid);
+                $order->setRemainingExpireWithDays($dateTimeService->getRemainingExpireTimeWithUserDays($order));
             } else {
                 $data = $bidService->getMaxMinCntBids($order);
                 $order->setMaxBid($data['max_bid']);
@@ -175,6 +183,8 @@ class UserController extends Controller
             throw new NotFoundHttpException();
         }
 
+        $user = $this->getUser();
+
         $dateTimeService = $this->get('secure.service.date_time');
         $orderService = $this->get('secure.service.order');
         $bidService = $this->get('secure.service.bid');
@@ -184,10 +194,14 @@ class UserController extends Controller
 
         if ($order->isGuarantee()) {
             $order->setRemainingGuarantee($dateTimeService->getRemainingGuaranteeTime($order));
-        } elseif ($order->isWork() || $order->isAssigned() || $order->isAuction() || $order->isNew()) {
+        } elseif ($order->isWork() || $order->isAuction() || $order->isNew()) {
             $order->setRemainingExpire($dateTimeService->getRemainingExpireTime($order));
         } elseif ($order->isCompleted()) {
             $order->setSpentDays($dateTimeService->getSpentDays($order));
+        } elseif ($order->isAssigned()) {
+            $selectedBid = $bidService->getSelectedUserBid($user, $order);
+            $order->setSelectedBid($selectedBid);
+            $order->setRemainingExpireWithDays($dateTimeService->getRemainingExpireTimeWithUserDays($order));
         }
 
         $formBid = $this->createForm(BidForm::class);
@@ -216,15 +230,7 @@ class UserController extends Controller
         //$customer = $userHelper->setRawUserAvatar($customer);
         //$orderData->setUser($customer);
 
-         $bidsData['bids'] = $bidService->getUserBids($this->getUser(), $order);
-
-         foreach ($bidsData['bids'] as $key => $bid) {
-             if ($bid['isClientDate']) {
-                 //$bid['day'] = $dateTimeService->getDiffBetweenDatesInDays($order->getDateExpire());
-
-                 $bidsData['bids'][$key] = $bid;
-             }
-         }
+        $bidsData['bids'] = $bidService->getUserBids($this->getUser(), $order);
 
         return $this->render(
             'UserBundle:User:orderPage.html.twig', [

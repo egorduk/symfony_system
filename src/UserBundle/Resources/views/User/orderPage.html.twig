@@ -10,24 +10,30 @@
                     <li class="block-num">Номер заказа: {{ order.id }}</li>
                     <li class="block-theme">Тема работы: {{ order.theme }}</li>
                     <li class="block-task">Задание: {{ order.task }}</li>
-                    <li>Объем заказа: {{ order.countsheet }} стр.</li>
-                    <li>Оригинальность заказа: {{ order.originality }}%</li>
+                    <li>Объем заказа: {{ order.countsheet | countSheet }}</li>
+                    <li>Оригинальность заказа: {{ order.originality | percent }}</li>
                     <li>Предмет: {{ order.subject.name }}</li>
                     <li>Тип заказа: {{ order.type.name }}</li>
                     <li>Статус заказа: {{ order.status.name }}</li>
-                    <li>Дата создания: {{ order.datecreate | date('d.m.Y H:i') }}</li>
+                    <li>Дата создания: {{ order.datecreate | defaultDateFormat }}</li>
 
-                    {% if type == statusOrderNew or type == statusOrderWork or type == statusOrderAssigned or type == statusOrderAuction %}
-                        <li>Выполнение до: {{ order.dateexpire | date('d.m.Y H:i') }}</li>
+                    {% if type == statusOrderNew or type == statusOrderWork or type == statusOrderAuction %}
+                        <li>Выполнение до: {{ order.dateexpire | defaultDateFormat }}</li>
                         <li>На выполнение осталось: {{ order.remainingExpire }}</li>
                     {% elseif type == statusOrderGuarantee %}
-                        <li>На гарантии с: {{ order.dateGuarantee | date('d.m.Y H:i') }}</li>
-                        <li>На гарантии до: {{ order.dateComplete | date('d.m.Y H:i') }}</li>
+                        <li>На гарантии с: {{ order.dateGuarantee | defaultDateFormat }}</li>
+                        <li>На гарантии до: {{ order.dateComplete | defaultDateFormat }}</li>
                         <li>На гарантии осталось: {{ order.remainingGuarantee }}</li>
                     {% elseif type == statusOrderCompleted %}
-                        <li>В работе с: {{ order.dateConfirm | date('d.m.Y H:i') }}</li>
-                        <li>Завершен: {{ order.dateComplete | date('d.m.Y H:i') }}</li>
+                        <li>В работе с: {{ order.dateConfirm | defaultDateFormat }}</li>
+                        <li>Завершен: {{ order.dateComplete | defaultDateFormat }}</li>
                         <li>Затрачено дней: {{ order.spentDays }}</li>
+                    {% elseif type == statusOrderAssigned %}
+                        <li>Выполнение до: {{ order.remainingExpireWithDays | defaultDateFormat }}</li>
+                        <li>Цена: {{ order.selectedBid.sum | price }}</li>
+                        <li>Срок: {{ order.selectedBid.day | day }}</li>
+                        <li>Дата оценки: {{ order.selectedBid.dateBid | defaultDateFormat }}</li>
+                        <li>В срок заказчика: {{ order.selectedBid.isClientDate }}</li>
                     {% endif %}
 
                     <li>Заказчик: <div>{{ order.user.rawavatar | raw }}</div>{{ order.user.login }}</li>

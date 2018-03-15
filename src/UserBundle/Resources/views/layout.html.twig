@@ -2,6 +2,7 @@
 
 {% set statusUserOrderBid = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_BID') %}
 {% set statusUserOrderFinish = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_FINISH') %}
+{% set statusUserOrderAssign = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_ASSIGN') %}
 {% set statusOrderWork = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_WORK_CODE') %}
 {% set statusOrderGuarantee = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_GUARANTEE_CODE') %}
 {% set statusOrderNew = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_NEW_CODE') %}
@@ -85,7 +86,10 @@
                                     <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'bid'}) }}">Оцененные</a>
                                 </li>
                                 <li>
-                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'work'}) }}">На выполнении</a>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'assign'}) }}">Закрепленные</a>
+                                </li>
+                                <li>
+                                    <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'work'}) }}">В работе</a>
                                 </li>
                                 <li>
                                     <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'guarantee'}) }}">На гарантии</a>

@@ -44,7 +44,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="dateBirthday" type="string" column="date_birthday" length="15" nullable="true"/>
+    <field name="dateBirthday" type="datetime" column="date_birthday" nullable="true"/>
     <one-to-many target-entity="AuthBundle\Entity\User" mapped-by="userInfo" field="user" />
     <many-to-one field="country" target-entity="AuthBundle\Entity\Country" inversed-by="userInfo">
       <join-column name="country_id" referenced-column-name="id" />

@@ -1,6 +1,7 @@
 {% macro ordersTable(type) %}
     {% set statusUserOrderBid = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_BID') %}
     {% set statusUserOrderFinish = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_FINISH') %}
+    {% set statusUserOrderAssign = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_ASSIGN') %}
     {% set statusOrderWork = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_WORK_CODE') %}
     {% set statusOrderGuarantee = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_GUARANTEE_CODE') %}
     {% set statusOrderNew = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_NEW_CODE') %}
@@ -17,11 +18,11 @@
             <th>Оценен</th>
             <th>Ставка</th>
         {% endif %}
-        {% if type != statusOrderGuarantee and type != statusUserOrderFinish %}
+        {% if type != statusOrderGuarantee and type != statusUserOrderFinish and type != statusUserOrderAssign %}
             <th>Выполнение до</th>
             <th>До сдачи</th>
         {% endif %}
-        {% if type != statusOrderWork and type != statusUserOrderFinish and type != statusOrderGuarantee %}
+        {% if type != statusOrderWork and type != statusUserOrderFinish and type != statusOrderGuarantee and type != statusUserOrderAssign %}
             <th>Max ставка</th>
             <th>Min ставка</th>
             <th>Ставок</th>
@@ -35,6 +36,13 @@
             <th>В работе с</th>
             <th>Завершен</th>
             <th>Затрачено дней</th>
+        {% endif %}
+        {% if type == statusUserOrderAssign %}
+            <th>Выполнение до</th>
+            <th>Цена</th>
+            <th>Срок</th>
+            <th>Дата оценки</th>
+            <th>В срок заказчика</th>
         {% endif %}
         <th>Создан</th>
         {% if type == statusOrderNew %}

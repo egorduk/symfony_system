@@ -26,6 +26,7 @@ class StatusOrder
 
     const STATUS_USER_ORDER_BID = 'bid';
     const STATUS_USER_ORDER_FINISH = 'finish';
+    const STATUS_USER_ORDER_ASSIGN = 'assign';
 
     /**
      * @ORM\Column(name="id", type="integer")

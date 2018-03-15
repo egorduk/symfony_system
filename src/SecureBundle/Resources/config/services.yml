@@ -28,6 +28,19 @@ services:
         class: SecureBundle\Service\BidService
         arguments: ['@em', '@secure.service.date_time']
 
+    app.twig:
+        class: SecureBundle\Twig\Extension\AppExtension
+        tags:
+            - { name: twig.extension }
+
+    app.twig_runtime:
+        class: SecureBundle\Twig\AppRuntime
+        public: false
+        tags:
+            - { name: twig.runtime }
+
+
+
 
 
     secure.image_helper:

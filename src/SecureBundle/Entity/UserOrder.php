@@ -151,11 +151,13 @@ class UserOrder
     private $rawFiles = null;
     private $remainingExpire = null;
     private $remainingGuarantee = null;
+    private $remainingExpireWithDays = null;
     private $maxBid = 0;
     private $minBid = 0;
     private $cntBids = 0;
     private $lastBid = null;
     private $spentDays = 0;
+    private $selectedBid = null;
 
     public function __construct()
     {
@@ -568,5 +570,28 @@ class UserOrder
     public function setSpentDays($spentDays)
     {
         $this->spentDays = $spentDays;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelectedBid()
+    {
+        return $this->selectedBid;
+    }
+
+    public function setSelectedBid($selectedBid)
+    {
+        $this->selectedBid = $selectedBid;
+    }
+
+    public function getRemainingExpireWithDays()
+    {
+        return $this->remainingExpireWithDays;
+    }
+
+    public function setRemainingExpireWithDays($remainingExpireWithDays)
+    {
+        $this->remainingExpireWithDays = $remainingExpireWithDays;
     }
 }

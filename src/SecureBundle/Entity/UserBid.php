@@ -63,19 +63,19 @@ class UserBid
     private $isShownUser;
 
     /**
-     * @ORM\Column(name="is_select_client", type="boolean")
+     * @ORM\Column(name="is_select", type="boolean")
      */
-    private $isSelectClient;
+    private $isSelected;
 
     /**
-     * @ORM\Column(name="is_confirm_author", type="boolean")
+     * @ORM\Column(name="is_confirm", type="boolean")
      */
-    private $isConfirmAuthor;
+    private $isConfirmed;
 
     /**
-     * @ORM\Column(name="is_confirm_fail", type="boolean")
+     * @ORM\Column(name="is_reject", type="boolean")
      */
-    private $isConfirmFail;
+    private $isRejected;
 
     /**
      * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="bids")
@@ -93,9 +93,9 @@ class UserBid
     public function __construct()
     {
         $this->dateBid = new \DateTime();
-        $this->isConfirmFail = 0;
-        $this->isConfirmAuthor = 0;
-        $this->isSelectClient = 0;
+        $this->isRejected = 0;
+        $this->isConfirmed = 0;
+        $this->isSelected = 0;
         $this->isClientDate = 0;
         $this->day = 0;
         $this->isShownOthers = 1;
@@ -162,42 +162,6 @@ class UserBid
         return $this->isClientDate;
     }
 
-    public function setIsSelectClient($isSelectClient)
-    {
-        $this->isSelectClient = $isSelectClient;
-
-        return $this;
-    }
-
-    public function getIsSelectClient()
-    {
-        return $this->isSelectClient;
-    }
-
-    public function setIsConfirmAuthor($isConfirmAuthor)
-    {
-        $this->isConfirmAuthor = $isConfirmAuthor;
-
-        return $this;
-    }
-
-    public function getIsConfirmAuthor()
-    {
-        return $this->isConfirmAuthor;
-    }
-
-    public function setIsConfirmFail($isConfirmFail)
-    {
-        $this->isConfirmFail = $isConfirmFail;
-
-        return $this;
-    }
-
-    public function getIsConfirmFail()
-    {
-        return $this->isConfirmFail;
-    }
-
     public function getId()
     {
         return $this->id;
@@ -241,5 +205,35 @@ class UserBid
     public function setIsShownUser($isShownUser)
     {
         $this->isShownUser = $isShownUser;
+    }
+
+    public function getIsSelected()
+    {
+        return $this->isSelected;
+    }
+
+    public function setIsSelected($isSelected)
+    {
+        $this->isSelected = $isSelected;
+    }
+
+    public function getIsConfirmed()
+    {
+        return $this->isConfirmed;
+    }
+
+    public function setIsConfirmed($isConfirmed)
+    {
+        $this->isConfirmed = $isConfirmed;
+    }
+
+    public function getIsRejected()
+    {
+        return $this->isRejected;
+    }
+
+    public function setIsRejected($isRejected)
+    {
+        $this->isRejected = $isRejected;
     }
 }

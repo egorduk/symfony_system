@@ -39,17 +39,17 @@
         <option name="default">1</option>
       </options>
     </field>
-    <field name="isSelectClient" type="boolean" column="is_select_client" nullable="false">
+    <field name="isSelected" type="boolean" column="is_select" nullable="false">
       <options>
         <option name="default">0</option>
       </options>
   </field>
-    <field name="isConfirmAuthor" type="boolean" column="is_confirm_author" nullable="false">
+    <field name="isConfirmed" type="boolean" column="is_confirm" nullable="false">
       <options>
         <option name="default">0</option>
       </options>
     </field>
-    <field name="isConfirmFail" type="boolean" column="is_confirm_fail" nullable="false">
+    <field name="isRejected" type="boolean" column="is_reject" nullable="false">
       <options>
         <option name="default">0</option>
       </options>

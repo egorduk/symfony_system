@@ -161,4 +161,27 @@ class BidService
 
         return true;
     }
+
+    public function getSelectedUserBid(User $user, UserOrder $order)
+    {
+        return $this->em
+            ->createQueryBuilder()
+            ->select('ub.day, ub.sum, ub.dateBid, ub.comment, ub.isClientDate')
+            ->from(UserBid::class, 'ub')
+            ->where('ub.user = :user')
+            ->andWhere('ub.order = :order')
+            ->andWhere('ub.isShownOthers = 1')
+            ->andWhere('ub.isShownUser = 1')
+            ->andWhere('ub.isSelected = 1')
+            ->andWhere('ub.isConfirmed = 0')
+            ->andWhere('ub.isRejected = 0')
+            //->orderBy('ub.dateBid', 'DESC')
+            ->setParameters([
+                'user' => $user,
+                'order' => $order,
+            ])
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

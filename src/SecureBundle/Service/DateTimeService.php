@@ -122,4 +122,14 @@ class DateTimeService
     {
         return $this->getDiffBetweenDatesInDays($order->getDateComplete(), $order->getDateConfirm());
     }
+
+    public function getRemainingExpireTimeWithUserDays(UserOrder $order)
+    {
+        $selectedBid = $order->getSelectedBid();
+        $days = $selectedBid['day'];
+
+        $currentDate = new \DateTime();
+
+        return $currentDate->modify('+' . $days . ' day');
+    }
 }
