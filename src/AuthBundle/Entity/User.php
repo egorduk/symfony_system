@@ -170,14 +170,8 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $userInfo;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\Company", inversedBy="users")
-     * @ORM\JoinColumn(name="company_id", referencedColumnName="id")
-     */
-    private $company;
-
-
     private $rawAvatar;
+
 
     public function __construct()
     {
@@ -759,18 +753,5 @@ class User implements AdvancedUserInterface, \Serializable
     public function setUserInfo($userInfo)
     {
         $this->userInfo = $userInfo;
-    }
-
-    /**
-     * @return Company
-     */
-    public function getCompany()
-    {
-        return $this->company;
-    }
-
-    public function setCompany($company)
-    {
-        $this->company = $company;
     }
 }

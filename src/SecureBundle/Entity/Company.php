@@ -54,11 +54,6 @@ class Company
     private $address;
 
     /**
-     * @ORM\OneToMany(targetEntity="AuthBundle\Entity\User", mappedBy="company")
-     */
-    private $users;
-
-    /**
      * @ORM\Column(name="date_reg", type="datetime")
      */
     private $dateRegistration;
@@ -82,6 +77,14 @@ class Company
      * @ORM\Column(name="sum", type="decimal")
      */
     private $sum;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="AuthBundle\Entity\User")
+     * @ORM\JoinTable(
+     *      joinColumns={@ORM\JoinColumn(onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(onDelete="CASCADE")}
+     */
+    private $users;
 
 
     public function __construct()

@@ -60,6 +60,7 @@
                 <option name="default">0</option>
             </options>
         </field>
-        <one-to-many field="users" target-entity="AuthBundle\Entity\User" mapped-by="company" />
+        <many-to-many field="users" target-entity="AuthBundle\Entity\User">
+        </many-to-many>
     </entity>
 </doctrine-mapping>
