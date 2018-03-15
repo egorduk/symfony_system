@@ -14,12 +14,12 @@
                 <option name="fixed"/>
             </options>
         </field>
-        <field name="phone" type="string" column="phone" length="20" nullable="false">
+        <field name="phone" type="string" column="phone" length="30" nullable="false">
             <options>
                 <option name="fixed"/>
             </options>
         </field>
-        <field name="skype" type="string" column="skype" length="20" nullable="false">
+        <field name="skype" type="string" column="skype" length="30" nullable="false">
             <options>
                 <option name="fixed"/>
             </options>
@@ -60,7 +60,5 @@
                 <option name="default">0</option>
             </options>
         </field>
-        <many-to-many field="users" target-entity="AuthBundle\Entity\User">
-        </many-to-many>
     </entity>
 </doctrine-mapping>

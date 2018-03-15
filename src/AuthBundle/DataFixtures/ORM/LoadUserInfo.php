@@ -32,14 +32,13 @@ class LoadUserInfo implements ORMFixtureInterface
             $index = array_rand($users);
             $user = $users[$index];
             $user->setUserInfo($info);
-            //unset($users[$index]);
 
             $rand = rand(0, 1);
 
             if ($rand) {
                 $info->setAccount($faker->iban('BY'));
             } else {
-                $info->setDateBirthday($faker->date());
+                $info->setDateBirthday($faker->dateTimeBetween());
             }
 
             if ($rand) {

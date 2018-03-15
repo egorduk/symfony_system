@@ -79,10 +79,7 @@ class Company
     private $sum;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AuthBundle\Entity\User")
-     * @ORM\JoinTable(
-     *      joinColumns={@ORM\JoinColumn(onDelete="CASCADE")},
-     *      inverseJoinColumns={@ORM\JoinColumn(onDelete="CASCADE")}
+     * @ORM\ManyToMany(targetEntity="AuthBundle\Entity\User", mappedBy="companies")
      */
     private $users;
 

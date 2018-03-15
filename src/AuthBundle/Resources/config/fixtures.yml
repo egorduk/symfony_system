@@ -28,3 +28,9 @@ services:
 
     AuthBundle\DataFixtures\ORM\LoadUserInfo:
         tags: [doctrine.fixture.orm]
+
+    AuthBundle\DataFixtures\ORM\LoadCompanies:
+        tags: [doctrine.fixture.orm]
+
+    AuthBundle\DataFixtures\ORM\ConnectCompaniesWithUsers:
+        tags: [doctrine.fixture.orm]

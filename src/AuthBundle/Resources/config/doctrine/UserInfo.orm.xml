@@ -4,32 +4,32 @@
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="skype" type="string" column="skype" length="20" nullable="true">
+    <field name="skype" type="string" column="skype" length="30" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="mobilePhone" type="string" column="mobile_phone" length="20" nullable="true">
+    <field name="mobilePhone" type="string" column="mobile_phone" length="30" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="staticPhone" type="string" column="static_phone" length="20" nullable="true">
+    <field name="staticPhone" type="string" column="static_phone" length="30" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="userName" type="string" column="username" length="20" nullable="true">
+    <field name="userName" type="string" column="username" length="30" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="surName" type="string" column="surname" length="20" nullable="true">
+    <field name="surName" type="string" column="surname" length="30" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
     </field>
-    <field name="lastName" type="string" column="lastname" length="20" nullable="true">
+    <field name="lastName" type="string" column="lastname" length="30" nullable="true">
       <options>
         <option name="fixed"/>
       </options>
@@ -39,7 +39,7 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="bic" type="string" column="bic" length="15" nullable="true">
+    <field name="bic" type="string" column="bic" length="20" nullable="true">
       <options>
         <option name="fixed"/>
       </options>

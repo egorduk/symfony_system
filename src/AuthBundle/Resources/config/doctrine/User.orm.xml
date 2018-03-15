@@ -100,6 +100,11 @@
         <option name="unsigned"/>
       </options>
     </field>
+    <field name="sum" type="decimal" column="sum" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
     <one-to-many field="orders" target-entity="SecureBundle\Entity\UserOrder" mapped-by="user" />
     <one-to-many target-entity="SecureBundle\Entity\OrderFile" mapped-by="user" field="files" />
     <one-to-many target-entity="SecureBundle\Entity\UserBid" mapped-by="user" field="bids" />

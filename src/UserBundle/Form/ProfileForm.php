@@ -121,7 +121,7 @@ class ProfileForm extends AbstractType
             ->add('dateBirthday', DateType::class, [
                 'label' => 'Дата рождения',
                 'required' => false,
-                'input' => 'string',
+                //'input' => 'string',
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Введите дату рождения',

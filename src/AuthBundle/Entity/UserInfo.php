@@ -20,42 +20,42 @@ class UserInfo
     private $id;
 
     /**
-     * @ORM\Column(name="skype", type="string", length=20, nullable=true)
+     * @ORM\Column(name="skype", type="string", length=30, nullable=true)
      *
      * @Assert\Length(max="20")
      */
     private $skype;
 
     /**
-     * @ORM\Column(name="mobile_phone", type="string", length=20, nullable=true)
+     * @ORM\Column(name="mobile_phone", type="string", length=30, nullable=true)
      *
      * @Assert\Length(max="20")
      */
     private $mobilePhone;
 
     /**
-     * @ORM\Column(name="static_phone", type="string", length=20, nullable=true)
+     * @ORM\Column(name="static_phone", type="string", length=30, nullable=true)
      *
      * @Assert\Length(max="20")
      */
     private $staticPhone;
 
     /**
-     * @ORM\Column(name="username", type="string", length=20, nullable=true)
+     * @ORM\Column(name="username", type="string", length=30, nullable=true)
      *
      * @Assert\Length(max="20")
      */
     private $userName;
 
     /**
-     * @ORM\Column(name="surname", type="string", length=20, nullable=true)
+     * @ORM\Column(name="surname", type="string", length=30, nullable=true)
      *
      * @Assert\Length(max="20")
      */
     private $surName;
 
     /**
-     * @ORM\Column(name="lastname", type="string", length=20, nullable=true)
+     * @ORM\Column(name="lastname", type="string", length=30, nullable=true)
      *
      * @Assert\Length(max="20")
      */

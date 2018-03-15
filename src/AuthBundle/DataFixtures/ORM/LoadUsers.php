@@ -48,12 +48,13 @@ class LoadUsers implements ORMFixtureInterface
             User::ROLE_DIRECTOR,
         ];
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $user = new User();
             $user->setLogin($faker->firstName);
             $user->setEmail($faker->email);
             $user->setRoles($roles[array_rand($roles)]);
             $user->setSalt($faker->word);
+            $user->setSum($faker->numberBetween(-5000, 5000));
             $user->setRegisterConfirm();
             $user->setIpReg(ip2long($faker->ipv4));
             $encodedPassword = $this->encoderService->encodePassword($user, 'test');

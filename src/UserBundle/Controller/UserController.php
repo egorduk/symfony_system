@@ -2,6 +2,8 @@
 
 namespace UserBundle\Controller;
 
+use AuthBundle\Entity\User;
+use SecureBundle\Entity\Company;
 use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Entity\UserOrder;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -23,6 +25,7 @@ class UserController extends Controller
      */
     public function homepageAction(Request $request)
     {
+        /* @var User $user */
         $user = $this->getUser();
 
         $session = $request->getSession();
@@ -31,6 +34,11 @@ class UserController extends Controller
 
         $dateTimeHelper = $this->get('secure.service.date_time');
         $userHelper = $this->get('secure.service.user');
+
+        $a = $this->getDoctrine()->getRepository(Company::class)->find(45);
+
+        dump($user->getCompanies());
+        //dump($a->getUsers()->count());
 
         $whenLoginDate = $dateTimeHelper->getDateFromTimestamp($sessionCreatedTimestamp, 'd/m/Y H:i');
         $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionCreatedTimestamp, $sessionLifeTimestamp, '+');

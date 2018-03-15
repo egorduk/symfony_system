@@ -150,6 +150,11 @@ class User implements AdvancedUserInterface, \Serializable
     private $role;
 
     /**
+     * @ORM\Column(name="sum", type="decimal")
+     */
+    private $sum;
+
+    /**
      * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserOrder", mappedBy="user")
      */
     private $orders;
@@ -169,6 +174,16 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id", nullable=true)
      */
     private $userInfo;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="SecureBundle\Entity\Company", inversedBy="users")
+     * @ORM\JoinTable(
+     *      name="user_has_company",
+     *      joinColumns={@ORM\JoinColumn(onDelete="CASCADE")},
+     *      inverseJoinColumns={@ORM\JoinColumn(onDelete="CASCADE")}
+     * )
+     */
+    private $companies;
 
     private $rawAvatar;
 
@@ -196,6 +211,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->hashCode = '';
         $this->token = '';
         $this->rating = null;
+        $this->sum = 0;
         /*$this->link_user_order = new ArrayCollection();
         $this->link_openid = new ArrayCollection();
         $this->link_author_file = new ArrayCollection();
@@ -210,6 +226,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->orders = new ArrayCollection();
         $this->files = new ArrayCollection();
         $this->bids = new ArrayCollection();
+        $this->companies = new ArrayCollection();
     }
 
     /**
@@ -753,5 +770,25 @@ class User implements AdvancedUserInterface, \Serializable
     public function setUserInfo($userInfo)
     {
         $this->userInfo = $userInfo;
+    }
+
+    public function getSum()
+    {
+        return $this->sum;
+    }
+
+    public function setSum($sum)
+    {
+        $this->sum = $sum;
+    }
+
+    public function getCompanies()
+    {
+        return $this->companies;
+    }
+
+    public function setCompanies($companies)
+    {
+        $this->companies = $companies;
     }
 }
