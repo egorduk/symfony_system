@@ -2,13 +2,16 @@
 
 namespace SecureBundle\Service;
 
+use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\OrderFile;
 use SecureBundle\Entity\StatusOrder;
+use SecureBundle\Entity\UserBid;
 use SecureBundle\Entity\UserOrder;
 use SecureBundle\Repository\StatusOrderRepository;
 use SecureBundle\Repository\UserOrderRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserOrderService
@@ -19,6 +22,7 @@ class UserOrderService
     private $dth;
     private $statusOrderRepository;
     private $userOrderRepository;
+    private $bidService;
 
     public function __construct(
         EntityManager $em,
@@ -26,7 +30,8 @@ class UserOrderService
         FileService $fileService,
         DateTimeService $dth,
         StatusOrderRepository $statusOrderRepository,
-        UserOrderRepository $userOrderRepository
+        UserOrderRepository $userOrderRepository,
+        BidService $bidService
     ) {
         $this->em = $em;
         $this->router = $router;
@@ -34,6 +39,7 @@ class UserOrderService
         $this->dth = $dth;
         $this->statusOrderRepository = $statusOrderRepository;
         $this->userOrderRepository = $userOrderRepository;
+        $this->bidService = $bidService;
     }
 
     /**
@@ -60,7 +66,7 @@ class UserOrderService
     }
 
     /**
-     * @param OrderFile[] $files
+     * @param $files
      *
      * @return array
      */
@@ -109,5 +115,47 @@ class UserOrderService
         $order->setStatus($status);
 
         $this->userOrderRepository->save($order, true);
+    }
+
+    /**
+     * @param User $user
+     * @param int $orderId
+     *
+     * @return bool
+     *
+     * @throws FatalErrorException
+     */
+    public function isUserHasAccessToOrder(User $user, $orderId)
+    {
+        $order = $this->userOrderRepository->find($orderId);
+
+        if (!$order instanceof UserOrder) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($user->isUser()) {
+            $bid = $this->bidService->getUserSelectedBidForOrder($user, $order);
+            //dump($bid);
+
+            if ($bid instanceof UserBid) {
+                return true;
+            }
+
+            $order = $this->userOrderRepository->getAllowedOrderForUser($user, $order);
+            //dump($order);
+
+            if ($order instanceof UserOrder) {
+                return true;
+            }
+
+            return false;
+        }
+
+       throw new FatalErrorException();
+    }
+
+    public function save(UserOrder $userOrder)
+    {
+        return $this->userOrderRepository->save($userOrder, true);
     }
 }

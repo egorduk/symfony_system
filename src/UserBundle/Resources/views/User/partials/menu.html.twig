@@ -1,0 +1,68 @@
+<div class="col-md-2">
+    <div class="" id="">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" href="{{ path('secure_user_homepage') }}">
+                    <i class="icon-home"></i> Домой
+                </a>
+            </div>
+        </div>
+        <div class="accordion-group">
+            <div><a href="{{ path('secure_user_profile', {'type': 'view'}) }}">Профиль</a></div>
+        </div>
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#leftMenu" href="#collapseThree">
+                    <i class="icon-docs"></i> Заказы
+                </a>
+            </div>
+            <div id="collapseThree" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul>
+                        <li>
+                            <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'new'}) }}">Новые</a>
+                        </li>
+                        <li>
+                            <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'bid'}) }}">Оцененные</a>
+                        </li>
+                        <li>
+                            <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'assign'}) }}">Закрепленные</a>
+                        </li>
+                        <li>
+                            <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'work'}) }}">В работе</a>
+                        </li>
+                        <li>
+                            <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'guarantee'}) }}">На гарантии</a>
+                        </li>
+                        <li>
+                            <a class="accordion-toggle" href="{{ path('secure_user_orders', {'type': 'finish'}) }}">Завершенные</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div><a href="{{ path('secure_user_bids') }}">Ставки</a></div>
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" href="{{ path('secure_user_settings') }}">
+                    <i class="icon-cog"></i> Настройки
+                </a>
+            </div>
+        </div>
+        <div><a href="{{ path('secure_user_activities') }}">Активность</a></div>
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" href="{{ path('logout') }}">
+                    <i class="icon-logout-1"></i> Выход
+                </a>
+            </div>
+        </div>
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" href="">
+                    <i class="icon-help"></i> Помощь
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

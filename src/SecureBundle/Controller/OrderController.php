@@ -16,11 +16,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class OrderController extends Controller
 {
-    /**
-     * @Template()
-     *
-     * @return array
-     */
     public function newOrdersAction(Request $request)
     {
         $ordersHelper = $this->get('secure.orders_helper');
@@ -139,13 +134,7 @@ class OrderController extends Controller
         );*/
     }
 
-    /**
-     * @param Request $request
-     * @param int $orderId
-     *
-     * @return JsonResponse
-     */
-    public function getOrderFullInfoAction(Request $request, $orderId)
+    /*public function getOrderFullInfoAction(Request $request, $orderId)
     {
         if ($request->isXmlHttpRequest()) {
             $orderHelper = $this->get('secure.order_helper');
@@ -167,9 +156,6 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * @return array
-     */
     public function orderPageAction(Request $request, $orderId)
     {
         $orderHelper = $this->get('secure.order_helper');
@@ -225,5 +211,5 @@ class OrderController extends Controller
         } else {
             throw new NotFoundHttpException();
         }
-    }
+    }*/
 }

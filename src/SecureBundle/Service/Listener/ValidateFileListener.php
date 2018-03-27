@@ -4,6 +4,7 @@ namespace SecureBundle\EventListener;
 
 use Oneup\UploaderBundle\Event\ValidationEvent;
 use Oneup\UploaderBundle\Uploader\Exception\ValidationException;
+use SecureBundle\Service\FileService;
 use SecureBundle\Service\Helper\FileHelper;
 
 class ValidateFileListener
@@ -17,7 +18,7 @@ class ValidateFileListener
     private $config;
     private $server;
 
-    public function __construct(FileHelper $fh)
+    public function __construct(FileService $fh)
     {
         $this->fh = $fh;
 

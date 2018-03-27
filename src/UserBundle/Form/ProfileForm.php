@@ -6,6 +6,7 @@ use AuthBundle\Entity\Country;
 use AuthBundle\Entity\UserInfo;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -122,10 +123,11 @@ class ProfileForm extends AbstractType
                 'label' => 'Дата рождения',
                 'required' => false,
                 //'input' => 'string',
+                'years' => range(date('Y') - 100, date('Y') - 18),
+                'months' => range(1, 12),
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Введите дату рождения',
-                    //'maxlength' => 15,
                     'placeholder' => 'Введите дату рождения',
                 ],
             ])
@@ -136,6 +138,19 @@ class ProfileForm extends AbstractType
                 'required' => false,
                 'constraints' => new NotBlank(),
             ]);
+
+        $builder->get('dateBirthday')->addModelTransformer(new CallbackTransformer(
+            function ($value) {
+                if (!$value) {
+                    return new \DateTime('now -50 years');
+                }
+
+                return $value;
+            },
+            function ($value) {
+                return $value;
+            }
+        ));
     }
 
     /* protected function getCountryCodes() {

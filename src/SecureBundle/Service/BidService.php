@@ -6,16 +6,19 @@ use AuthBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\UserBid;
 use SecureBundle\Entity\UserOrder;
+use SecureBundle\Repository\UserBidRepository;
 
 class BidService
 {
     private $em;
     private $dateTimeService;
+    private $userBidRepository;
 
-    public function __construct(EntityManager $em, DateTimeService $dateTimeService)
+    public function __construct(EntityManager $em, DateTimeService $dateTimeService, UserBidRepository $userBidRepository)
     {
         $this->em = $em;
         $this->dateTimeService = $dateTimeService;
+        $this->userBidRepository = $userBidRepository;
     }
 
     /**
@@ -55,23 +58,6 @@ class BidService
             ])
             ->getQuery()
             ->getOneOrNullResult();
-    }
-
-    public function getBidsWithOrdersByUser(User $user)
-    {
-        return $this->em
-            ->createQueryBuilder()
-            ->select('ub')
-            ->from(UserBid::class, 'ub')
-            ->innerJoin(UserOrder::class, 'uo', 'WITH', 'ub.order = uo')
-            ->andWhere('ub.isShowAuthor = 1')
-            ->andWhere('ub.isShowClient = 1')
-            ->andWhere('ub.user = :user')
-            ->groupBy('uo.id')
-            ->orderBy('ub.dateBid', 'DESC')
-            ->setParameter('user', $user)
-            ->getQuery()
-            ->getResult();
     }
 
     /*public function setRemainingTime($bids)
@@ -166,14 +152,14 @@ class BidService
     {
         return $this->em
             ->createQueryBuilder()
-            ->select('ub.day, ub.sum, ub.dateBid, ub.comment, ub.isClientDate')
+            ->select('ub')
             ->from(UserBid::class, 'ub')
             ->where('ub.user = :user')
             ->andWhere('ub.order = :order')
             ->andWhere('ub.isShownOthers = 1')
             ->andWhere('ub.isShownUser = 1')
             ->andWhere('ub.isSelected = 1')
-            ->andWhere('ub.isConfirmed = 0')
+            //->andWhere('ub.isConfirmed = 0')
             ->andWhere('ub.isRejected = 0')
             //->orderBy('ub.dateBid', 'DESC')
             ->setParameters([
@@ -183,5 +169,32 @@ class BidService
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function getUserSelectedBidForOrder(User $user, UserOrder $order)
+    {
+        return $this->em
+            ->createQueryBuilder()
+            ->select('ub')
+            ->from(UserBid::class, 'ub')
+            ->where('ub.isShownOthers = 1')
+            ->andWhere('ub.isShownUser = 1')
+            ->andWhere('ub.isSelected = 1')
+            ->andWhere('ub.user = :user')
+            ->andWhere('ub.order = :order')
+            //->andWhere('ub.isConfirmed = 1')
+            //->andWhere('ub.isRejected = 0')
+            ->setParameters([
+                'user' => $user,
+                'order' => $order,
+            ])
+            //->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function save(UserBid $userBid)
+    {
+        return $this->userBidRepository->save($userBid, true);
     }
 }

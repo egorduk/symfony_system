@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="user_order")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="SecureBundle\Repository\UserOrderRepository")
  */
 class UserOrder
 {
@@ -110,6 +110,13 @@ class UserOrder
     private $additionalInfo;
 
     /**
+     * High educational institute name
+     *
+     * @ORM\Column(name="hei", type="string", length=50, nullable=true)
+     */
+    private $hei;
+
+    /**
      * @ORM\Column(name="client_degree", type="integer", nullable=true)
      */
     private $clientDegree;
@@ -148,6 +155,11 @@ class UserOrder
      */
     private $bids;
 
+    /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\StageOrder", mappedBy="order")
+     */
+    private $stages;
+
     private $rawFiles = null;
     private $remainingExpire = null;
     private $remainingGuarantee = null;
@@ -168,6 +180,7 @@ class UserOrder
 
         $this->files = new ArrayCollection();
         $this->bids = new ArrayCollection();
+        $this->stages = new ArrayCollection();
     }
 
 
@@ -593,5 +606,25 @@ class UserOrder
     public function setRemainingExpireWithDays($remainingExpireWithDays)
     {
         $this->remainingExpireWithDays = $remainingExpireWithDays;
+    }
+
+    public function getStages()
+    {
+        return $this->stages;
+    }
+
+    public function setStages($stages)
+    {
+        $this->stages = $stages;
+    }
+
+    public function getHei()
+    {
+        return $this->hei;
+    }
+
+    public function setHei($hei)
+    {
+        $this->hei = $hei;
     }
 }

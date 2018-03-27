@@ -6,21 +6,23 @@ use AuthBundle\Entity\User;
 use AuthBundle\Entity\UserInfo;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Asset\Packages;
-use Symfony\Component\Filesystem\Filesystem;
 
 class UserService
 {
     private $em;
-    private $webDir;
+    private $packages;
+    private $uploadDir;
 
     /**
      * @param EntityManager $em
-     * @param string $webDir
+     * @param Packages $packages
+     * @param string $uploadDir
      */
-    public function __construct(EntityManager $em, $webDir)
+    public function __construct(EntityManager $em, Packages $packages, $uploadDir)
     {
         $this->em = $em;
-        $this->webDir = $webDir;
+        $this->packages = $packages;
+        $this->uploadDir = $uploadDir;
     }
 
     /**
@@ -30,12 +32,7 @@ class UserService
      * @return string
      */
     private function getFullPathToAvatar(User $user = null, $userId = null) {
-        /*if (is_null($user) && $userId) {
-            $user = self::getUserById($userId);
-        }*/
-
         $userAvatar = $user->getAvatar();
-        $userRole = $user->getRoles();
 
         $avatars = [
             'default.png',
@@ -43,20 +40,22 @@ class UserService
             'default_w.jpg',
         ];
 
-        $avatarsDir = $this->webDir->getUrl('uploads/avatars');
-       // $this->avatarsDir = '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'avatars';
+        $basePath = rtrim($this->packages->getUrl($this->uploadDir), '/');
+        $fileName = ltrim($userAvatar, '/');
 
         if (in_array($userAvatar, $avatars)) {
-            return $avatarsDir . DIRECTORY_SEPARATOR . $userAvatar;
+            return $basePath . DIRECTORY_SEPARATOR . $fileName;
         } else {
             $userId = $user->getId();
+            $userRole = $user->getRole();
 
-            return $avatarsDir . DIRECTORY_SEPARATOR . strtolower($this->getRoleName($userRole[0])) . DIRECTORY_SEPARATOR . $userId . DIRECTORY_SEPARATOR . $userAvatar;
+            return $basePath . DIRECTORY_SEPARATOR . strtolower($this->getRoleName($userRole)) . DIRECTORY_SEPARATOR . $userId . DIRECTORY_SEPARATOR . $fileName;
         }
     }
 
     /**
      * @param string $role
+     * @param bool $isLower
      *
      * @return string
      */
@@ -70,16 +69,17 @@ class UserService
     /**
      * @param User $user
      *
-     * @return User
+     * @return string
      */
-    public function setRawUserAvatar(User $user)
+    public function getFormattedUserAvatar(User $user)
     {
         $pathAvatar = $this->getFullPathToAvatar($user);
 
-        $userAvatar = '<img src="' . $pathAvatar . '" align="middle" alt="pic" width="110px" height="auto" class="thumbnail">';
-        $user->setRawAvatar($userAvatar);
+        $userAvatar = sprintf('<img src="%s" align="middle" alt="avatar" width="110px" height="auto" class="thumbnail">', $pathAvatar);
 
-        return $user;
+        $company = $user->getCompanies()->count() ? $user->getCompanies()->first()->getName() : '';
+
+        return $userAvatar . ' - ' . ($user->isUser() ? $user->getLogin() : ($user->getLogin() . ' из ' . $company));
     }
 
     public function updateProfile(UserInfo $userInfo)

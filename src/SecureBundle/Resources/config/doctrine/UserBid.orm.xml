@@ -24,6 +24,7 @@
         <option name="default">CURRENT_TIMESTAMP</option>
       </options>
     </field>
+    <field name="dateReject" type="datetime" column="date_reject" nullable="true"/>
     <field name="isClientDate" type="boolean" column="is_client_date" nullable="false">
     <options>
       <option name="default">0</option>
@@ -54,10 +55,10 @@
         <option name="default">0</option>
       </options>
     </field>
-    <many-to-one field="user" target-entity="AuthBundle\Entity\User" inversed-by="bids">
+    <many-to-one field="user" target-entity="AuthBundle\Entity\User" inversed-by="bids" fetch="LAZY">
       <join-column name="user_id" referenced-column-name="id" />
     </many-to-one>
-    <many-to-one field="order" target-entity="SecureBundle\Entity\UserOrder" inversed-by="bids">
+    <many-to-one field="order" target-entity="SecureBundle\Entity\UserOrder" inversed-by="bids" fetch="LAZY">
       <join-column name="order_id" referenced-column-name="id" />
     </many-to-one>
   </entity>

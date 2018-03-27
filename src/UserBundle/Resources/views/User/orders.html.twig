@@ -52,7 +52,7 @@
                             <td>{{ order.selectedBid.sum }}</td>
                             <td>{{ order.selectedBid.day }}</td>
                             <td>{{ order.selectedBid.dateBid | date('d.m.Y H:i') }}</td>
-                            <td>{{ order.selectedBid.isClientDate }}</td>
+                            <td>{{ order.selectedBid.isClientDate | default('-') }}</td>
                         {% endif %}
                         <td>{{ order.datecreate | date('d.m.Y H:i') }}</td>
                         {% if type == statusOrderNew %}

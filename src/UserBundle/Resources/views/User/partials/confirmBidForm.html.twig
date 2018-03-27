@@ -1,0 +1,29 @@
+<div>
+    {{ form_start(formConfirmBid, {'attr': {'id' : 'formConfirmBid'}}) }}
+    <div class="form-group">
+        {{ form_label(formConfirmBid.sum) }}
+        {{ form_errors(formConfirmBid.sum) }}
+        <div class="input-group">
+            {{ form_widget(formConfirmBid.sum) }}
+        </div>
+        {{ form_label(formConfirmBid.day) }}
+        {{ form_errors(formConfirmBid.day) }}
+        <div class="input-group">
+            {{ form_widget(formConfirmBid.day) }}
+        </div>
+        {{ form_label(formConfirmBid.isClientDate) }}
+        <div class="input-group">
+            {{ form_widget(formConfirmBid.isClientDate) }}
+        </div>
+        {{ form_label(formConfirmBid.comment) }}
+        <div class="input-group">
+            {{ form_widget(formConfirmBid.comment) }}
+        </div>
+        <br>
+        {#<div class="input-group">
+            <button type="submit" name="confirm" class="btn btn-success">{{ 'Принять'|trans }}</button>
+            <button type="submit" name="reject" class="btn btn-cancel">{{ 'Отказаться'|trans }}</button>
+        </div>#}
+    </div>
+    {{ form_end(formConfirmBid) }}
+</div>

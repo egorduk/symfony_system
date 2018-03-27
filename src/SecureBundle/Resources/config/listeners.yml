@@ -1,0 +1,16 @@
+services:
+    secure.listener.request_order:
+        class: SecureBundle\Service\Listener\RequestOrderListener
+        arguments: ['@security.token_storage', '@secure.service.order']
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
+    secure.listener.user_activity:
+        class: SecureBundle\Service\Listener\UserActivityListener
+        arguments: ['@secure.service.user_activity', '@em']
+        tags:
+            - { name: kernel.event_subscriber }
+
+    secure.listener.logout:
+        class: SecureBundle\Service\Listener\LogoutListener
+        arguments: ['@secure.service.user_activity', '@em', '@event_dispatcher']

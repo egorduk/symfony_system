@@ -16,6 +16,8 @@
                     <li>Тип заказа: {{ order.type.name }}</li>
                     <li>Статус заказа: {{ order.status.name }}</li>
                     <li>Дата создания: {{ order.datecreate | defaultDateFormat }}</li>
+                    <li>ВУЗ: {{ order.hei | noData }}</li>
+                    <li>Заказчик: {{ order.user | avatar | raw }}</li>
 
                     {% if type == statusOrderNew or type == statusOrderWork or type == statusOrderAuction %}
                         <li>Выполнение до: {{ order.dateexpire | defaultDateFormat }}</li>
@@ -36,7 +38,9 @@
                         <li>В срок заказчика: {{ order.selectedBid.isClientDate }}</li>
                     {% endif %}
 
-                    <li>Заказчик: <div>{{ order.user.rawavatar | raw }}</div>{{ order.user.login }}</li>
+                    {% if type == statusOrderWork %}
+                        <li>В работе с: {{ order.dateConfirm | defaultDateFormat }}</li>
+                    {% endif %}
                 </ul>
             </div>
             <div>
@@ -51,11 +55,19 @@
                 {% include 'UserBundle:User/partials:orderBidForm.html.twig' with {'formBid': formBid} %}
             </div>
         {% endif %}
-         {% if type == statusOrderNew or type == statusOrderAuction %}
-             <div>
-                 {% include 'UserBundle:User/partials:orderUserBids.html.twig' with {'bidsData': bidsData} %}
-             </div>
-         {% endif %}
+        {% if type == statusOrderNew or type == statusOrderAuction or type == statusOrderAssigned %}
+            <div>
+                {% include 'UserBundle:User/partials:orderUserBids.html.twig' with {'bidsData': bidsData} %}
+            </div>
+        {% endif %}
+        {% if type == statusOrderAssigned %}
+            <div>
+                {% include 'UserBundle:User/partials:confirmBidForm.html.twig' with {'formConfirmBid': formConfirmBid} %}
+            </div>
+        {% endif %}
+        <div>
+            {% include 'UserBundle:User/partials:orderStages.html.twig' with {'stagesData': order.stages } %}
+        </div>
     {% endblock %}
 
 {#

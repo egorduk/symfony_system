@@ -84,7 +84,7 @@
         <option name="default">1</option>
       </options>
     </field>
-    <field name="avatar" type="string" column="avatar" length="25" nullable="false">
+    <field name="avatar" type="string" column="avatar" length="50" nullable="false">
       <options>
         <option name="default">default.png</option>
       </options>
@@ -108,8 +108,20 @@
     <one-to-many field="orders" target-entity="SecureBundle\Entity\UserOrder" mapped-by="user" />
     <one-to-many target-entity="SecureBundle\Entity\OrderFile" mapped-by="user" field="files" />
     <one-to-many target-entity="SecureBundle\Entity\UserBid" mapped-by="user" field="bids" />
+    <one-to-many target-entity="SecureBundle\Entity\UserActivity" mapped-by="user" field="activities" />
     <many-to-one field="userInfo" target-entity="AuthBundle\Entity\UserInfo" inversed-by="user">
       <join-column name="user_info_id" referenced-column-name="id" />
     </many-to-one>
+    <many-to-many field="companies" target-entity="SecureBundle\Entity\Company" inversed-by="users" fetch="LAZY">
+      <join-table name="user_has_company">
+        <join-columns>
+          <join-column name="user_id" referenced-column-name="id" on-delete="CASCADE"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="company_id" referenced-column-name="id" on-delete="CASCADE"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+    <one-to-many field="settings" target-entity="SecureBundle\Entity\Setting" mapped-by="user" />
   </entity>
 </doctrine-mapping>

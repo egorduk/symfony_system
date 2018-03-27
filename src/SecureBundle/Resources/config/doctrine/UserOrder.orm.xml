@@ -72,24 +72,30 @@
         <option name="fixed"/>
       </options>
     </field>
+    <field name="hei" type="string" column="hei" length="50" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
     <field name="clientDegree" type="integer" column="client_degree" nullable="true">
       <options>
         <option name="unsigned">1</option>
       </options>
     </field>
-    <many-to-one field="status" target-entity="SecureBundle\Entity\StatusOrder" inversed-by="orders">
+    <many-to-one field="status" target-entity="SecureBundle\Entity\StatusOrder" inversed-by="orders" fetch="LAZY">
       <join-column name="status_order_id" referenced-column-name="id" />
     </many-to-one>
-    <many-to-one field="subject" target-entity="SecureBundle\Entity\SubjectOrder" inversed-by="orders">
+    <many-to-one field="subject" target-entity="SecureBundle\Entity\SubjectOrder" inversed-by="orders" fetch="LAZY">
       <join-column name="subject_order_id" referenced-column-name="id" />
     </many-to-one>
-    <many-to-one field="user" target-entity="AuthBundle\Entity\User" inversed-by="orders">
+    <many-to-one field="user" target-entity="AuthBundle\Entity\User" inversed-by="orders" fetch="LAZY">
       <join-column name="user_id" referenced-column-name="id" />
     </many-to-one>
-    <many-to-one field="type" target-entity="SecureBundle\Entity\TypeOrder" inversed-by="orders">
+    <many-to-one field="type" target-entity="SecureBundle\Entity\TypeOrder" inversed-by="orders" fetch="LAZY">
       <join-column name="type_order_id" referenced-column-name="id" />
     </many-to-one>
-    <one-to-many target-entity="SecureBundle\Entity\OrderFile" mapped-by="order" field="files" />
-    <one-to-many target-entity="SecureBundle\Entity\UserBid" mapped-by="order" field="bids" />
+    <one-to-many target-entity="SecureBundle\Entity\OrderFile" mapped-by="order" field="files" fetch="LAZY"/>
+    <one-to-many target-entity="SecureBundle\Entity\UserBid" mapped-by="order" field="bids" fetch="LAZY"/>
+    <one-to-many target-entity="SecureBundle\Entity\StageOrder" mapped-by="order" field="stages" fetch="LAZY"/>
   </entity>
 </doctrine-mapping>

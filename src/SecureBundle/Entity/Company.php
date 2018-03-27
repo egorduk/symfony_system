@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(name="company", uniqueConstraints={@ORM\UniqueConstraint(name="slug", columns={"slug"}), @ORM\UniqueConstraint(name="name", columns={"name"})})
- * @ORM\Entity
+ * @ORM\Entity()
  */
 class Company
 {
@@ -83,6 +83,11 @@ class Company
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\Setting", mappedBy="company")
+     */
+    private $settings;
+
 
     public function __construct()
     {
@@ -91,6 +96,7 @@ class Company
         $this->dateRegistration = new \DateTime();
 
         $this->users = new ArrayCollection();
+        $this->settings = new ArrayCollection();
     }
 
     public function setName($name)
@@ -228,5 +234,15 @@ class Company
     public function setSum($sum)
     {
         $this->sum = $sum;
+    }
+
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    public function setSettings($settings)
+    {
+        $this->settings = $settings;
     }
 }

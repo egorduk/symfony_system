@@ -29,6 +29,7 @@ class LoadUsers implements ORMFixtureInterface
         $user->setRegisterConfirm();
         $encodedPassword = $this->encoderService->encodePassword($user, 'test');
         $user->setPassword($encodedPassword);
+        $user->setIpReg(ip2long('127.0.0.1'));
         $manager->persist($user);
         
         $user = new User();
@@ -39,6 +40,7 @@ class LoadUsers implements ORMFixtureInterface
         $user->setRegisterConfirm();
         $encodedPassword = $this->encoderService->encodePassword($user, 'test');
         $user->setPassword($encodedPassword);
+        $user->setIpReg(ip2long('127.0.0.1'));
         $manager->persist($user);
 
         $roles = [

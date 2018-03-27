@@ -6,12 +6,15 @@
         <div class="container">
             <div class="row">
                 <div  class="col-xs-4">
-                    <div>{{ user.rawavatar | raw }}</div>
+                    <div>{{ user | avatar | raw }}</div>
                     <p>{{ user.login }}</p>
                     <hr style="border:solid 1px black">
                     <p>Ваш ID - {{ user.id }}</p>
                     <hr style="border:solid 1px black">
-                    <p>Компании - {{ user.id }}</p>
+                    <p>Компании: </p>
+                    {% for company in user.companies  %}
+                        <li><a href="{{ path('secure_company_info', {companyId: company.id}) }}">{{ company.name }}</a></li>
+                    {% endfor %}
                     <hr style="border:solid 1px black">
                     <p>Ваш баланс: {{ user.account }} руб.</p>
                     <hr style="border:solid 1px black">

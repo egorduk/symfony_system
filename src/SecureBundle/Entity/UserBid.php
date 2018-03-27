@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="user_bid")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="SecureBundle\Repository\UserBidRepository")
  */
 class UserBid
 {
@@ -46,6 +46,11 @@ class UserBid
      * @ORM\Column(name="date_bid", type="datetime")
      */
     private $dateBid;
+
+    /**
+     * @ORM\Column(name="date_reject", type="datetime", nullable=true)
+     */
+    private $dateReject;
 
     /**
      * @ORM\Column(name="is_client_date", type="boolean")
@@ -93,11 +98,13 @@ class UserBid
     public function __construct()
     {
         $this->dateBid = new \DateTime();
+        $this->dateReject = null;
         $this->isRejected = 0;
         $this->isConfirmed = 0;
         $this->isSelected = 0;
         $this->isClientDate = 0;
         $this->day = 0;
+        $this->sum = 0;
         $this->isShownOthers = 1;
         $this->isShownUser = 1;
     }
@@ -235,5 +242,30 @@ class UserBid
     public function setIsRejected($isRejected)
     {
         $this->isRejected = $isRejected;
+    }
+
+    public function getDateReject()
+    {
+        return $this->dateReject;
+    }
+
+    public function setDateReject($dateReject)
+    {
+        $this->dateReject = $dateReject;
+    }
+
+    public function setConfirmed()
+    {
+        $this->setIsConfirmed(1);
+    }
+
+    public function setRejected()
+    {
+        $this->setIsRejected(1);
+    }
+
+    public function setSelected()
+    {
+        $this->setIsSelected(1);
     }
 }

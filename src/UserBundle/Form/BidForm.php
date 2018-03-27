@@ -5,13 +5,12 @@ namespace UserBundle\Form;
 use SecureBundle\Entity\UserBid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 class BidForm extends AbstractType
 {
@@ -22,7 +21,7 @@ class BidForm extends AbstractType
         $builder
             ->add('sum', TextType::class, [
                 'required' => true,
-                'label' => 'Сумма'/*, 'data' => $options['data']->fieldSum*/,
+                'label' => 'Сумма',
                 'attr' => [
                     'class' => 'form-control',
                     'maxlength' => 7,
@@ -35,7 +34,7 @@ class BidForm extends AbstractType
             ])
             ->add('day', TextType::class, [
                 'required' => false,
-                'label' => 'Количество дней',/* 'data' => $options['data']->fieldDay, */
+                'label' => 'Количество дней',
                 'attr' => [
                     'class' => 'form-control',
                     'maxlength' => 3,
@@ -48,7 +47,7 @@ class BidForm extends AbstractType
             ])
             ->add('comment', TextareaType::class, [
                 'required' => false,
-                'label' => 'Комментарий',/* 'data' => $options['data']->fieldComment,*/
+                'label' => 'Комментарий',
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Введите комментарий для заказчика',

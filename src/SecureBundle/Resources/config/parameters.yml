@@ -1,3 +1,7 @@
 parameters:
     user_order_entity: SecureBundle\Entity\UserOrder
     status_order_entity: SecureBundle\Entity\StatusOrder
+    company_entity: SecureBundle\Entity\Company
+    user_bid_entity: SecureBundle\Entity\UserBid
+    setting_entity: SecureBundle\Entity\Setting
+    user_activity_entity: SecureBundle\Entity\UserActivity

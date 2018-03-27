@@ -1,0 +1,15 @@
+{% extends 'UserBundle::layout.html.twig' %}
+
+{% block title %}{{ 'Информация о компании' | trans }}{% endblock %}
+    {% block content %}
+        <div class="row">
+            <div  class="col-xs-5 col-xs-offset-4">
+                <p>Название: {{ company.name }}</p>
+                <p>Телефон: {{ company.phone }}</p>
+                <p>Skype: {{ company.skype }}</p>
+                <p>Email: {{ company.email }}</p>
+                <p>Директор: {{ company.director }}</p>
+                <p>Адрес: {{ company.address }}</p>
+            </div>
+        </div>
+    {% endblock %}

@@ -126,7 +126,7 @@ class DateTimeService
     public function getRemainingExpireTimeWithUserDays(UserOrder $order)
     {
         $selectedBid = $order->getSelectedBid();
-        $days = $selectedBid['day'];
+        $days = $selectedBid->getDay();
 
         $currentDate = new \DateTime();
 

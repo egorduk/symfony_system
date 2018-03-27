@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="SecureBundle\Entity\UserActivity" table="user_activity">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="action" type="string" column="action" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dateActivity" type="datetime" column="date_activity" nullable="false">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="ipAddress" type="integer" column="ip_address" nullable="false"/>
+    <field name="additionalInfo" type="json_array" column="additional_info" nullable="true"/>
+    <many-to-one field="user" target-entity="AuthBundle\Entity\User" inversed-by="activities" fetch="LAZY">
+      <join-column name="user_id" referenced-column-name="id" nullable="false"/>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

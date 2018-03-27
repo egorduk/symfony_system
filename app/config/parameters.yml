@@ -15,10 +15,6 @@ parameters:
     confirm_auth_path: 'http://localhost/symfony_system/web/app_dev.php/confirm'
     mail_sender: egorduk@yandex.com
     mail_title: Study
-    web_dir: '%kernel.root_dir%/../web'
-    #uploads_dir: '%kernel.root_dir%/../web/uploads'
-
-    #uploads_avatars_dir: '%kernel.root_dir%/../web/uploads/avatars'
     mail_options:
         mail_sender: '%mail_sender%'
         mail_title: '%mail_title%'
@@ -27,3 +23,6 @@ parameters:
     file_upload_dir_fixtures: '%kernel.root_dir%/Resources/uploads/fixtures'
     #file_upload_dir_order_attachments: '%kernel.root_dir%/Resources/uploads/attachments/orders'
     file_upload_dir_order_attachments: '%kernel.root_dir%/Resources/uploads'
+    #uploads_dir: '%kernel.root_dir%/../web/uploads'
+    web_dir: '%kernel.root_dir%/../web'
+    file_upload_dir_user_avatars: 'uploads/avatars'

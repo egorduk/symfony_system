@@ -2,3 +2,7 @@ parameters:
     entity_repositories:
         SecureBundle\Entity\UserOrder: SecureBundle\Repository\UserOrderRepository
         SecureBundle\Entity\StatusOrder: SecureBundle\Repository\StatusOrderRepository
+        SecureBundle\Entity\Company: SecureBundle\Repository\CompanyRepository
+        SecureBundle\Entity\UserBid: SecureBundle\Repository\UserBidRepository
+        SecureBundle\Entity\Setting: SecureBundle\Repository\SettingRepository
+        SecureBundle\Entity\UserActivity: SecureBundle\Repository\UserActivityRepository

@@ -219,7 +219,7 @@
                 <div class="col-xs-6 col-xs-offset-3">
                     {{ form_start(formProfile, {'attr': {'id' : 'formProfile'}}) }}
                     <div class="form-group">
-                        <p id="user-avatar">{{ user.rawavatar | raw }}</p>
+                        <p id="user-avatar">{{ user | avatar | raw }}</p>
                         {{ form_start(formProfile) }}
                         <div class="input-group form-group">
                             <label for="btn-change-avatar" class="btn btn-success"><span class="icon-trash-1">&nbspИзменить</span></label>

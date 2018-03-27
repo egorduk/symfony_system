@@ -46,6 +46,7 @@ class LoadOrders implements ORMFixtureInterface
             $order->setSubject($subjects[array_rand($subjects)]);
             $order->setStatus($statuses[array_rand($statuses)]);
             $order->setType($types[array_rand($types)]);
+            $order->setHei(rand(0, 1) ? $faker->text(50) : null);
             $manager->persist($order);
         }
 

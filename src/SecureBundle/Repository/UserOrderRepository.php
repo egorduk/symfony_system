@@ -220,4 +220,36 @@ class UserOrderRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getAllowedOrderForUser(User $user, $order)
+    {
+        return $this->_em
+            ->createQueryBuilder()
+            ->select('uo')
+            ->from(UserOrder::class, 'uo')
+            ->innerJoin(StatusOrder::class, 'so', 'WITH', 'uo.status = so.id')
+            //->leftJoin(UserBid::class, 'ub', 'WITH', 'ub.order = uo.id')
+            ->where('uo = :order')
+            ->andWhere('uo.isShownOthers = 1')
+            ->andWhere('uo.isShownUser = 1')
+            ->andWhere('uo.isHidden = 0')
+            //->andWhere('uo.dateExpire > :now')
+            /*->andWhere('ub.isShownOthers = 1')
+            ->andWhere('ub.isShownUser = 1')*/
+            /*->andWhere('ub.isSelected is null')
+            ->andWhere('ub.isConfirmed is null')
+            ->andWhere('ub.user = :user')*/
+            ->andWhere('so.code IN (:codes)')
+            ->setParameters([
+                'order' => $order,
+                //'user' => $user,
+                //'now' => new \DateTime(),
+                'codes' => [
+                    StatusOrder::STATUS_ORDER_NEW_CODE,
+                    StatusOrder::STATUS_ORDER_AUCTION_CODE,
+                ],
+            ])
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

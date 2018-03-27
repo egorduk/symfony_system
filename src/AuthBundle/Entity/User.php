@@ -90,17 +90,17 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(name="is_active", type="boolean")
      */
-    private $isActive = 'b\'0\'';
+    private $isActive;
 
     /**
      * @ORM\Column(name="is_confirm", type="boolean")
      */
-    private $isConfirm = 'b\'0\'';
+    private $isConfirm;
 
     /**
      * @ORM\Column(name="hash_code", type="string", length=30)
      */
-    private $hashCode = '';
+    private $hashCode;
 
     /**
      * @ORM\Column(name="token", type="string", length=30)
@@ -110,7 +110,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(name="recovery_password", type="string", length=100)
      */
-    private $recoveryPassword = '';
+    private $recoveryPassword;
 
     /**
      * @ORM\Column(name="account", type="integer")
@@ -128,7 +128,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $isAccessOrder;
 
     /**
-     * @ORM\Column(name="avatar", type="string", length=25)
+     * @ORM\Column(name="avatar", type="string", length=50)
      */
     private $avatar;
 
@@ -145,7 +145,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $rating;
 
     /**
-     * @ORM\Column(name="roles", type="string")
+     * @ORM\Column(name="roles", type="string", length=20)
      */
     private $role;
 
@@ -170,8 +170,13 @@ class User implements AdvancedUserInterface, \Serializable
     private $bids;
 
     /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserActivity", mappedBy="user")
+     */
+    private $activities;
+
+    /**
      * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\UserInfo", inversedBy="user")
-     * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id")
      */
     private $userInfo;
 
@@ -185,12 +190,14 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $companies;
 
-    private $rawAvatar;
+    /**
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\Setting", mappedBy="user")
+     */
+    private $settings;
 
 
     public function __construct()
     {
-        // may not be needed, see section on salt below
         $this->salt = md5(uniqid(null, true));
         $this->account = 0;
         $this->avatar = 'default.png';
@@ -198,9 +205,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->dateConfirmRecovery = null;
         $this->dateConfirmReg = null;
         $this->dateUploadAvatar = null;
-        //$this->is_active = 1;
-        //$this->ipReg = ip2long($_SERVER['REMOTE_ADDR']);
-        $this->ipReg = 1234;
+        $this->ipReg = null;
         $this->isConfirm = 0;
         $this->isActive = 1;
         $this->isBan = 0;
@@ -214,8 +219,6 @@ class User implements AdvancedUserInterface, \Serializable
         $this->sum = 0;
         /*$this->link_user_order = new ArrayCollection();
         $this->link_openid = new ArrayCollection();
-        $this->link_author_file = new ArrayCollection();
-        $this->link_user_bid = new ArrayCollection();
         $this->link_select_user = new ArrayCollection();
         $this->link_webchat_user = new ArrayCollection();
         $this->link_favorite_user = new ArrayCollection();
@@ -226,7 +229,9 @@ class User implements AdvancedUserInterface, \Serializable
         $this->orders = new ArrayCollection();
         $this->files = new ArrayCollection();
         $this->bids = new ArrayCollection();
+        $this->activities = new ArrayCollection();
         $this->companies = new ArrayCollection();
+        $this->settings = new ArrayCollection();
     }
 
     /**
@@ -622,18 +627,6 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->role;
     }
 
-    /*public function setInfo($info)
-    {
-        $this->info = $info;
-
-        return $this;
-    }
-
-    public function getInfo()
-    {
-        return $this->info;
-    }*/
-
     public function getId()
     {
         return $this->id;
@@ -752,7 +745,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->bids = $bids;
     }
 
-    public function getRawAvatar()
+/*    public function getRawAvatar()
     {
         return $this->rawAvatar;
     }
@@ -760,7 +753,7 @@ class User implements AdvancedUserInterface, \Serializable
     public function setRawAvatar($rawAvatar)
     {
         $this->rawAvatar = $rawAvatar;
-    }
+    }*/
 
     public function getUserInfo()
     {
@@ -790,5 +783,50 @@ class User implements AdvancedUserInterface, \Serializable
     public function setCompanies($companies)
     {
         $this->companies = $companies;
+    }
+
+    public function isUser()
+    {
+        return $this->role === self::ROLE_USER;
+    }
+
+    public function getOrders()
+    {
+        return $this->orders;
+    }
+
+    public function setOrders($orders)
+    {
+        $this->orders = $orders;
+    }
+
+    public function getActivities()
+    {
+        return $this->activities;
+    }
+
+    public function setActivities($activities)
+    {
+        $this->activities = $activities;
+    }
+
+    public function setActive()
+    {
+        $this->setIsActive(1);
+    }
+
+    public function setInactive()
+    {
+        $this->setIsActive(0);
+    }
+
+    public function getSettings()
+    {
+        return $this->settings;
+    }
+
+    public function setSettings($settings)
+    {
+        $this->settings = $settings;
     }
 }

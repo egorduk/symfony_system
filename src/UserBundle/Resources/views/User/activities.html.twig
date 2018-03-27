@@ -1,0 +1,27 @@
+{% extends 'UserBundle::layout.html.twig' %}
+
+{% import '@User/User/macros/activitiesTable.html.twig' as macros %}
+
+{% block title %}{{ 'Активность' | trans }}{% endblock %}
+    {% block content %}
+        <div class="row">
+            <table id="" class="display responsive" width="100%">
+                <thead>
+                {{ macros.activitiesTable() }}
+                </thead>
+                <tfoot>
+                {{ macros.activitiesTable() }}
+                </tfoot>
+                <tbody>
+                {% for activity in activities %}
+                    <tr data-id="">
+                        <td>{{ activity.action | trans }}</td>
+                        <td>{{ activity.dateActivity | defaultDateFormat }}</td>
+                        <td>{{ activity.additionalInfo | additionalActivityInfo(activity.action) }}</td>
+                        <td>{{ activity.ipAddress | ip }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endblock %}

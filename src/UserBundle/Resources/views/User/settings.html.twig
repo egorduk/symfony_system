@@ -1,0 +1,45 @@
+{% extends 'UserBundle::layout.html.twig' %}
+
+{% import '@User/User/macros/settingsTable.html.twig' as macros %}
+
+{% block title %}{{ 'Настройки' | trans }}{% endblock %}
+    {% block content %}
+        <div class="row">
+            <div>
+                {{ form_start(formSetting, {'attr': {'id' : 'formSetting'}}) }}
+                <div class="form-group">
+                    {% for setting in formSetting.settings %}
+                        {{ form_label(setting.name, setting.vars.data.name) }}
+                        {{ form_widget(setting.name) }}
+                        {{ form_label(setting.value) }}
+                        {{ form_errors(setting.value) }}
+                        <div class="input-group">
+                            {{ form_widget(setting.value) }}
+                        </div>
+                    {% endfor %}
+                    <div class="input-group">
+                        <button type="submit" class="btn btn-success">{{ 'Сохранить' | trans }}</button>
+                    </div>
+                </div>
+                {{ form_end(formSetting) }}
+            </div>
+        </div>
+        <div class="row">
+            <table id="" class="display responsive" width="100%">
+                <thead>
+                {{ macros.settingsTable() }}
+                </thead>
+                <tfoot>
+                {{ macros.settingsTable() }}
+                </tfoot>
+                <tbody>
+                {% for setting in settings %}
+                    <tr data-id="">
+                        <td>{{ setting.name | trans }}</td>
+                        <td>{{ setting.value | trans }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endblock %}

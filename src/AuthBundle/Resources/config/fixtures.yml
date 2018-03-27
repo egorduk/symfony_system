@@ -34,3 +34,6 @@ services:
 
     AuthBundle\DataFixtures\ORM\ConnectCompaniesWithUsers:
         tags: [doctrine.fixture.orm]
+
+    AuthBundle\DataFixtures\ORM\LoadOrderStages:
+        tags: [doctrine.fixture.orm]

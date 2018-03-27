@@ -19,6 +19,7 @@ services:
             - '@secure.service.date_time'
             - '@secure.repository.status_order'
             - '@secure.repository.user_order'
+            - '@secure.service.bid'
 
     secure.service.files:
         class: SecureBundle\Service\FileService
@@ -26,7 +27,7 @@ services:
 
     secure.service.bid:
         class: SecureBundle\Service\BidService
-        arguments: ['@em', '@secure.service.date_time']
+        arguments: ['@em', '@secure.service.date_time', '@secure.repository.user_bid']
 
     app.twig:
         class: SecureBundle\Twig\Extension\AppExtension
@@ -35,10 +36,22 @@ services:
 
     app.twig_runtime:
         class: SecureBundle\Twig\AppRuntime
+        arguments: ['@secure.service.user']
         public: false
         tags:
             - { name: twig.runtime }
 
+    secure.service.user:
+        class: SecureBundle\Service\UserService
+        arguments: ['@doctrine.orm.entity_manager', '@assets.packages', '%file_upload_dir_user_avatars%']
+
+    secure.service.user_activity:
+        class: SecureBundle\Service\UserActivityService
+        arguments: ['@secure.repository.user_activity']
+
+    secure.service.setting:
+        class: SecureBundle\Service\SettingService
+        arguments: ['@secure.repository.setting']
 
 
 
@@ -47,9 +60,6 @@ services:
         class: SecureBundle\Service\ImageService
         arguments: ['@doctrine.orm.entity_manager', '@router', '@secure.service.user']
 
-    secure.service.user:
-        class: SecureBundle\Service\UserService
-        arguments: ['@doctrine.orm.entity_manager', '@assets.packages']
 
     secure.mail_helper:
         class: SecureBundle\Service\MailService

@@ -3,16 +3,19 @@
 namespace UserBundle\Controller;
 
 use AuthBundle\Entity\User;
-use SecureBundle\Entity\Company;
+use SecureBundle\Entity\Setting;
 use SecureBundle\Entity\StatusOrder;
+use SecureBundle\Entity\UserBid;
 use SecureBundle\Entity\UserOrder;
+use SecureBundle\Event\UserActivityEvent;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UserBundle\Form\BidForm;
+use UserBundle\Form\ConfirmBidForm;
 use UserBundle\Form\ProfileForm;
+use UserBundle\Form\SettingForm;
+use UserBundle\Model\SettingsModel;
 
 class UserController extends Controller
 {
@@ -23,7 +26,7 @@ class UserController extends Controller
      *
      * @return array
      */
-    public function homepageAction(Request $request)
+    public function homeAction(Request $request)
     {
         /* @var User $user */
         $user = $this->getUser();
@@ -33,43 +36,34 @@ class UserController extends Controller
         $sessionLifeTimestamp = $session->getMetadataBag()->getLifetime();
 
         $dateTimeHelper = $this->get('secure.service.date_time');
-        $userHelper = $this->get('secure.service.user');
-
-        $a = $this->getDoctrine()->getRepository(Company::class)->find(45);
-
-        dump($user->getCompanies());
-        //dump($a->getUsers()->count());
+        $userService = $this->get('secure.service.user');
 
         $whenLoginDate = $dateTimeHelper->getDateFromTimestamp($sessionCreatedTimestamp, 'd/m/Y H:i');
         $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionCreatedTimestamp, $sessionLifeTimestamp, '+');
         $nowTimestamp = $dateTimeHelper->getCurrentTimestamp();
         $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionRemainingTimestamp, $nowTimestamp, '-');
         $remainingTime = $dateTimeHelper->getDateFromTimestamp($sessionRemainingTimestamp, 'i:s');
-        $user = $userHelper->setRawUserAvatar($user);
 
-        $templateData = [
+        return [
             'user' => $user,
             'whenLoginDate' => $whenLoginDate,
             'remainingTime' => $remainingTime,
-            'userRole' => $userHelper->getRoleName($user->getRoles()[0]),
+            'userRole' => $userService->getRoleName($user->getRole()),
         ];
-
-        return $templateData;
     }
 
-    public function bidsAction(Request $request)
+    /**
+     * @Template()
+     *
+     * @return array
+     */
+    public function bidsAction()
     {
-        /* $bidHelper = $this->get('secure.bid_helper');
+        $bids = $this->get('secure.repository.user_bid')->getBidsWithOrdersInfoByUser($this->getUser());
 
-         $bidsData = $bidHelper->getBidsWithOrdersByUser($this->getUser());
-         $bidsData = $bidHelper->setRemainingTime($bidsData);
-
-         return $this->render(
-             'SecureBundle:Author:bidsPage.html.twig',
-             [
-                 'bidsData' => $bidsData,
-             ]
-         );*/
+        return [
+            'bids' => $bids,
+        ];
     }
 
     /**
@@ -80,7 +74,7 @@ class UserController extends Controller
      *
      * @return array
      */
-    public function ordersPageAction(Request $request, $type)
+    public function ordersAction(Request $request, $type)
     {
         $orders = null;
         $user = $this->getUser();
@@ -132,9 +126,43 @@ class UserController extends Controller
         ];
     }
 
+    /**
+     * @Template()
+     *
+     * @param Request $request
+     *
+     * @return array
+     */
     public function settingsAction(Request $request)
     {
+        $settings = $this->get('secure.service.setting')->getUserSettings($this->getUser());
 
+        $settingsModel = new SettingsModel();
+        $settingsModel->setSettings($settings);
+
+        $formSetting = $this->createForm(SettingForm::class, $settingsModel);
+        $formSetting->handleRequest($request);
+
+        if ($formSetting->isSubmitted() && $formSetting->isValid()) {
+            $settingsModel = $formSetting->getData();
+
+            $this->get('secure.service.setting')->saveUserSettings($settingsModel, $this->getUser());
+
+            $this->addFlash(
+                'success',
+                'Settings were updated!'
+            );
+
+            $this->get('event_dispatcher')->dispatch(
+                UserActivityEvent::UPDATE_SETTINGS,
+                new UserActivityEvent($this->getUser(), $request)
+            );
+        }
+
+        return [
+            'settings' => $settings,
+            'formSetting' => $formSetting->createView(),
+        ];
     }
 
     /**
@@ -149,8 +177,6 @@ class UserController extends Controller
         $user = $this->getUser();
 
         $userService = $this->get('secure.service.user');
-
-        $user = $userService->setRawUserAvatar($user);
 
         $formProfile = $this->createForm(ProfileForm::class, $user->getUserInfo());
         $formProfile->handleRequest($request);
@@ -177,21 +203,23 @@ class UserController extends Controller
     }
 
     /**
+     * @Template()
+     *
      * @param Request $request
      * @param int $orderId
      *
-     * @return Response
+     * @return array
      */
-    public function orderPageAction(Request $request, $orderId)
+    public function orderAction(Request $request, $orderId)
     {
         $orderRepository = $this->get('secure.repository.user_order');
+        /* @var UserOrder $order */
         $order = $orderRepository->getOrderById($orderId);
 
-        if (!$order instanceof UserOrder) {
-            throw new NotFoundHttpException();
-        }
-
         $user = $this->getUser();
+
+        $formConfirmBid = null;
+        $formBid = null;
 
         $dateTimeService = $this->get('secure.service.date_time');
         $orderService = $this->get('secure.service.order');
@@ -207,44 +235,102 @@ class UserController extends Controller
         } elseif ($order->isCompleted()) {
             $order->setSpentDays($dateTimeService->getSpentDays($order));
         } elseif ($order->isAssigned()) {
+            /* @var UserBid $selectedBid */
             $selectedBid = $bidService->getSelectedUserBid($user, $order);
+            //dump($selectedBid);
             $order->setSelectedBid($selectedBid);
             $order->setRemainingExpireWithDays($dateTimeService->getRemainingExpireTimeWithUserDays($order));
+
+            $formConfirmBid = $this->createForm(ConfirmBidForm::class, $selectedBid);
+            $formConfirmBid->handleRequest($request);
+
+            if ($formConfirmBid->isSubmitted() && $formConfirmBid->isValid()) {
+                $repositoryStatusOrder = $this->get('secure.repository.status_order');
+
+                if ($formConfirmBid->get('confirm')->isClicked()) {
+                    $status = $repositoryStatusOrder->findOneBy(['code' => StatusOrder::STATUS_ORDER_WORK_CODE]);
+
+                    $selectedBid->setConfirmed();
+
+                    $order->setDateConfirm(new \DateTime());
+
+                    $this->addFlash(
+                        'success',
+                        'Ставка принята! Заказ в работе!'
+                    );
+                } else {
+                    $status = $repositoryStatusOrder->findOneBy(['code' => StatusOrder::STATUS_ORDER_AUCTION_CODE]);
+
+                    $selectedBid->setRejected();
+                    $selectedBid->setSelected();
+                    $selectedBid->setDateReject(new \DateTime());
+
+                    $this->addFlash(
+                        'success',
+                        'Ставка не принята! Заказ на оценке!'
+                    );
+                }
+
+                $order->setStatus($status);
+
+                $orderService->save($order);
+                $bidService->save($selectedBid);
+            }
         }
 
-        $formBid = $this->createForm(BidForm::class);
-        $formBid->handleRequest($request);
+        if ($order->isAuction() || $order->isNew()) {
+            $formBid = $this->createForm(BidForm::class);
+            $formBid->handleRequest($request);
 
-        if ($formBid->isSubmitted() && $formBid->isValid()) {
-            $bid = $formBid->getData();
-            $isSuccess = $bidService->createBid($bid, $order, $this->getUser());
+            if ($formBid->isSubmitted() && $formBid->isValid()) {
+                $bid = $formBid->getData();
+                $isSuccess = $bidService->createBid($bid, $order, $this->getUser());
 
-            if ($order->isNew()) {
-                $orderService->changeStatusOrder($order, StatusOrder::STATUS_ORDER_AUCTION_CODE);
-            }
+                if ($isSuccess) {
+                    if ($order->isNew()) {
+                        $orderService->changeStatusOrder($order, StatusOrder::STATUS_ORDER_AUCTION_CODE);
+                    }
 
-            if ($isSuccess) {
-                $this->addFlash(
-                    'success',
-                    'Ставка поставлена!'
-                );
+                    $this->addFlash(
+                        'success',
+                        'Ставка поставлена!'
+                    );
+
+                    $this->get('event_dispatcher')->dispatch(
+                        UserActivityEvent::SET_BID,
+                        new UserActivityEvent($user, $request, ['order_id' => $order->getId(), 'bid_id' => $bid->getId()])
+                    );
+                }
             }
         }
 
-        $bidsData['statistic'] = $bidService->getMaxMinCntBids($order);
+        $bidsData = [
+            'statistic' => $bidService->getMaxMinCntBids($order),
+            'bids' => $bidService->getUserBids($this->getUser(), $order),
+        ];
 
         //$customer = $orderData->getUser();
         //$userHelper = $this->get('secure.user_helper');
         //$customer = $userHelper->setRawUserAvatar($customer);
         //$orderData->setUser($customer);
 
-        $bidsData['bids'] = $bidService->getUserBids($this->getUser(), $order);
-
-        return $this->render(
-            'UserBundle:User:orderPage.html.twig', [
+        return [
             'order' => $order,
             'bidsData' => $bidsData,
-            'formBid' => $formBid->createView(),
-        ]);
+            'formBid' => $formBid !== null ? $formBid->createView() : null,
+            'formConfirmBid' => $formConfirmBid !== null ? $formConfirmBid->createView() : null,
+        ];
+    }
+
+    /**
+     * @Template()
+     *
+     * @return array
+     */
+    public function activitiesAction()
+    {
+        $activities = $this->get('secure.repository.user_activity')->findBy(['user' => $this->getUser()]);
+
+        return compact('activities');
     }
 }

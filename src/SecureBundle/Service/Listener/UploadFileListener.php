@@ -4,8 +4,10 @@ namespace SecureBundle\EventListener;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
+use SecureBundle\Service\FileService;
 use SecureBundle\Service\Helper\FileHelper;
 use SecureBundle\Service\Helper\ImageHelper;
+use SecureBundle\Service\ImageService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -32,7 +34,7 @@ class UploadFileListener
      */
     private $ts;
 
-    public function __construct(ObjectManager $om, FileHelper $fh, ImageHelper $ih, TokenStorage $ts)
+    public function __construct(ObjectManager $om, FileService $fh, ImageService $ih, TokenStorage $ts)
     {
         $this->om = $om;
         $this->fh = $fh;

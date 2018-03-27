@@ -64,6 +64,7 @@ security:
             logout:
                 path: /logout
                 target: login
+                handlers: [secure.listener.logout]
 
     access_control:
         - { path: ^/secure/admin, roles: ROLE_ADMIN }

@@ -15,5 +15,6 @@ class SecureBundleExtension extends Extension
         $loader->load('services.yml');
         $loader->load('parameters.yml');
         $loader->load('repositories.yml');
+        $loader->load('listeners.yml');
     }
 }

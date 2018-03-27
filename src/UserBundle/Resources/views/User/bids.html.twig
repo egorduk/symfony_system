@@ -1,0 +1,35 @@
+{% extends 'UserBundle::layout.html.twig' %}
+
+{% import '@User/User/macros/bidsTable.html.twig' as macros %}
+
+{% block title %}{{ 'Просмотр ставок' | trans }}{% endblock %}
+    {% block content %}
+        <div class="col-md-6 col-md-offset-3">
+            <table id="" class="display responsive" width="100%">
+                <thead>
+                {{ macros.bidsTable() }}
+                </thead>
+                <tfoot>
+                {{ macros.bidsTable() }}
+                </tfoot>
+                <tbody>
+                {% for bid in bids %}
+                    <tr data-id="">
+                        <td>{{ bid.id }}</td>
+                        <td><a href="{{ path('secure_user_order_page', {'orderId': bid.order_id })  }}">{{ bid.order_id }}</a></td>
+                        <td>{{ bid.order_subject }}</td>
+                        <td>{{ bid.order_type }}</td>
+                        <td>{{ bid.order_theme }}</td>
+                        <td>{{ bid.order_status }}</td>
+                        <td>1</td>
+                        <td>{{ bid.sum }}</td>
+                        <td>{{ bid.dateBid | defaultDateFormat }}</td>
+                        <td>{{ bid.comment }}</td>
+                        <td>{{ bid.order_dateCreate | defaultDateFormat }}</td>
+                        <td>{{ bid.order_user_login }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endblock %}
