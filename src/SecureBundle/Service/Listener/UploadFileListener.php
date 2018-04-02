@@ -1,12 +1,11 @@
 <?php
 
-namespace SecureBundle\EventListener;
+namespace SecureBundle\Service\Listener;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use SecureBundle\Service\FileService;
-use SecureBundle\Service\Helper\FileHelper;
-use SecureBundle\Service\Helper\ImageHelper;
 use SecureBundle\Service\ImageService;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Config\Definition\Exception\InvalidTypeException;
@@ -14,32 +13,17 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class UploadFileListener
 {
-    /**
-     * @var ObjectManager
-     */
-    private $om;
+    private $em;
+    private $fileService;
+    private $imageService;
+    private $tokenStorage;
 
-    /**
-     * @var FileHelper
-     */
-    private $fh;
-
-    /**
-     * @var ImageHelper $ih
-     */
-    private $ih;
-
-    /**
-     * @var TokenStorage $ts
-     */
-    private $ts;
-
-    public function __construct(ObjectManager $om, FileService $fh, ImageService $ih, TokenStorage $ts)
+    public function __construct(EntityManager $em, FileService $fileService, ImageService $imageService, TokenStorage $tokenStorage)
     {
-        $this->om = $om;
-        $this->fh = $fh;
-        $this->ih = $ih;
-        $this->ts = $ts;
+        $this->em = $em;
+        $this->fileService = $fileService;
+        $this->imageService = $imageService;
+        $this->tokenStorage = $tokenStorage;
 
         $this->response = [];
         $this->options = [
@@ -53,6 +37,8 @@ class UploadFileListener
         $response = $event->getResponse();
         $file = $event->getFile();
         $config = $event->getConfig();
+        $request = $event->getRequest();
+        $orderId = $request->request->get('orderId');
 
         $destination = $config['storage']['directory'];
         //var_dump($destination);die;
@@ -60,9 +46,9 @@ class UploadFileListener
         $newWidth = $this->options['maxWidth'];
         $newHeight = $this->options['maxHeight'];
 
-        $user = $this->ts->getToken()->getUser();
+        $user = $this->tokenStorage->getToken()->getUser();
 
-        $response['response'] = $this->ih->createThumbnail($file, $newWidth, $newHeight, $user, $destination);
+        //$response['response'] = $this->imageService->createThumbnail($file, $newWidth, $newHeight, $user, $destination);
 
         return $response;
     }

@@ -5,3 +5,4 @@ parameters:
     user_bid_entity: SecureBundle\Entity\UserBid
     setting_entity: SecureBundle\Entity\Setting
     user_activity_entity: SecureBundle\Entity\UserActivity
+    order_file_entity: SecureBundle\Entity\OrderFile

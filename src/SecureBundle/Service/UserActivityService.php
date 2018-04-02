@@ -31,4 +31,9 @@ class UserActivityService
 
         $this->userActivityRepository->save($activity, true);
     }
+
+    public function getUserActivities(User $user)
+    {
+        return $this->userActivityRepository->findBy(['user' => $user]);
+    }
 }

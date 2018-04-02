@@ -68,11 +68,57 @@
         <div>
             {% include 'UserBundle:User/partials:orderStages.html.twig' with {'stagesData': order.stages } %}
         </div>
+        {% if type == statusOrderWork or type == statusOrderGuarantee %}
+            <div class="col-md-8" id="block-completed-order">
+                <form class="form-horizontal" name="form-completed-order" id="form-completed-order" enctype="multipart/form-data">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="check-completed-order" id="check-completed-order">Заказ выполнен
+                        </label>
+                    </div>
+                    <div class="input-group">
+
+                    </div>
+                </form>
+                {#<div id="fileupload"></div>#}
+
+               {# <ul id="filelist"></ul>
+                <br />
+                <div id="container">
+                    <a id="browse" href="javascript:;">[Browse...]</a>
+                    <a id="start-upload" href="javascript:;">[Start Upload]</a>
+                </div>
+                <br />
+                <pre id="console"></pre>#}
+
+                <form id="form" method="post" action="/symfony_system/web/app_dev.php/_uploader/gallery/upload">
+                    <div id="uploader">
+                        <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
+                    </div>
+                    <br/>
+                </form>
+
+                <div class="js-var" data-order-id="{{ order.id }}"></div>
+            </div>
+        {% endif %}
     {% endblock %}
 
-{#
+
     {% block javascripts_footer %}
         {{ parent() }}
-        <script type="application/javascript" src="{{ asset('js/order.js') }}"></script>
-        <script type="application/javascript" src="{{ asset('js/price-format.js') }}"></script>
-    {% endblock %}#}
+        {#<script type="application/javascript" src="{{ asset('js/order.js') }}"></script>#}
+        {#<script type="application/javascript" src="{{ asset('js/price-format.js') }}"></script>#}
+        {% javascripts
+        '@UserBundle/Resources/public/js/jquery-3.3.1.min.js'
+        '@UserBundle/Resources/public/js/browser-plus.js'
+        '@UserBundle/Resources/public/js/jquery-ui.min.js'
+        '@UserBundle/Resources/public/js/plupload.full.min.js'
+        '@UserBundle/Resources/public/js/jquery.plupload.queue.min.js'
+        '@UserBundle/Resources/public/js/jquery.ui.plupload.min.js'
+        '@UserBundle/Resources/public/js/script.js'
+        %}
+        <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+
+        <link href="{{ asset('bundles/user/css/jquery.plupload.queue.css') }}" rel="stylesheet" type="text/css" />
+    {% endblock %}

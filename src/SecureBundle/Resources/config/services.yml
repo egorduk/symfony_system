@@ -53,30 +53,25 @@ services:
         class: SecureBundle\Service\SettingService
         arguments: ['@secure.repository.setting']
 
-
-
-
-    secure.image_helper:
+    secure.service.image:
         class: SecureBundle\Service\ImageService
         arguments: ['@doctrine.orm.entity_manager', '@router', '@secure.service.user']
+
+
 
 
     secure.mail_helper:
         class: SecureBundle\Service\MailService
         arguments: ['@doctrine.orm.entity_manager', '%mail_options%', '@mailer']
 
-    secure.upload_file_listener_gallery:
-        class: SecureBundle\EventListener\UploadFileListener
-        arguments: ['@doctrine.orm.entity_manager', '@secure.service.files', '@secure.image_helper', '@security.token_storage']
-        tags:
-            - { name: kernel.event_listener, event: oneup_uploader.post_persist.gallery, method: onUpload }
 
-    secure.validate_file_listener_gallery:
-        class: SecureBundle\EventListener\ValidateFileListener
-        arguments: ['@secure.service.files']
-        tags:
-            - { name: kernel.event_listener, event: oneup_uploader.validation.gallery, method: onValidate }
-
-    secure.file_upload_error_handler:
-        arguments: ['@secure.service.files']
-        class: SecureBundle\Service\Handler\UploadFileErrorHandler
+#
+#    secure.validate_file_listener_gallery:
+#        class: SecureBundle\EventListener\ValidateFileListener
+#        arguments: ['@secure.service.files']
+#        tags:
+#            - { name: kernel.event_listener, event: oneup_uploader.validation.gallery, method: onValidate }
+#
+#    secure.file_upload_error_handler:
+#        arguments: ['@secure.service.files']
+#        class: SecureBundle\Service\Handler\UploadFileErrorHandler

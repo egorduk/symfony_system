@@ -5,24 +5,21 @@ namespace SecureBundle\Service\Handler;
 use Exception;
 use Oneup\UploaderBundle\Uploader\ErrorHandler\ErrorHandlerInterface;
 use Oneup\UploaderBundle\Uploader\Response\AbstractResponse;
-use SecureBundle\Service\Helper\FileHelper;
+use SecureBundle\Service\FileService;
 
 class UploadFileErrorHandler implements ErrorHandlerInterface
 {
-    /**
-     * @var FileHelper
-     */
-    private $fh;
+    private $fileService;
 
-    public function __construct(FileHelper $fh)
+    public function __construct(FileService $fileService)
     {
-        $this->fh = $fh;
+        $this->fileService = $fileService;
     }
 
     public function addException(AbstractResponse $response, Exception $exception)
     {
         $message = $exception->getMessage();
 
-        $response['error'] = $this->fh->getErrorMessage($message);
+        $response['error'] = $this->fileService->getErrorMessage($message);
     }
 }

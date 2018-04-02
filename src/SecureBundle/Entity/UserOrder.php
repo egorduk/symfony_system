@@ -194,6 +194,9 @@ class UserOrder
         $this->user = $user;
     }
 
+    /**
+     * @return StatusOrder
+     */
     public function getStatus()
     {
         return $this->status;

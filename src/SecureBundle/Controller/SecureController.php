@@ -49,9 +49,9 @@ class SecureController extends Controller
             $file = $this->get('secure.service.files')->getFileById($fileId);
             $filename = $file->getName();
             $uploadsOrdersDir = $this->getParameter('file_upload_dir_order_attachments');
-            //$orderId = $file->getOrder()->getId();
-            //$filePath = $uploadsOrdersDir . DIRECTORY_SEPARATOR . $orderId . DIRECTORY_SEPARATOR . $filename;
-            $filePath = $uploadsOrdersDir . DIRECTORY_SEPARATOR . $filename;
+            $orderId = $file->getOrder()->getId();
+            $filePath = $uploadsOrdersDir . DIRECTORY_SEPARATOR . $orderId . DIRECTORY_SEPARATOR . $filename;
+            //$filePath = $uploadsOrdersDir . DIRECTORY_SEPARATOR . $filename;
         }
 
         if (!file_exists($filePath)) {

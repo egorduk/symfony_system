@@ -158,4 +158,9 @@ class UserOrderService
     {
         return $this->userOrderRepository->save($userOrder, true);
     }
+
+    public function getOneById($orderId)
+    {
+        return $this->userOrderRepository->find($orderId);
+    }
 }

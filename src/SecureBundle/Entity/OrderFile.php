@@ -20,7 +20,7 @@ class OrderFile
     private $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=50)
+     * @ORM\Column(name="name", type="string", length=100)
      */
     private $name;
 
@@ -41,13 +41,13 @@ class OrderFile
 
     /**
      * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\UserOrder", inversedBy="files")
-     * @ORM\JoinColumn(name="order_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="order_id", referencedColumnName="id", nullable=false)
      */
     private $order;
 
     /**
      * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="files")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
 

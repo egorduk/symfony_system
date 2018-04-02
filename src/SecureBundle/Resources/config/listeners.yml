@@ -14,3 +14,9 @@ services:
     secure.listener.logout:
         class: SecureBundle\Service\Listener\LogoutListener
         arguments: ['@secure.service.user_activity', '@em', '@event_dispatcher']
+
+#    secure.listener.upload_file_gallery:
+#        class: SecureBundle\Service\Listener\UploadFileListener
+#        arguments: ['@em', '@secure.service.files', '@secure.service.image', '@security.token_storage']
+#        tags:
+#            - { name: kernel.event_listener, event: oneup_uploader.post_persist.gallery, method: onUpload }

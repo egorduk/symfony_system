@@ -25,10 +25,9 @@ class AppKernel extends Kernel
             //new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             //new Symfony\Bundle\DebugBundle\DebugBundle(),
-            //new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle(),
             //new Sensio\Bundle\DistributionBundle\SensioDistributionBundle(),
             //new Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle(),
-            //new Oneup\UploaderBundle\OneupUploaderBundle()
+            new Oneup\UploaderBundle\OneupUploaderBundle(),
         ];
 
         //var_dump($this->getEnvironment());die;

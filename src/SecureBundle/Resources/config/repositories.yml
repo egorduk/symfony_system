@@ -28,3 +28,8 @@ services:
         class: Doctrine\Common\Persistence\ObjectRepository
         factory: ['@doctrine', getRepository]
         arguments: ['%user_activity_entity%']
+
+    secure.repository.order_file:
+        class: Doctrine\Common\Persistence\ObjectRepository
+        factory: ['@doctrine', getRepository]
+        arguments: ['%order_file_entity%']

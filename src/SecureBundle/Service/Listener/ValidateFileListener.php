@@ -1,6 +1,6 @@
 <?php
 
-namespace SecureBundle\EventListener;
+namespace SecureBundle\Service\ListenerEventListener;
 
 use Oneup\UploaderBundle\Event\ValidationEvent;
 use Oneup\UploaderBundle\Uploader\Exception\ValidationException;
@@ -9,9 +9,6 @@ use SecureBundle\Service\Helper\FileHelper;
 
 class ValidateFileListener
 {
-    /**
-     * @var FileHelper
-     */
     private $fh;
     private $error;
     private $options;

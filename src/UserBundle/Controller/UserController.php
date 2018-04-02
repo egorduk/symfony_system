@@ -304,15 +304,18 @@ class UserController extends Controller
             }
         }
 
+        if ($order->isWork() || $order->isGuarantee()) {
+            //$formUploadWork = $this->createForm(UploadWorkForm::class);
+            //$formUploadWork->handleRequest($request);
+            $helper = $this->container->get('oneup_uploader.templating.uploader_helper');
+            $endpoint = $helper->endpoint('gallery');
+            //dump($endpoint);
+        }
+
         $bidsData = [
             'statistic' => $bidService->getMaxMinCntBids($order),
             'bids' => $bidService->getUserBids($this->getUser(), $order),
         ];
-
-        //$customer = $orderData->getUser();
-        //$userHelper = $this->get('secure.user_helper');
-        //$customer = $userHelper->setRawUserAvatar($customer);
-        //$orderData->setUser($customer);
 
         return [
             'order' => $order,
@@ -329,7 +332,7 @@ class UserController extends Controller
      */
     public function activitiesAction()
     {
-        $activities = $this->get('secure.repository.user_activity')->findBy(['user' => $this->getUser()]);
+        $activities = $this->get('secure.service.user_activity')->getUserActivities($this->getUser());
 
         return compact('activities');
     }

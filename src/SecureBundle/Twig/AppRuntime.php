@@ -72,7 +72,7 @@ class AppRuntime
         $data = json_decode($info);
 
         if ($action === UserActivityEvent::SET_BID) {
-            return $data->order_id . ' ' . $data->bid_id;
+            return sprintf('Ставка номер %s на заказ номер %s', $data->bid_id, $data->order_id);
         }
 
         return null;
