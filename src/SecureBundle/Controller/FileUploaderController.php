@@ -10,6 +10,7 @@ use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use SecureBundle\Entity\OrderFile;
 use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Entity\UserOrder;
+use SecureBundle\Response\OrderFileUploadSuccessResponse;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,45 +22,49 @@ class FileUploaderController extends FineUploaderController
     public function upload()
     {
         $request = $this->getRequest();
-        $files = $this->getFiles($request->files);
+        $file = $this->getFiles($request->files)[0];
 
-        $response = new EmptyResponse();
+        $response = new OrderFileUploadSuccessResponse();
+
         $isChunks = null !== $request->get('chunks');
-
-        $uploadedFiles = [];
 
         $this->setOrderId($request->get('orderId'));
 
-        foreach ($files as $file) {
-            try {
-                $isChunks ?
-                    $this->handleChunkedUpload($file, $response, $request) :
-                    $uploadedFiles[] = $this->handleUpload($file, $response, $request)
-                ;
-            } catch (UploadException $e) {
-                $this->errorHandler->addException($response, $e);
-            }
+        $uploadedFile = null;
+
+        try {
+            $isChunks ?
+                $this->handleChunkedUpload($file, $response, $request) :
+                $uploadedFile = $this->handleUpload($file, $response, $request)
+            ;
+        } catch (UploadException $e) {
+            $this->errorHandler->addException($response, $e);
         }
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $orderFileRepository = $this->container->get('secure.repository.order_file');
-        /* @var UserOrder $order */
         $order = $this->container->get('secure.service.order')->getOneById($this->getOrderId());
 
-        /* @var File $file */
-        foreach ($uploadedFiles as $file) {
-            $orderFile = new OrderFile();
-            $orderFile->setName($file->getFilename());
-            $orderFile->setSize($file->getSize());
-            $orderFile->setUser($user);
-            $orderFile->setOrder($order);
+        $fileService = $this->container->get('secure.service.file');
+        $dateTimeService = $this->container->get('secure.service.date_time');
 
-            $orderFileRepository->save($orderFile);
-        }
+        $orderFile = new OrderFile();
+        $orderFile->setName($uploadedFile->getFilename());
+        $orderFile->setSize($uploadedFile->getSize());
+        $orderFile->setUser($user);
+        $orderFile->setOrder($order);
 
-        $orderFileRepository->flush();
+        $orderFile = $orderFileRepository->save($orderFile, true);
 
-        if ($request->get('isReady')) {
+        $response->offsetSet(0, [
+            'name' => $orderFile->getName(),
+            'dateUpload' => $dateTimeService->getDatetimeFormatted($orderFile->getDateUpload(), 'd.m.Y H:i'),
+            'size' => $fileService->getSizeFile($orderFile->getSize()),
+            'url' => $fileService->getFileUrl($orderFile->getId(), OrderFile::ATTACHMENTS_TYPE),
+            'extension' => $fileService->getFileExtension($orderFile->getName()),
+        ]);
+
+        if ($request->get('isReady') && $order->isWork()) {
             $order->getStatus()->setCode(StatusOrder::STATUS_ORDER_GUARANTEE_CODE);
             $orderFileRepository->save($order, true);
         }

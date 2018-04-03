@@ -46,7 +46,7 @@ class SecureController extends Controller
         $filename = '';
 
         if ($type === OrderFile::ATTACHMENTS_TYPE) {
-            $file = $this->get('secure.service.files')->getFileById($fileId);
+            $file = $this->get('secure.service.file')->getFileById($fileId);
             $filename = $file->getName();
             $uploadsOrdersDir = $this->getParameter('file_upload_dir_order_attachments');
             $orderId = $file->getOrder()->getId();

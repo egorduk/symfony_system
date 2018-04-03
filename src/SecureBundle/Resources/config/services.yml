@@ -15,13 +15,13 @@ services:
         arguments:
             - '@em'
             - '@router'
-            - '@secure.service.files'
+            - '@secure.service.file'
             - '@secure.service.date_time'
             - '@secure.repository.status_order'
             - '@secure.repository.user_order'
             - '@secure.service.bid'
 
-    secure.service.files:
+    secure.service.file:
         class: SecureBundle\Service\FileService
         arguments: ['@em', '@router']
 
