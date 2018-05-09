@@ -2,7 +2,7 @@
 
 namespace AuthBundle\Service;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 

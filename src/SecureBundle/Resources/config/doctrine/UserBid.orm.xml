@@ -55,7 +55,7 @@
         <option name="default">0</option>
       </options>
     </field>
-    <many-to-one field="user" target-entity="AuthBundle\Entity\User" inversed-by="bids" fetch="LAZY">
+    <many-to-one field="user" target-entity="SecureBundle\Entity\User" inversed-by="bids" fetch="LAZY">
       <join-column name="user_id" referenced-column-name="id" />
     </many-to-one>
     <many-to-one field="order" target-entity="SecureBundle\Entity\UserOrder" inversed-by="bids" fetch="LAZY">

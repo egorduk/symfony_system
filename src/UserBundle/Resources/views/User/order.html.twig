@@ -70,34 +70,17 @@
         </div>
         {% if type == statusOrderWork or type == statusOrderGuarantee %}
             <div class="col-md-8" id="block-completed-order">
-                <form class="form-horizontal" name="form-completed-order" id="form-completed-order" enctype="multipart/form-data">
+                <form method="post" name="form-completed-order" id="form-completed-order" action="/symfony_system/web/app_dev.php/_uploader/gallery/upload">
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="check-completed-order" id="check-completed-order">Заказ выполнен
+                            <input type="checkbox" name="is-ready-order" id="is-ready-order" {% if type == statusOrderGuarantee %} checked disabled {% endif %}>Заказ выполнен
                         </label>
                     </div>
-                    <div class="input-group">
-
-                    </div>
-                </form>
-                {#<div id="fileupload"></div>#}
-
-               {# <ul id="filelist"></ul>
-                <br />
-                <div id="container">
-                    <a id="browse" href="javascript:;">[Browse...]</a>
-                    <a id="start-upload" href="javascript:;">[Start Upload]</a>
-                </div>
-                <br />
-                <pre id="console"></pre>#}
-
-                <form id="form" method="post" action="/symfony_system/web/app_dev.php/_uploader/gallery/upload">
                     <div id="uploader">
                         <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
                     </div>
                     <br/>
                 </form>
-
                 <div class="js-var" data-order-id="{{ order.id }}"></div>
             </div>
         {% endif %}

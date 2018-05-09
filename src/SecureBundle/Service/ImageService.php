@@ -2,7 +2,7 @@
 
 namespace SecureBundle\Service;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\OrderFile;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;

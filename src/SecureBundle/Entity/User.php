@@ -1,6 +1,6 @@
 <?php
 
-namespace AuthBundle\Entity;
+namespace SecureBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -175,7 +175,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $activities;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\UserInfo", inversedBy="user")
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\UserInfo", inversedBy="user")
      * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id")
      */
     private $userInfo;

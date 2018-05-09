@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AuthBundle\Entity\Country" table="country">
+  <entity name="SecureBundle\Entity\Country" table="country">
     <unique-constraints>
       <unique-constraint name="name" columns="name"/>
       <unique-constraint name="code" columns="code"/>
@@ -23,6 +23,6 @@
         <option name="fixed"/>
       </options>
     </field>
-    <one-to-many target-entity="AuthBundle\Entity\UserInfo" mapped-by="country" field="userInfo" />
+    <one-to-many target-entity="SecureBundle\Entity\UserInfo" mapped-by="country" field="userInfo" />
   </entity>
 </doctrine-mapping>

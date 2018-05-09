@@ -2,9 +2,9 @@
 
 namespace SecureBundle\Service;
 
-use AuthBundle\Entity\User;
-use AuthBundle\Entity\UserInfo;
 use Doctrine\ORM\EntityManager;
+use SecureBundle\Entity\User;
+use SecureBundle\Entity\UserInfo;
 use Symfony\Component\Asset\Packages;
 
 class UserService

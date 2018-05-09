@@ -2,7 +2,7 @@
 
 namespace SecureBundle\Controller;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use SecureBundle\Entity\OrderFile;
 use SecureBundle\Form\ProfileForm;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

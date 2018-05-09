@@ -46,7 +46,7 @@ class OrderFile
     private $order;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="files")
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\User", inversedBy="files")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;
@@ -129,5 +129,10 @@ class OrderFile
     public function setUser($user)
     {
         $this->user = $user;
+    }
+
+    public function isDeleted()
+    {
+        return $this->isDelete === true;
     }
 }

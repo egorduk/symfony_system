@@ -1,6 +1,6 @@
 <?php
 
-namespace AuthBundle\Entity;
+namespace SecureBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 

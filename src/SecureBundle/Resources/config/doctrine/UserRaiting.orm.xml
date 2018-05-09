@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AuthBundle\Entity\FavoriteOrder" table="favorite_order">
+  <entity name="SecureBundle\Entity\UserRaiting" table="user_raiting">
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
-    <field name="dateFavorite" type="datetime" column="date_favorite" nullable="false"/>
-    <field name="userId" type="integer" column="user_id" nullable="false">
+    <field name="name" type="string" column="name" length="50" nullable="false">
       <options>
-        <option name="unsigned"/>
-      </options>
-    </field>
-    <field name="userOrderId" type="integer" column="user_order_id" nullable="false">
-      <options>
-        <option name="unsigned"/>
+        <option name="fixed"/>
       </options>
     </field>
   </entity>

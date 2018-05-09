@@ -1,5 +1,8 @@
 $(document).ready(function() {
-    var orderId = $('.js-var').data('order-id');
+    var orderId = $('.js-var').data('order-id'),
+        isReadyEl = $('#is-ready-order'),
+        isReady = isReadyEl.prop('checked'),
+        isDisabled = isReadyEl.prop('disabled');
 
     var initUploader = function() {
         $('#uploader').pluploadQueue({
@@ -19,6 +22,7 @@ $(document).ready(function() {
             ],
             multipart_params: {
                 'orderId': orderId
+                //'isReady': isReady
             },
             views: {
                 list: true,
@@ -35,11 +39,28 @@ $(document).ready(function() {
             silverlight_xap_url: 'http://rawgithub.com/moxiecode/moxie/master/bin/silverlight/Moxie.cdn.xap',
             init: {
                 FilesAdded: function (up, files) {
-                    console.log(files);
+                    console.log(isReady);
+                    console.log(isDisabled);
                     //up.start();
+
+                    if (isReady === false && isDisabled === false) {
+                        isReadyEl.prop('checked', true);
+                    }
+                },
+                FilesRemoved: function (up, files) {
+                    if (up.total.queued === 0 && isDisabled === false) {
+                        isReadyEl.prop('checked', false);
+                    }
+                },
+                BeforeUpload: function (up, file) {
+                    console.log(isReady);
+                    console.log(up.settings.multipart_params);
+                    up.settings.multipart_params.isReady = isReady;
+                    console.log(up.settings.multipart_params);
+                    //up.settings.multipart_params.push({'isReady': isReady});
                 },
                 FileUploaded: function (up, file, info) {
-                    console.log(file);
+                    //console.log(up.settings);
 
                     var parsedData = $.parseJSON(info.response);
 
@@ -59,6 +80,10 @@ $(document).ready(function() {
                             '<td>' + file.size + '</td>' +
                             '<td>' + file.dateUpload + '</td>' +
                             '</tr>');
+
+                        if (isDisabled === false) {
+                            isReadyEl.prop('disabled', true);
+                        }
                     }
                 },
                 UploadComplete: function (up, files) {

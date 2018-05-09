@@ -2,7 +2,7 @@
 
 namespace SecureBundle\Service;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use SecureBundle\Repository\SettingRepository;
 use UserBundle\Model\SettingsModel;
 

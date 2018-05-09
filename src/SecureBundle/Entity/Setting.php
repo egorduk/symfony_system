@@ -38,7 +38,7 @@ class Setting
     private $company;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="settings")
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\User", inversedBy="settings")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

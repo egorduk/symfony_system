@@ -2,7 +2,7 @@ security:
     encoders:
         # Our user class and the algorithm we'll use to encode passwords
         # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
-        AuthBundle\Entity\User:
+        SecureBundle\Entity\User:
 #        Symfony\Component\Security\Core\User\User:
             algorithm: sha512
             encode-as-base64: true
@@ -17,7 +17,7 @@ security:
         # To see the users at src/AppBundle/DataFixtures/ORM/LoadFixtures.php
         # To load users from somewhere else: http://symfony.com/doc/current/cookbook/security/custom_provider.html
         database_users:
-            entity: { class: AuthBundle:User, property: email }
+            entity: { class: SecureBundle:User, property: email }
 #        in_memory:
 #            memory:
 #                users:

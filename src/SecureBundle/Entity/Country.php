@@ -1,6 +1,6 @@
 <?php
 
-namespace AuthBundle\Entity;
+namespace SecureBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,7 +41,7 @@ class Country
     private $mobileCode;
 
     /**
-     * @ORM\OneToMany(targetEntity="AuthBundle\Entity\UserInfo", mappedBy="country")
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\UserInfo", mappedBy="country")
      */
     private $userInfo;
 

@@ -2,7 +2,7 @@
 
 namespace AuthBundle\Controller;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use AuthBundle\Form\AuthorRegForm;
 use AuthBundle\Form\LoginForm;
 use AuthBundle\Form\RecoveryPasswordForm;

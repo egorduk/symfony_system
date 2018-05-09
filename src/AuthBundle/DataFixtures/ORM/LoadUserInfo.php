@@ -2,9 +2,9 @@
 
 namespace AuthBundle\DataFixtures\ORM;
 
-use AuthBundle\Entity\Country;
-use AuthBundle\Entity\User;
-use AuthBundle\Entity\UserInfo;
+use SecureBundle\Entity\Country;
+use SecureBundle\Entity\User;
+use SecureBundle\Entity\UserInfo;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;

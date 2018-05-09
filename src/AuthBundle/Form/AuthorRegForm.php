@@ -2,7 +2,7 @@
 
 namespace AuthBundle\Form;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;

@@ -1,21 +1,21 @@
 <?php
 
-namespace AuthBundle\Entity;
+namespace SecureBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UserRaiting
+ * Provider
  *
- * @ORM\Table(name="user_raiting")
+ * @ORM\Table(name="provider")
  * @ORM\Entity
  */
-class UserRaiting
+class Provider
 {
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=50, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
 
@@ -35,7 +35,7 @@ class UserRaiting
      *
      * @param string $name
      *
-     * @return UserRaiting
+     * @return Provider
      */
     public function setName($name)
     {

@@ -16,7 +16,7 @@
     </field>
     <field name="ipAddress" type="integer" column="ip_address" nullable="false"/>
     <field name="additionalInfo" type="json_array" column="additional_info" nullable="true"/>
-    <many-to-one field="user" target-entity="AuthBundle\Entity\User" inversed-by="activities" fetch="LAZY">
+    <many-to-one field="user" target-entity="SecureBundle\Entity\User" inversed-by="activities" fetch="LAZY">
       <join-column name="user_id" referenced-column-name="id" nullable="false"/>
     </many-to-one>
   </entity>

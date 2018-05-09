@@ -2,7 +2,7 @@
 
 namespace SecureBundle\Service;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
 class MailService

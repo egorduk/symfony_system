@@ -28,7 +28,7 @@ class UserActivity
     private $action;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="activities")
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\User", inversedBy="activities")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
     private $user;

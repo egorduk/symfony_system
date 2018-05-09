@@ -79,7 +79,7 @@ class Company
     private $sum;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AuthBundle\Entity\User", mappedBy="companies")
+     * @ORM\ManyToMany(targetEntity="SecureBundle\Entity\User", mappedBy="companies")
      */
     private $users;
 

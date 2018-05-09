@@ -57,6 +57,10 @@ services:
         class: SecureBundle\Service\ImageService
         arguments: ['@doctrine.orm.entity_manager', '@router', '@secure.service.user']
 
+    secure.service.status_order:
+        class: SecureBundle\Service\StatusOrderService
+        arguments: ['@secure.repository.status_order']
+
 
 
 

@@ -2,7 +2,7 @@
 
 namespace SecureBundle\Service;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\OrderFile;
 use SecureBundle\Entity\StatusOrder;
@@ -75,14 +75,16 @@ class UserOrderService
         $data = [];
 
         foreach ($files as $file) {
-            $data[] = [
-                'id' => $file->getId(),
-                'name' => $file->getName(),
-                'dateUpload' => $this->dth->getDatetimeFormatted($file->getDateUpload(), 'd.m.Y H:i'),
-                'size' => $this->fileService->getSizeFile($file->getSize()),
-                'url' => $this->fileService->getFileUrl($file->getId(), OrderFile::ATTACHMENTS_TYPE),
-                'extension' => $this->fileService->getFileExtension($file->getName()),
-            ];
+            if (!$file->isDeleted()) {
+                $data[] = [
+                    'id' => $file->getId(),
+                    'name' => $file->getName(),
+                    'dateUpload' => $this->dth->getDatetimeFormatted($file->getDateUpload(), 'd.m.Y H:i'),
+                    'size' => $this->fileService->getSizeFile($file->getSize()),
+                    'url' => $this->fileService->getFileUrl($file->getId(), OrderFile::ATTACHMENTS_TYPE),
+                    'extension' => $this->fileService->getFileExtension($file->getName()),
+                ];
+            }
         }
 
         return $data;
@@ -154,9 +156,9 @@ class UserOrderService
        throw new FatalErrorException();
     }
 
-    public function save(UserOrder $userOrder)
+    public function save(UserOrder $userOrder, $flush = false)
     {
-        return $this->userOrderRepository->save($userOrder, true);
+        return $this->userOrderRepository->save($userOrder, $flush);
     }
 
     public function getOneById($orderId)

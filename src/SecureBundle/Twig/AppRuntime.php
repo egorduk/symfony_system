@@ -2,7 +2,7 @@
 
 namespace SecureBundle\Twig;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use SecureBundle\Event\UserActivityEvent;
 use SecureBundle\Service\UserService;
 

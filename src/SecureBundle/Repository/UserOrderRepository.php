@@ -2,7 +2,7 @@
 
 namespace SecureBundle\Repository;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Entity\UserBid;

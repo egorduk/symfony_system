@@ -2,7 +2,7 @@
 
 namespace UserBundle\Controller;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use SecureBundle\Entity\Setting;
 use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Entity\UserBid;
@@ -307,8 +307,8 @@ class UserController extends Controller
         if ($order->isWork() || $order->isGuarantee()) {
             //$formUploadWork = $this->createForm(UploadWorkForm::class);
             //$formUploadWork->handleRequest($request);
-            $helper = $this->container->get('oneup_uploader.templating.uploader_helper');
-            $endpoint = $helper->endpoint('gallery');
+            //$helper = $this->container->get('oneup_uploader.templating.uploader_helper');
+            //$endpoint = $helper->endpoint('gallery');
             //dump($endpoint);
         }
 

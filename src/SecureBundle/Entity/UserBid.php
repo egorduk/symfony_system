@@ -83,7 +83,7 @@ class UserBid
     private $isRejected;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="bids")
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\User", inversedBy="bids")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

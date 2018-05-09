@@ -2,7 +2,7 @@
 
 namespace SecureBundle\Entity;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -140,7 +140,7 @@ class UserOrder
     private $status;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User", inversedBy="orders")
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\User", inversedBy="orders")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;

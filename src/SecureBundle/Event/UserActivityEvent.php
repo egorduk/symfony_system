@@ -2,7 +2,7 @@
 
 namespace SecureBundle\Event;
 
-use AuthBundle\Entity\User;
+use SecureBundle\Entity\User;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Request;
 

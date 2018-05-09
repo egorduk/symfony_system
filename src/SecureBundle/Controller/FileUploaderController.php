@@ -35,15 +35,15 @@ class FileUploaderController extends FineUploaderController
         try {
             $isChunks ?
                 $this->handleChunkedUpload($file, $response, $request) :
-                $uploadedFile = $this->handleUpload($file, $response, $request)
-            ;
+                $uploadedFile = $this->handleUpload($file, $response, $request);
         } catch (UploadException $e) {
             $this->errorHandler->addException($response, $e);
         }
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $orderFileRepository = $this->container->get('secure.repository.order_file');
-        $order = $this->container->get('secure.service.order')->getOneById($this->getOrderId());
+        $orderService = $this->container->get('secure.service.order');
+        $order = $orderService->getOneById($this->getOrderId());
 
         $fileService = $this->container->get('secure.service.file');
         $dateTimeService = $this->container->get('secure.service.date_time');
@@ -64,9 +64,11 @@ class FileUploaderController extends FineUploaderController
             'extension' => $fileService->getFileExtension($orderFile->getName()),
         ]);
 
-        if ($request->get('isReady') && $order->isWork()) {
-            $order->getStatus()->setCode(StatusOrder::STATUS_ORDER_GUARANTEE_CODE);
-            $orderFileRepository->save($order, true);
+        //var_dump($request->get('isReady') === "true");var_dump($order->isWork());die;
+        if ($request->get('isReady') === "true" && $order->isWork()) {
+            $status = $this->container->get('secure.service.status_order')->getStatusByCode(StatusOrder::STATUS_ORDER_GUARANTEE_CODE);
+            $order->setStatus($status);
+            $orderService->save($order, true);
         }
 
         return $this->createSupportedJsonResponse($response->assemble());

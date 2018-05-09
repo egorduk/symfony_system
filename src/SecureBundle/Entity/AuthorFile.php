@@ -1,6 +1,6 @@
 <?php
 
-namespace AuthBundle\Entity;
+namespace SecureBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -43,9 +43,7 @@ class AuthorFile
     private $id;
 
     /**
-     * @var \AuthBundle\Entity\User
-     *
-     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\User")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * })
@@ -143,7 +141,7 @@ class AuthorFile
      *
      * @return AuthorFile
      */
-    public function setUser(\AuthBundle\Entity\User $user = null)
+    public function setUser(\SecureBundle\Entity\User $user = null)
     {
         $this->user = $user;
 
@@ -153,7 +151,7 @@ class AuthorFile
     /**
      * Get user
      *
-     * @return \AuthBundle\Entity\User
+     * @return \SecureBundle\Entity\User
      */
     public function getUser()
     {

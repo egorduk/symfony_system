@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="AuthBundle\Entity\UserInfo" table="user_info">
+  <entity name="SecureBundle\Entity\UserInfo" table="user_info">
     <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
@@ -45,8 +45,8 @@
       </options>
     </field>
     <field name="dateBirthday" type="datetime" column="date_birthday" nullable="true"/>
-    <one-to-many target-entity="AuthBundle\Entity\User" mapped-by="userInfo" field="user" />
-    <many-to-one field="country" target-entity="AuthBundle\Entity\Country" inversed-by="userInfo">
+    <one-to-many target-entity="SecureBundle\Entity\User" mapped-by="userInfo" field="user" />
+    <many-to-one field="country" target-entity="SecureBundle\Entity\Country" inversed-by="userInfo">
       <join-column name="country_id" referenced-column-name="id" />
     </many-to-one>
   </entity>

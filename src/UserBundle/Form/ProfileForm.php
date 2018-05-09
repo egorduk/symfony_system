@@ -2,8 +2,8 @@
 
 namespace UserBundle\Form;
 
-use AuthBundle\Entity\Country;
-use AuthBundle\Entity\UserInfo;
+use SecureBundle\Entity\Country;
+use SecureBundle\Entity\UserInfo;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;

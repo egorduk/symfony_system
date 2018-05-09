@@ -1,6 +1,6 @@
 <?php
 
-namespace AuthBundle\Entity;
+namespace SecureBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -81,12 +81,12 @@ class UserInfo
     private $dateBirthday;
 
     /**
-     * @ORM\OneToMany(targetEntity="AuthBundle\Entity\User", mappedBy="userInfo")
+     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\User", mappedBy="userInfo")
      */
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AuthBundle\Entity\Country", inversedBy="userInfo")
+     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\Country", inversedBy="userInfo")
      * @ORM\JoinColumn(name="country_id", referencedColumnName="id")
      */
     private $country;
