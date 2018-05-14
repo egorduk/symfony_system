@@ -2,6 +2,7 @@
 
 namespace SecureBundle\Service;
 
+use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Repository\StatusOrderRepository;
 
 class StatusOrderService
@@ -13,8 +14,18 @@ class StatusOrderService
         $this->orderStatusRepository = $orderStatusRepository;
     }
 
-    public function getStatusByCode($code)
+    public function getGuaranteeStatus()
     {
-        return $this->orderStatusRepository->findOneBy(['code' => $code]);
+        return $this->orderStatusRepository->findOneBy(['code' => StatusOrder::STATUS_ORDER_GUARANTEE_CODE]);
+    }
+
+    public function getWorkStatus()
+    {
+        return $this->orderStatusRepository->findOneBy(['code' => StatusOrder::STATUS_ORDER_WORK_CODE]);
+    }
+
+    public function getNewStatus()
+    {
+        return $this->orderStatusRepository->findOneBy(['code' => StatusOrder::STATUS_ORDER_NEW_CODE]);
     }
 }

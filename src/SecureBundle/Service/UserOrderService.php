@@ -156,9 +156,9 @@ class UserOrderService
        throw new FatalErrorException();
     }
 
-    public function save(UserOrder $userOrder, $flush = false)
+    public function save(UserOrder $userOrder)
     {
-        return $this->userOrderRepository->save($userOrder, $flush);
+        return $this->userOrderRepository->save($userOrder, true);
     }
 
     public function getOneById($orderId)

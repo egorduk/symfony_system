@@ -1,7 +1,7 @@
 {% if stagesData is not empty %}
     <div>
         <p>Этапы</p>
-        <table class="table table-striped table-bordered table-responsive">
+        <table class="table table-striped table-bordered table-responsive" id="order-stage-table">
             <thead>
             <tr>
                 <th>#</th>
@@ -12,7 +12,7 @@
             </thead>
             <tbody>
             {% for key, stage in stagesData %}
-                <tr>
+                <tr id="{{ stage.id }}">
                     <td>{{ key + 1 }}</td>
                     <td>{{ stage.name }}</td>
                     <td>{{ stage.dateStage | stageDateFormat }}</td>

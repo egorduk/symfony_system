@@ -21,7 +21,6 @@ class AppKernel extends Kernel
             new AuthBundle\AuthBundle(),
             new SecureBundle\SecureBundle(),
             new AdminBundle\AdminBundle(),
-            new UserBundle\UserBundle(),
             //new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             //new Symfony\Bundle\DebugBundle\DebugBundle(),

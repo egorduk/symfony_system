@@ -6,3 +6,4 @@ parameters:
     setting_entity: SecureBundle\Entity\Setting
     user_activity_entity: SecureBundle\Entity\UserActivity
     order_file_entity: SecureBundle\Entity\OrderFile
+    stage_order_entity: SecureBundle\Entity\StageOrder

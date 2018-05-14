@@ -33,3 +33,8 @@ services:
         class: Doctrine\Common\Persistence\ObjectRepository
         factory: ['@doctrine', getRepository]
         arguments: ['%order_file_entity%']
+
+    secure.repository.stage_order:
+        class: Doctrine\Common\Persistence\ObjectRepository
+        factory: ['@doctrine', getRepository]
+        arguments: ['%stage_order_entity%']

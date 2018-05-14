@@ -1,7 +1,0 @@
-parameters:
-#    parameter_name: value
-
-services:
-#    user.service.orders:
-#        class: SecureBundle\Service\OrdersService
-#        arguments: ['@em']

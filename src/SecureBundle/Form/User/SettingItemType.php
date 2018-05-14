@@ -1,6 +1,6 @@
 <?php
 
-namespace UserBundle\Form;
+namespace SecureBundle\Form\User;
 
 use SecureBundle\Entity\Setting;
 use Symfony\Component\Form\AbstractType;

@@ -98,7 +98,7 @@ class DateTimeService
      *
      * @return string
      */
-    public function getDatetimeFormatted($datetime, $format)
+    public function getDatetimeFormatted($datetime, $format = 'd.m.Y H:i')
     {
         return $datetime->format($format);
     }

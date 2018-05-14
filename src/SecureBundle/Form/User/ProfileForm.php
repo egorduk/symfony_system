@@ -1,6 +1,6 @@
 <?php
 
-namespace UserBundle\Form;
+namespace UserBundle\Form\User;
 
 use SecureBundle\Entity\Country;
 use SecureBundle\Entity\UserInfo;

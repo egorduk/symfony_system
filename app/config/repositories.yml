@@ -7,3 +7,4 @@ parameters:
         SecureBundle\Entity\Setting: SecureBundle\Repository\SettingRepository
         SecureBundle\Entity\UserActivity: SecureBundle\Repository\UserActivityRepository
         SecureBundle\Entity\OrderFile: SecureBundle\Repository\OrderFileRepository
+        SecureBundle\Entity\StageOrder: SecureBundle\Repository\StageOrderRepository

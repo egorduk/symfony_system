@@ -1,6 +1,6 @@
 <?php
 
-namespace UserBundle\Controller;
+namespace SecureBundle\Controller;
 
 use SecureBundle\Entity\User;
 use SecureBundle\Entity\Setting;
@@ -8,13 +8,14 @@ use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Entity\UserBid;
 use SecureBundle\Entity\UserOrder;
 use SecureBundle\Event\UserActivityEvent;
+use SecureBundle\Form\User\BidForm;
+use SecureBundle\Form\User\ConfirmBidForm;
+use SecureBundle\Form\User\SettingForm;
+use SecureBundle\Form\User\StageOrderType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use UserBundle\Form\BidForm;
-use UserBundle\Form\ConfirmBidForm;
-use UserBundle\Form\ProfileForm;
-use UserBundle\Form\SettingForm;
+use UserBundle\Form\User\ProfileForm;
 use UserBundle\Model\SettingsModel;
 
 class UserController extends Controller
@@ -220,6 +221,7 @@ class UserController extends Controller
 
         $formConfirmBid = null;
         $formBid = null;
+        $formStageOrder = null;
 
         $dateTimeService = $this->get('secure.service.date_time');
         $orderService = $this->get('secure.service.order');
@@ -262,7 +264,7 @@ class UserController extends Controller
                     $status = $repositoryStatusOrder->findOneBy(['code' => StatusOrder::STATUS_ORDER_AUCTION_CODE]);
 
                     $selectedBid->setRejected();
-                    $selectedBid->setSelected();
+                    //$selectedBid->setSelected();
                     $selectedBid->setDateReject(new \DateTime());
 
                     $this->addFlash(
@@ -310,6 +312,16 @@ class UserController extends Controller
             //$helper = $this->container->get('oneup_uploader.templating.uploader_helper');
             //$endpoint = $helper->endpoint('gallery');
             //dump($endpoint);
+
+            $orderStages = $this->get('secure.service.stage_order')->getStagesInWorkByOrder($order);
+            //$orderStages = $order->getStages();
+
+            $formStageOrder = $this->createForm(StageOrderType::class, null, ['stages' => $orderStages]);
+  /*          $formStageOrder->handleRequest($request);
+
+            if ($formStageOrder->isSubmitted() && $formStageOrder->isValid()) {
+
+            }*/
         }
 
         $bidsData = [
@@ -322,6 +334,7 @@ class UserController extends Controller
             'bidsData' => $bidsData,
             'formBid' => $formBid !== null ? $formBid->createView() : null,
             'formConfirmBid' => $formConfirmBid !== null ? $formConfirmBid->createView() : null,
+            'formStageOrder' => $formStageOrder !== null ? $formStageOrder->createView() : null,
         ];
     }
 

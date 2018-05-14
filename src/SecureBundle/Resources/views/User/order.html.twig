@@ -1,4 +1,4 @@
-{% extends 'UserBundle::layout.html.twig' %}
+{% extends 'SecureBundle::layout.html.twig' %}
 
 {% set type = order.status.code %}
 
@@ -44,29 +44,29 @@
                 </ul>
             </div>
             <div>
-                {% include 'UserBundle:User/partials:orderFiles.html.twig' with {'order': order} %}
+                {% include 'SecureBundle:User/partials:orderFiles.html.twig' with {'order': order} %}
             </div>
         </div>
         {% if type == statusOrderNew or type == statusOrderAuction %}
             <div>
-                {% include 'UserBundle:User/partials:orderBids.html.twig' with {'bidsData': bidsData} %}
+                {% include 'SecureBundle:User/partials:orderBids.html.twig' with {'bidsData': bidsData} %}
             </div>
             <div>
-                {% include 'UserBundle:User/partials:orderBidForm.html.twig' with {'formBid': formBid} %}
+                {% include 'SecureBundle:User/partials:orderBidForm.html.twig' with {'formBid': formBid} %}
             </div>
         {% endif %}
         {% if type == statusOrderNew or type == statusOrderAuction or type == statusOrderAssigned %}
             <div>
-                {% include 'UserBundle:User/partials:orderUserBids.html.twig' with {'bidsData': bidsData} %}
+                {% include 'SecureBundle:User/partials:orderUserBids.html.twig' with {'bidsData': bidsData} %}
             </div>
         {% endif %}
         {% if type == statusOrderAssigned %}
             <div>
-                {% include 'UserBundle:User/partials:confirmBidForm.html.twig' with {'formConfirmBid': formConfirmBid} %}
+                {% include 'SecureBundle:User/partials:confirmBidForm.html.twig' with {'formConfirmBid': formConfirmBid} %}
             </div>
         {% endif %}
         <div>
-            {% include 'UserBundle:User/partials:orderStages.html.twig' with {'stagesData': order.stages } %}
+            {% include 'SecureBundle:User/partials:orderStages.html.twig' with {'stagesData': order.stages } %}
         </div>
         {% if type == statusOrderWork or type == statusOrderGuarantee %}
             <div class="col-md-8" id="block-completed-order">
@@ -75,6 +75,9 @@
                         <label>
                             <input type="checkbox" name="is-ready-order" id="is-ready-order" {% if type == statusOrderGuarantee %} checked disabled {% endif %}>Заказ выполнен
                         </label>
+                    </div>
+                    <div class="">
+                        {% include 'SecureBundle:User/partials:stageOrderForm.html.twig' with {'formStageOrder': formStageOrder} %}
                     </div>
                     <div id="uploader">
                         <p>Your browser doesn't have Flash, Silverlight or HTML5 support.</p>
@@ -86,19 +89,18 @@
         {% endif %}
     {% endblock %}
 
-
     {% block javascripts_footer %}
         {{ parent() }}
         {#<script type="application/javascript" src="{{ asset('js/order.js') }}"></script>#}
         {#<script type="application/javascript" src="{{ asset('js/price-format.js') }}"></script>#}
         {% javascripts
-        '@UserBundle/Resources/public/js/jquery-3.3.1.min.js'
-        '@UserBundle/Resources/public/js/browser-plus.js'
-        '@UserBundle/Resources/public/js/jquery-ui.min.js'
-        '@UserBundle/Resources/public/js/plupload.full.min.js'
-        '@UserBundle/Resources/public/js/jquery.plupload.queue.js'
-        '@UserBundle/Resources/public/js/jquery.ui.plupload.min.js'
-        '@UserBundle/Resources/public/js/script.js'
+        '@SecureBundle/Resources/public/js/jquery-3.3.1.min.js'
+        '@SecureBundle/Resources/public/js/browser-plus.js'
+        '@SecureBundle/Resources/public/js/jquery-ui.min.js'
+        '@SecureBundle/Resources/public/js/plupload.full.min.js'
+        '@SecureBundle/Resources/public/js/jquery.plupload.queue.js'
+        '@SecureBundle/Resources/public/js/jquery.ui.plupload.min.js'
+        '@SecureBundle/Resources/public/js/script.js'
         %}
         <script src="{{ asset_url }}"></script>
         {% endjavascripts %}

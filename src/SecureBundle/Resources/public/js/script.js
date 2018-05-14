@@ -2,7 +2,8 @@ $(document).ready(function() {
     var orderId = $('.js-var').data('order-id'),
         isReadyEl = $('#is-ready-order'),
         isReady = isReadyEl.prop('checked'),
-        isDisabled = isReadyEl.prop('disabled');
+        isDisabled = isReadyEl.prop('disabled'),
+        stageOrderEl = $('#form-completed-order').find('#stage_order_name');
 
     var initUploader = function() {
         $('#uploader').pluploadQueue({
@@ -21,8 +22,8 @@ $(document).ready(function() {
                 {title: 'Zip files', extensions: 'zip'}
             ],
             multipart_params: {
-                'orderId': orderId
-                //'isReady': isReady
+                'orderId': orderId,
+                //'stageOrderId': stageOrderSelectedId
             },
             views: {
                 list: true,
@@ -39,9 +40,10 @@ $(document).ready(function() {
             silverlight_xap_url: 'http://rawgithub.com/moxiecode/moxie/master/bin/silverlight/Moxie.cdn.xap',
             init: {
                 FilesAdded: function (up, files) {
-                    console.log(isReady);
-                    console.log(isDisabled);
+                    //console.log(isReady);
+                    //console.log(isDisabled);
                     //up.start();
+                    //console.log(stageOrderSelectedId);
 
                     if (isReady === false && isDisabled === false) {
                         isReadyEl.prop('checked', true);
@@ -53,11 +55,13 @@ $(document).ready(function() {
                     }
                 },
                 BeforeUpload: function (up, file) {
-                    console.log(isReady);
-                    console.log(up.settings.multipart_params);
+                   // console.log(up.settings.multipart_params);
+                    var stageOrderSelectedId = stageOrderEl.find('option:selected').val();
+                    //console.log(stageOrderSelectedId);
+
                     up.settings.multipart_params.isReady = isReady;
+                    up.settings.multipart_params.stageOrderId = stageOrderSelectedId;
                     console.log(up.settings.multipart_params);
-                    //up.settings.multipart_params.push({'isReady': isReady});
                 },
                 FileUploaded: function (up, file, info) {
                     //console.log(up.settings);
@@ -65,20 +69,29 @@ $(document).ready(function() {
                     var parsedData = $.parseJSON(info.response);
 
                     if (parsedData.success === true) {
-                        var orderFileTableEl = $('#order-table-files'),
+                        var fileOrderData = parsedData[0].fileOrder,
+                            stageOrderData = parsedData[0].stageOrder,
+                            orderFileTableEl = $('#order-file-table'),
                             orderFileTableTbodyEl = orderFileTableEl.find('tbody'),
-                            cntFiles = orderFileTableTbodyEl.find('tr');
+                            cntFiles = orderFileTableTbodyEl.find('tr'),
+                            orderStageTableEl = $('#order-stage-table'),
+                            stageOrderTrEl = orderStageTableEl.find('tr#' + stageOrderData.id),
+                            stageOrderSelectorEl = $('#stage_order_name');
 
-                        file = parsedData[0];
+                        console.log(parsedData[0]);
+
+                        stageOrderTrEl.find('td:last').text(stageOrderData.status);
+                        stageOrderSelectorEl.find('[value="' + stageOrderData.id + '"]').remove();
+
 
                         orderFileTableTbodyEl.append('<tr>' +
                             '<td>' + ++cntFiles.length + '</td>' +
                             '<td>' +
-                            '<div class="file-icon ' + file.extension + '"></div>' +
-                            '<div><a href="' + file.url + '">' + file.name + '</a></div>' +
+                            '<div class="file-icon ' + fileOrderData.extension + '"></div>' +
+                            '<div><a href="' + fileOrderData.url + '">' + fileOrderData.name + '</a></div>' +
                             '</td>' +
-                            '<td>' + file.size + '</td>' +
-                            '<td>' + file.dateUpload + '</td>' +
+                            '<td>' + fileOrderData.size + '</td>' +
+                            '<td>' + fileOrderData.dateUpload + '</td>' +
                             '</tr>');
 
                         if (isDisabled === false) {

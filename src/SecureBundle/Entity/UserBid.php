@@ -262,6 +262,7 @@ class UserBid
     public function setRejected()
     {
         $this->setIsRejected(1);
+        $this->setIsSelected(0);
     }
 
     public function setSelected()

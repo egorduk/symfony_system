@@ -1,6 +1,6 @@
 <?php
 
-namespace UserBundle\Form;
+namespace SecureBundle\Form\User;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;

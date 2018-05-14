@@ -1,0 +1,11 @@
+<div>
+    {{ form_start(formStageOrder, {'attr': {'id' : 'formStageOrder'}}) }}
+    <div class="form-group">
+        {{ form_label(formStageOrder.name) }}
+        {{ form_errors(formStageOrder.name) }}
+        <div class="input-group">
+            {{ form_widget(formStageOrder.name) }}
+        </div>
+    </div>
+    {{ form_end(formStageOrder) }}
+</div>

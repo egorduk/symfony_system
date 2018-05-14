@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 class FileUploaderController extends FineUploaderController
 {
     private $orderId = 0;
+    private $stageOrderId = 0;
 
     public function upload()
     {
@@ -29,6 +30,7 @@ class FileUploaderController extends FineUploaderController
         $isChunks = null !== $request->get('chunks');
 
         $this->setOrderId($request->get('orderId'));
+        $this->setStageOrderId($request->get('stageOrderId'));
 
         $uploadedFile = null;
 
@@ -56,20 +58,33 @@ class FileUploaderController extends FineUploaderController
 
         $orderFile = $orderFileRepository->save($orderFile, true);
 
-        $response->offsetSet(0, [
-            'name' => $orderFile->getName(),
-            'dateUpload' => $dateTimeService->getDatetimeFormatted($orderFile->getDateUpload(), 'd.m.Y H:i'),
-            'size' => $fileService->getSizeFile($orderFile->getSize()),
-            'url' => $fileService->getFileUrl($orderFile->getId(), OrderFile::ATTACHMENTS_TYPE),
-            'extension' => $fileService->getFileExtension($orderFile->getName()),
-        ]);
-
-        //var_dump($request->get('isReady') === "true");var_dump($order->isWork());die;
         if ($request->get('isReady') === "true" && $order->isWork()) {
-            $status = $this->container->get('secure.service.status_order')->getStatusByCode(StatusOrder::STATUS_ORDER_GUARANTEE_CODE);
+            $status = $this->container->get('secure.service.status_order')->getGuaranteeStatus();
             $order->setStatus($status);
-            $orderService->save($order, true);
+            $orderService->save($order);
         }
+
+        $stageOrderService = $this->container->get('secure.service.stage_order');
+        $stageOrder = $stageOrderService->getOneById($this->getStageOrderId());
+
+        if ($stageOrder->isWork()) {
+            $stageOrder->setCompleted();
+            $stageOrder = $stageOrderService->save($stageOrder);
+        }
+
+        $response->offsetSet(0, [
+            'fileOrder' => [
+                'name' => $orderFile->getName(),
+                'dateUpload' => $dateTimeService->getDatetimeFormatted($orderFile->getDateUpload()),
+                'size' => $fileService->getSizeFile($orderFile->getSize()),
+                'url' => $fileService->getFileUrl($orderFile->getId(), OrderFile::ATTACHMENTS_TYPE),
+                'extension' => $fileService->getFileExtension($orderFile->getName()),
+            ],
+            'stageOrder' => [
+                'id' => $stageOrder->getId(),
+                'status' => $stageOrder->getStatus(),
+            ],
+        ]);
 
         return $this->createSupportedJsonResponse($response->assemble());
     }
@@ -115,5 +130,21 @@ class FileUploaderController extends FineUploaderController
     public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStageOrderId()
+    {
+        return $this->stageOrderId;
+    }
+
+    /**
+     * @param int $stageOrderId
+     */
+    public function setStageOrderId($stageOrderId)
+    {
+        $this->stageOrderId = $stageOrderId;
     }
 }

@@ -99,4 +99,14 @@ class StageOrder
     {
         return $this->status === self::STATUS_COMPLETED;
     }
+
+    public function setCompleted()
+    {
+        $this->setStatus(self::STATUS_COMPLETED);
+    }
+
+    public function setInWork()
+    {
+        $this->setStatus(self::STATUS_WORK);
+    }
 }
