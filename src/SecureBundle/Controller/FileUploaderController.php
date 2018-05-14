@@ -2,14 +2,18 @@
 
 namespace SecureBundle\Controller;
 
+use Doctrine\Tests\ORM\Functional\Ticket\Status;
 use Oneup\UploaderBundle\Controller\FineUploaderController;
 use Oneup\UploaderBundle\Uploader\File\FileInterface;
 use Oneup\UploaderBundle\Uploader\File\FilesystemFile;
 use Oneup\UploaderBundle\Uploader\Response\EmptyResponse;
 use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use SecureBundle\Entity\OrderFile;
+use SecureBundle\Entity\StageOrder;
 use SecureBundle\Entity\StatusOrder;
+use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserOrder;
+use SecureBundle\Event\UserActivityEvent;
 use SecureBundle\Response\OrderFileUploadSuccessResponse;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -19,10 +23,13 @@ class FileUploaderController extends FineUploaderController
 {
     private $orderId = 0;
     private $stageOrderId = 0;
+    private $user = null;
+
 
     public function upload()
     {
         $request = $this->getRequest();
+
         $file = $this->getFiles($request->files)[0];
 
         $response = new OrderFileUploadSuccessResponse();
@@ -43,6 +50,8 @@ class FileUploaderController extends FineUploaderController
         }
 
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $this->setUser($user);
+
         $orderFileRepository = $this->container->get('secure.repository.order_file');
         $orderService = $this->container->get('secure.service.order');
         $order = $orderService->getOneById($this->getOrderId());
@@ -58,10 +67,20 @@ class FileUploaderController extends FineUploaderController
 
         $orderFile = $orderFileRepository->save($orderFile, true);
 
+        $this->dispatchEvent(UserActivityEvent::UPLOAD_FILE, $request, [
+            'file_id' => $orderFile->getId(),
+        ]);
+
         if ($request->get('isReady') === "true" && $order->isWork()) {
             $status = $this->container->get('secure.service.status_order')->getGuaranteeStatus();
             $order->setStatus($status);
             $orderService->save($order);
+
+            $this->dispatchEvent(UserActivityEvent::CHANGE_ORDER_STATUS, $request, [
+                'order_id' => $order->getId(),
+                'old_status' => StatusOrder::STATUS_ORDER_WORK_CODE,
+                'new_status' => StatusOrder::STATUS_ORDER_GUARANTEE_CODE,
+            ]);
         }
 
         $stageOrderService = $this->container->get('secure.service.stage_order');
@@ -70,6 +89,12 @@ class FileUploaderController extends FineUploaderController
         if ($stageOrder->isWork()) {
             $stageOrder->setCompleted();
             $stageOrder = $stageOrderService->save($stageOrder);
+
+           $this->dispatchEvent(UserActivityEvent::CHANGE_STAGE_STATUS, $request, [
+               'stage_id' => $stageOrder->getId(),
+               'old_status' => StageOrder::STATUS_WORK,
+               'new_status' => StageOrder::STATUS_COMPLETED,
+           ]);
         }
 
         $response->offsetSet(0, [
@@ -87,6 +112,14 @@ class FileUploaderController extends FineUploaderController
         ]);
 
         return $this->createSupportedJsonResponse($response->assemble());
+    }
+
+    private function dispatchEvent($eventName = '', Request $request, array $data = [])
+    {
+        $this->container->get('event_dispatcher')->dispatch(
+            $eventName,
+            new UserActivityEvent($this->getUser(), $request, $data)
+        );
     }
 
     protected function handleUpload($file, ResponseInterface $response, Request $request)
@@ -146,5 +179,15 @@ class FileUploaderController extends FineUploaderController
     public function setStageOrderId($stageOrderId)
     {
         $this->stageOrderId = $stageOrderId;
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user)
+    {
+        $this->user = $user;
     }
 }

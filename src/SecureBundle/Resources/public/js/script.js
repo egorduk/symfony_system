@@ -59,7 +59,7 @@ $(document).ready(function() {
                     var stageOrderSelectedId = stageOrderEl.find('option:selected').val();
                     //console.log(stageOrderSelectedId);
 
-                    up.settings.multipart_params.isReady = isReady;
+                    up.settings.multipart_params.isReady = isReadyEl.prop('checked');
                     up.settings.multipart_params.stageOrderId = stageOrderSelectedId;
                     console.log(up.settings.multipart_params);
                 },
@@ -78,7 +78,7 @@ $(document).ready(function() {
                             stageOrderTrEl = orderStageTableEl.find('tr#' + stageOrderData.id),
                             stageOrderSelectorEl = $('#stage_order_name');
 
-                        console.log(parsedData[0]);
+                        //console.log(parsedData[0]);
 
                         stageOrderTrEl.find('td:last').text(stageOrderData.status);
                         stageOrderSelectorEl.find('[value="' + stageOrderData.id + '"]').remove();

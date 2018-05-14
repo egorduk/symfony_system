@@ -13,6 +13,9 @@ final class UserActivityEvent extends Event
     const LOGOUT = 'logout';
     const SET_BID = 'set_bid';
     const UPDATE_SETTINGS = 'update_settings';
+    const CHANGE_ORDER_STATUS = 'change_order_status';
+    const CHANGE_STAGE_STATUS = 'change_stage_status';
+    const UPLOAD_FILE = 'upload_file';
 
     private $user;
     private $request;

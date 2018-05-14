@@ -27,6 +27,9 @@ class UserActivityListener implements EventSubscriberInterface
             UserActivityEvent::LOGOUT => 'onLogout',
             UserActivityEvent::SET_BID => 'onSetBid',
             UserActivityEvent::UPDATE_SETTINGS => 'onUpdateSettings',
+            UserActivityEvent::CHANGE_ORDER_STATUS => 'onChangeOrderStatus',
+            UserActivityEvent::CHANGE_STAGE_STATUS => 'onChangeStageStatus',
+            UserActivityEvent::UPLOAD_FILE => 'onUploadFile',
         ];
     }
 
@@ -87,126 +90,33 @@ class UserActivityListener implements EventSubscriberInterface
         );
     }
 
-    /*public function onChangePassword(UserActivityEvent $event)
+    public function onChangeOrderStatus(UserActivityEvent $event)
     {
-        $this->activityLogger->log(
+        $this->activityLogger->logActivity(
             $event->getUser(),
-            AccountActivityEvents::CHANGE_PASSWORD_COMPLETED,
-            $event->getClientIp()
-        );
-    }
-
-    public function onProfileChange(UserActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::PROFILE_EDIT_COMPLETED,
-            $event->getClientIp()
-        );
-    }
-
-    public function onTwoFactorEnable(UserActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::TWO_FACTOR_ENABLED,
-            $event->getClientIp()
-        );
-    }
-
-    public function onTwoFactorDisable(UserActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::TWO_FACTOR_DISABLED,
-            $event->getClientIp()
-        );
-    }
-
-    public function onLimitBuyDealSubmitted(UserTradeActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::LIMIT_BUY_ORDER,
-            $event->getClientIp(),
-            ['%amount%' => $event->getAmountWithCurrency(), '%price%' => $event->getPriceWithCurrency()]
-        );
-    }
-
-    public function onLimitSellDealSubmitted(UserTradeActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::LIMIT_SELL_ORDER,
-            $event->getClientIp(),
-            ['%amount%' => $event->getAmountWithCurrency(), '%price%' => $event->getPriceWithCurrency()]
-        );
-    }
-
-    public function onMarketSellDealSubmitted(UserTradeActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::MARKET_SELL_ORDER,
-            $event->getClientIp(),
-            ['%amount%' => $event->getAmountWithCurrency()]
-        );
-    }
-
-    public function onMarketBuyDealSubmitted(UserTradeActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::MARKET_BUY_ORDER,
-            $event->getClientIp(),
-            ['%amount%' => $event->getAmountWithCurrency()]
-        );
-    }
-
-    public function onDepositRequest(UserActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::DEPOSIT_REQUEST,
-            $event->getClientIp()
-        );
-    }
-
-    public function onWithdrawalRequest(UserActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::WITHDRAWAL_REQUEST,
-            $event->getClientIp()
-        );
-    }
-
-    public function onPreferencesUpdate(UserActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::PREFERENCES_UPDATED,
-            $event->getClientIp()
-        );
-    }
-
-    public function onVoucherRedeem(UserActivityEvent $event)
-    {
-        $this->activityLogger->log(
-            $event->getUser(),
-            AccountActivityEvents::VOUCHER_REDEEM,
+            UserActivityEvent::CHANGE_ORDER_STATUS,
             $event->getClientIp(),
             $event->getParams()
         );
     }
 
-    public function onVoucherIssue(UserActivityEvent $event)
+    public function onChangeStageStatus(UserActivityEvent $event)
     {
-        $this->activityLogger->log(
+        $this->activityLogger->logActivity(
             $event->getUser(),
-            AccountActivityEvents::VOUCHER_ISSUE,
+            UserActivityEvent::CHANGE_STAGE_STATUS,
             $event->getClientIp(),
             $event->getParams()
         );
-    }*/
+    }
+
+    public function onUploadFile(UserActivityEvent $event)
+    {
+        $this->activityLogger->logActivity(
+            $event->getUser(),
+            UserActivityEvent::UPLOAD_FILE,
+            $event->getClientIp(),
+            $event->getParams()
+        );
+    }
 }
