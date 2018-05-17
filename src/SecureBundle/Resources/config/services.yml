@@ -20,6 +20,7 @@ services:
             - '@secure.repository.status_order'
             - '@secure.repository.user_order'
             - '@secure.service.bid'
+            - '@event_dispatcher'
 
     secure.service.file:
         class: SecureBundle\Service\FileService

@@ -34,6 +34,12 @@ class LoadStatuses implements ORMFixtureInterface
         $status->setCode(StatusOrder::STATUS_ORDER_GUARANTEE_CODE);
         $status->setName(StatusOrder::STATUS_ORDER_GUARANTEE);
         $manager->persist($status);
+        $status->setCode(StatusOrder::STATUS_ORDER_REJECTED_CODE);
+        $status->setName(StatusOrder::STATUS_ORDER_REJECTED);
+        $manager->persist($status);
+        $status->setCode(StatusOrder::STATUS_ORDER_REFINING_CODE);
+        $status->setName(StatusOrder::STATUS_ORDER_REFINING);
+        $manager->persist($status);
 
         $manager->flush();
     }

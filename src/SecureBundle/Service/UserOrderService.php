@@ -8,10 +8,13 @@ use SecureBundle\Entity\OrderFile;
 use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Entity\UserBid;
 use SecureBundle\Entity\UserOrder;
+use SecureBundle\Event\UserActivityEvent;
 use SecureBundle\Repository\StatusOrderRepository;
 use SecureBundle\Repository\UserOrderRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Debug\Exception\FatalErrorException;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserOrderService
@@ -19,27 +22,30 @@ class UserOrderService
     private $em;
     private $router;
     private $fileService;
-    private $dth;
+    private $dateTimeService;
     private $statusOrderRepository;
     private $userOrderRepository;
     private $bidService;
+    private $ed;
 
     public function __construct(
         EntityManager $em,
         Router $router,
         FileService $fileService,
-        DateTimeService $dth,
+        DateTimeService $dateTimeService,
         StatusOrderRepository $statusOrderRepository,
         UserOrderRepository $userOrderRepository,
-        BidService $bidService
+        BidService $bidService,
+        EventDispatcher $ed
     ) {
         $this->em = $em;
         $this->router = $router;
         $this->fileService = $fileService;
-        $this->dth = $dth;
+        $this->dateTimeService = $dateTimeService;
         $this->statusOrderRepository = $statusOrderRepository;
         $this->userOrderRepository = $userOrderRepository;
         $this->bidService = $bidService;
+        $this->ed = $ed;
     }
 
     /**
@@ -55,11 +61,11 @@ class UserOrderService
             'task' => $order->getTask(),
             'theme' => $order->getTheme(),
             'originality' => $order->getOriginality(),
-            'dateCreate' => $this->dth->getDatetimeFormatted($order->getDateCreate(), 'd.m.Y H:i'),
-            'dateExpire' => $this->dth->getDatetimeFormatted($order->getDateExpire(), 'd.m.Y H:i'),
+            'dateCreate' => $this->dateTimeService->getDatetimeFormatted($order->getDateCreate(), 'd.m.Y H:i'),
+            'dateExpire' => $this->dateTimeService->getDatetimeFormatted($order->getDateExpire(), 'd.m.Y H:i'),
             'countSheet' => $order->getCountSheet(),
             'additionalInfo' => $order->getAdditionalInfo(),
-            'remaining' => $this->getRemaining($order->getDateExpire()),
+            //'remaining' => $this->getRemaining($order->getDateExpire()),
             'files' => $this->prepareFiles($order->getFiles()),
             'status' => $order->getStatus()->getCode(),
         ];
@@ -79,7 +85,7 @@ class UserOrderService
                 $data[] = [
                     'id' => $file->getId(),
                     'name' => $file->getName(),
-                    'dateUpload' => $this->dth->getDatetimeFormatted($file->getDateUpload(), 'd.m.Y H:i'),
+                    'dateUpload' => $this->dateTimeService->getDatetimeFormatted($file->getDateUpload(), 'd.m.Y H:i'),
                     'size' => $this->fileService->getSizeFile($file->getSize()),
                     'url' => $this->fileService->getFileUrl($file->getId(), OrderFile::ATTACHMENTS_TYPE),
                     'extension' => $this->fileService->getFileExtension($file->getName()),
@@ -95,18 +101,20 @@ class UserOrderService
      *
      * @return string
      */
-    public function getRemaining($date)
+   /* public function getRemaining($date)
     {
-        $remaining = $this->dth->getDiffBetweenDates($date);
+        $remaining = $this->dateTimeService->getDiffBetweenDates($date);
 
         return $remaining->format('%d дн. %h ч. %i мин.');
-    }
+    }*/
 
     /**
      * @param UserOrder $order
      * @param string $newStatus
+     *
+     * @return UserOrder
      */
-    public function changeStatusOrder(UserOrder $order, $newStatus)
+    public function changeStatusOrder(UserOrder $order, $newStatus = '')
     {
         $status = $this->statusOrderRepository->findOneBy(['code' => $newStatus]);
 
@@ -114,9 +122,8 @@ class UserOrderService
             throw new NotFoundHttpException();
         }
 
-        $order->setStatus($status);
-
-        $this->userOrderRepository->save($order, true);
+        //return $this->save($order);
+        return $order->setStatus($status);
     }
 
     /**
@@ -164,5 +171,25 @@ class UserOrderService
     public function getOneById($orderId)
     {
         return $this->userOrderRepository->find($orderId);
+    }
+
+    public function changeOrderFromWorkToGuarantee(UserOrder $userOrder, User $user, Request $request)
+    {
+        $date = $this->dateTimeService->addDaysToDate(10);
+
+        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_GUARANTEE_CODE)
+            ->setDateComplete(new \DateTime())
+            ->setDateGuarantee($date);
+
+        $this->ed->dispatch(
+            UserActivityEvent::CHANGE_ORDER_STATUS,
+            new UserActivityEvent($user, $request, [
+                'order_id' => $userOrder->getId(),
+                'old_status' => StatusOrder::STATUS_ORDER_WORK_CODE,
+                'new_status' => StatusOrder::STATUS_ORDER_GUARANTEE_CODE,
+            ])
+        );
+
+        return $this->save($userOrder);
     }
 }

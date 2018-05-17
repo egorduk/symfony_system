@@ -75,6 +75,11 @@ class UserOrder
     private $dateConfirm;
 
     /**
+     * @ORM\Column(name="date_finish", type="datetime", nullable=true)
+     */
+    private $dateFinish;
+
+    /**
      * @ORM\Column(name="is_show_user", type="boolean")
      */
     private $isShownUser;
@@ -288,6 +293,9 @@ class UserOrder
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getDateCreate()
     {
         return $this->dateCreate;
@@ -300,6 +308,9 @@ class UserOrder
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getDateExpire()
     {
         return $this->dateExpire;
@@ -312,6 +323,9 @@ class UserOrder
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getDateEdit()
     {
         return $this->dateEdit;
@@ -324,6 +338,9 @@ class UserOrder
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getDateComplete()
     {
         return $this->dateComplete;
@@ -336,6 +353,9 @@ class UserOrder
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getDateGuarantee()
     {
         return $this->dateGuarantee;
@@ -348,6 +368,9 @@ class UserOrder
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getDateCancel()
     {
         return $this->dateCancel;
@@ -360,6 +383,9 @@ class UserOrder
         return $this;
     }
 
+    /**
+     * @return \DateTime
+     */
     public function getDateConfirm()
     {
         return $this->dateConfirm;
@@ -588,9 +614,6 @@ class UserOrder
         $this->spentDays = $spentDays;
     }
 
-    /**
-     * @return array
-     */
     public function getSelectedBid()
     {
         return $this->selectedBid;
@@ -629,5 +652,18 @@ class UserOrder
     public function setHei($hei)
     {
         $this->hei = $hei;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateFinish()
+    {
+        return $this->dateFinish;
+    }
+
+    public function setDateFinish($dateFinish)
+    {
+        $this->dateFinish = $dateFinish;
     }
 }

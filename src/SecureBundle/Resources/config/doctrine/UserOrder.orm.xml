@@ -42,6 +42,7 @@
     <field name="dateGuarantee" type="datetime" column="date_guarantee" nullable="true"/>
     <field name="dateCancel" type="datetime" column="date_cancel" nullable="true"/>
     <field name="dateConfirm" type="datetime" column="date_confirm" nullable="true"/>
+    <field name="dateFinish" type="datetime" column="date_finish" nullable="true"/>
     <field name="isShownOthers" type="boolean" column="is_show_others" nullable="false">
       <options>
           <option name="default">1</option>

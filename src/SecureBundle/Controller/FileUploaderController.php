@@ -15,6 +15,7 @@ use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserOrder;
 use SecureBundle\Event\UserActivityEvent;
 use SecureBundle\Response\OrderFileUploadSuccessResponse;
+use SecureBundle\Service\DateTimeService;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,6 +55,8 @@ class FileUploaderController extends FineUploaderController
 
         $orderFileRepository = $this->container->get('secure.repository.order_file');
         $orderService = $this->container->get('secure.service.order');
+
+        /* @var UserOrder $order */
         $order = $orderService->getOneById($this->getOrderId());
 
         $fileService = $this->container->get('secure.service.file');
@@ -67,20 +70,12 @@ class FileUploaderController extends FineUploaderController
 
         $orderFile = $orderFileRepository->save($orderFile, true);
 
-        $this->dispatchEvent(UserActivityEvent::UPLOAD_FILE, $request, [
+        $this->dispatchEvent(UserActivityEvent::UPLOAD_FILE, [
             'file_id' => $orderFile->getId(),
         ]);
 
         if ($request->get('isReady') === "true" && $order->isWork()) {
-            $status = $this->container->get('secure.service.status_order')->getGuaranteeStatus();
-            $order->setStatus($status);
-            $orderService->save($order);
-
-            $this->dispatchEvent(UserActivityEvent::CHANGE_ORDER_STATUS, $request, [
-                'order_id' => $order->getId(),
-                'old_status' => StatusOrder::STATUS_ORDER_WORK_CODE,
-                'new_status' => StatusOrder::STATUS_ORDER_GUARANTEE_CODE,
-            ]);
+            $order = $orderService->changeOrderFromWorkToGuarantee($order, $user, $this->getRequest());
         }
 
         $stageOrderService = $this->container->get('secure.service.stage_order');
@@ -90,11 +85,11 @@ class FileUploaderController extends FineUploaderController
             $stageOrder->setCompleted();
             $stageOrder = $stageOrderService->save($stageOrder);
 
-           $this->dispatchEvent(UserActivityEvent::CHANGE_STAGE_STATUS, $request, [
-               'stage_id' => $stageOrder->getId(),
-               'old_status' => StageOrder::STATUS_WORK,
-               'new_status' => StageOrder::STATUS_COMPLETED,
-           ]);
+            $this->dispatchEvent(UserActivityEvent::CHANGE_STAGE_STATUS, [
+                'stage_id' => $stageOrder->getId(),
+                'old_status' => StageOrder::STATUS_WORK,
+                'new_status' => StageOrder::STATUS_COMPLETED,
+            ]);
         }
 
         $response->offsetSet(0, [
@@ -109,16 +104,23 @@ class FileUploaderController extends FineUploaderController
                 'id' => $stageOrder->getId(),
                 'status' => $stageOrder->getStatus(),
             ],
+            'order' => [
+                'status' => $order->getStatus()->getName(),
+                'dateGuarantee' => $order->getDateGuarantee()->format(DateTimeService::DEFAULT_FORMAT),
+                'data' => '<li>На гарантии с:'.$dateTimeService->getDatetimeFormatted($order->getDateFinish()).'</li>
+                     <li>На гарантии до:'.$dateTimeService->getDatetimeFormatted($order->getDateGuarantee()).'</li>
+                     <li>На гарантии осталось:'.$dateTimeService->getRemainingGuaranteeTime($order).'</li>',
+            ],
         ]);
 
         return $this->createSupportedJsonResponse($response->assemble());
     }
 
-    private function dispatchEvent($eventName = '', Request $request, array $data = [])
+    private function dispatchEvent($eventName = '', array $data = [])
     {
         $this->container->get('event_dispatcher')->dispatch(
             $eventName,
-            new UserActivityEvent($this->getUser(), $request, $data)
+            new UserActivityEvent($this->getUser(), $this->getRequest(), $data)
         );
     }
 

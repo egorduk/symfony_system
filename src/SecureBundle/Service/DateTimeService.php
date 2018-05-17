@@ -7,6 +7,7 @@ use SecureBundle\Entity\UserOrder;
 class DateTimeService
 {
     const REMAINING_FORMAT = '%d дн. %d ч. %d мин.';
+    const DEFAULT_FORMAT = 'd.m.Y H:i';
 
     /**
      * @param int $timestamp
@@ -98,14 +99,14 @@ class DateTimeService
      *
      * @return string
      */
-    public function getDatetimeFormatted($datetime, $format = 'd.m.Y H:i')
+    public function getDatetimeFormatted($datetime, $format = self::DEFAULT_FORMAT)
     {
         return $datetime->format($format);
     }
 
     public function getRemainingGuaranteeTime(UserOrder $order)
     {
-        $diff = $this->getDiffBetweenDates($order->getDateComplete(), $order->getDateGuarantee());
+        $diff = $this->getDiffBetweenDates($order->getDateGuarantee());
 
         return sprintf(self::REMAINING_FORMAT, $diff->days, $diff->h, $diff->i);
     }
@@ -131,5 +132,13 @@ class DateTimeService
         $currentDate = new \DateTime();
 
         return $currentDate->modify('+' . $days . ' day');
+    }
+
+    public function addDaysToDate($days = 0)
+    {
+        $date = new \DateTime();
+        $date->add(new \DateInterval('P'.$days.'D')); // P1D means a period of 1 day
+
+        return $date;
     }
 }

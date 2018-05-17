@@ -19,10 +19,14 @@ class StatusOrder
     const STATUS_ORDER_ASSIGNED_CODE = 'assigned';
     const STATUS_ORDER_WORK = 'В работе';
     const STATUS_ORDER_WORK_CODE = 'work';
-    const STATUS_ORDER_COMPLETED = 'Завершен';
-    const STATUS_ORDER_COMPLETED_CODE = 'completed';
+    const STATUS_ORDER_REFINING = 'На доработке';
+    const STATUS_ORDER_REFINING_CODE = 'refining';
     const STATUS_ORDER_GUARANTEE = 'На гарантии';
     const STATUS_ORDER_GUARANTEE_CODE = 'guarantee';
+    const STATUS_ORDER_COMPLETED = 'Завершен';
+    const STATUS_ORDER_COMPLETED_CODE = 'completed';
+    const STATUS_ORDER_REJECTED = 'Отказ от выполнения';
+    const STATUS_ORDER_REJECTED_CODE = 'rejected';
 
     const STATUS_USER_ORDER_BID = 'bid';
     const STATUS_USER_ORDER_FINISH = 'finish';

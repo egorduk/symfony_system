@@ -71,18 +71,21 @@ $(document).ready(function() {
                     if (parsedData.success === true) {
                         var fileOrderData = parsedData[0].fileOrder,
                             stageOrderData = parsedData[0].stageOrder,
+                            orderData = parsedData[0].order,
                             orderFileTableEl = $('#order-file-table'),
                             orderFileTableTbodyEl = orderFileTableEl.find('tbody'),
                             cntFiles = orderFileTableTbodyEl.find('tr'),
                             orderStageTableEl = $('#order-stage-table'),
                             stageOrderTrEl = orderStageTableEl.find('tr#' + stageOrderData.id),
-                            stageOrderSelectorEl = $('#stage_order_name');
+                            stageOrderSelectorEl = $('#stage_order_name'),
+                            dynamicBlockEl = $('.dynamic-block-order-info');
 
                         //console.log(parsedData[0]);
 
                         stageOrderTrEl.find('td:last').text(stageOrderData.status);
                         stageOrderSelectorEl.find('[value="' + stageOrderData.id + '"]').remove();
 
+                        dynamicBlockEl.empty().append(orderData.data);
 
                         orderFileTableTbodyEl.append('<tr>' +
                             '<td>' + ++cntFiles.length + '</td>' +
