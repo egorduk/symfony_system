@@ -12,7 +12,8 @@ class Setting
 {
     const EMAIL_NOTIFICATION = 'email_notification';
     const SMS_NOTIFICATION = 'sms_notification';
-    const GUARANTEE_PERIOD = 'guarantee_period';
+    const GUARANTEE_DAYS = 'guarantee_days';
+    const REFINING_DAYS = 'refining_days';
 
     /**
      * @ORM\Column(name="id", type="integer")

@@ -76,7 +76,7 @@
         <div>
             {% include 'SecureBundle:User/partials:orderStages.html.twig' with {'stagesData': order.stages } %}
         </div>
-        {% if type == statusOrderWork or type == statusOrderGuarantee %}
+        {% if type == statusOrderWork or type == statusOrderGuarantee or type == statusOrderRefining %}
             <div class="col-md-8" id="block-completed-order">
                 <form method="post" name="form-completed-order" id="form-completed-order" action="/symfony_system/web/app_dev.php/_uploader/gallery/upload">
                     <div class="checkbox">

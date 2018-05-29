@@ -74,8 +74,14 @@ class FileUploaderController extends FineUploaderController
             'file_id' => $orderFile->getId(),
         ]);
 
-        if ($request->get('isReady') === "true" && $order->isWork()) {
-            $order = $orderService->changeOrderFromWorkToGuarantee($order, $user, $this->getRequest());
+        if ($request->get('isReady') === "true") {
+            if ($order->isWork()) {
+                $order = $orderService->changeOrderFromWorkToGuarantee($order, $user, $this->getRequest());
+            }
+
+            if ($order->isRefining()) {
+                $order = $orderService->changeOrderFromRefiningToGuarantee($order, $user, $this->getRequest());
+            }
         }
 
         $stageOrderService = $this->container->get('secure.service.stage_order');
@@ -114,7 +120,6 @@ class FileUploaderController extends FineUploaderController
             ],
             'order' => [
                 'status' => $order->getStatus()->getName(),
-                //'dateGuarantee' => $order->getDateGuarantee()->format(DateTimeService::DEFAULT_FORMAT),
                 'data' => $data,
             ],
         ]);

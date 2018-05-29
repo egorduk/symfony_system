@@ -236,16 +236,30 @@ class UserController extends Controller
         $files = $orderService->prepareFiles($order->getFiles());
         $order->setRawFiles($files);
 
-        if ($order->isGuarantee()) {
-            $order->setRemainingGuarantee($dateTimeService->getRemainingGuaranteeTime($order));
-        }
+        if ($order->isAuction() || $order->isNew()) {
+            $formBid = $this->createForm(BidForm::class);
+            $formBid->handleRequest($request);
 
-        if ($order->isWork() || $order->isAuction() || $order->isNew() || $order->isRefining()) {
-            $order->setRemainingExpire($dateTimeService->getRemainingExpireTime($order));
-        }
+            if ($formBid->isSubmitted() && $formBid->isValid()) {
+                $bid = $formBid->getData();
+                $isSuccess = $bidService->createBid($bid, $order, $this->getUser());
 
-        if ($order->isCompleted()) {
-            $order->setSpentDays($dateTimeService->getSpentDays($order));
+                if ($isSuccess) {
+                    if ($order->isNew()) {
+                        $orderService->changeOrderFromNewToAuction($order, $this->getUser(), $bid, $request);
+                    }
+
+                    $this->addFlash(
+                        'success',
+                        'Ставка поставлена!'
+                    );
+
+                    $this->get('event_dispatcher')->dispatch(
+                        UserActivityEvent::SET_BID,
+                        new UserActivityEvent($user, $request, ['order_id' => $order->getId(), 'bid_id' => $bid->getId()])
+                    );
+                }
+            }
         }
 
         if ($order->isAssigned()) {
@@ -279,37 +293,11 @@ class UserController extends Controller
             }
         }
 
-        if ($order->isRefining()) {
-            $order->setRemainingRefining($dateTimeService->getRemainingRefiningTime($order));
+        if ($order->isWork() || $order->isAuction() || $order->isNew() || $order->isRefining()) {
+            $order->setRemainingExpire($dateTimeService->getRemainingExpireTime($order));
         }
 
-        if ($order->isAuction() || $order->isNew()) {
-            $formBid = $this->createForm(BidForm::class);
-            $formBid->handleRequest($request);
-
-            if ($formBid->isSubmitted() && $formBid->isValid()) {
-                $bid = $formBid->getData();
-                $isSuccess = $bidService->createBid($bid, $order, $this->getUser());
-
-                if ($isSuccess) {
-                    if ($order->isNew()) {
-                        $orderService->changeOrderFromNewToAuction($order, $this->getUser(), $bid, $request);
-                    }
-
-                    $this->addFlash(
-                        'success',
-                        'Ставка поставлена!'
-                    );
-
-                    $this->get('event_dispatcher')->dispatch(
-                        UserActivityEvent::SET_BID,
-                        new UserActivityEvent($user, $request, ['order_id' => $order->getId(), 'bid_id' => $bid->getId()])
-                    );
-                }
-            }
-        }
-
-        if ($order->isWork() || $order->isGuarantee()) {
+        if ($order->isWork() || $order->isGuarantee() || $order->isRefining()) {
             //$formUploadWork = $this->createForm(UploadWorkForm::class);
             //$formUploadWork->handleRequest($request);
             //$helper = $this->container->get('oneup_uploader.templating.uploader_helper');
@@ -320,11 +308,23 @@ class UserController extends Controller
             //$orderStages = $order->getStages();
 
             $formStageOrder = $this->createForm(StageOrderType::class, null, ['stages' => $orderStages]);
-  /*          $formStageOrder->handleRequest($request);
+            /*          $formStageOrder->handleRequest($request);
 
-            if ($formStageOrder->isSubmitted() && $formStageOrder->isValid()) {
+                      if ($formStageOrder->isSubmitted() && $formStageOrder->isValid()) {
 
-            }*/
+                      }*/
+        }
+
+        if ($order->isGuarantee()) {
+            $order->setRemainingGuarantee($dateTimeService->getRemainingGuaranteeTime($order));
+        }
+
+        if ($order->isRefining()) {
+            $order->setRemainingRefining($dateTimeService->getRemainingRefiningTime($order));
+        }
+
+        if ($order->isCompleted()) {
+            $order->setSpentDays($dateTimeService->getSpentDays($order));
         }
 
         $bidsData = [

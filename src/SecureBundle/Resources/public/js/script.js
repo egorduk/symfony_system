@@ -118,4 +118,15 @@ $(document).ready(function() {
     };
 
     initUploader();
+
+    var isClientDate = $('#bid_form_isClientDate'),
+        bidDay = $('#bid_form_day');
+
+    isClientDate.on('change', function () {
+        if ($(this).is(':checked')) {
+            bidDay.attr('disabled', true);
+        } else {
+            bidDay.attr('disabled', false);
+        }
+    });
 });

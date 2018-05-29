@@ -2,6 +2,8 @@
 
 namespace SecureBundle\Service;
 
+use SecureBundle\Entity\Company;
+use SecureBundle\Entity\Setting;
 use SecureBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\OrderFile;
@@ -27,6 +29,7 @@ class UserOrderService
     private $userOrderRepository;
     private $bidService;
     private $ed;
+    private $settingService;
 
     public function __construct(
         EntityManager $em,
@@ -36,7 +39,8 @@ class UserOrderService
         StatusOrderRepository $statusOrderRepository,
         UserOrderRepository $userOrderRepository,
         BidService $bidService,
-        EventDispatcher $ed
+        EventDispatcher $ed,
+        SettingService $settingService
     ) {
         $this->em = $em;
         $this->router = $router;
@@ -46,6 +50,7 @@ class UserOrderService
         $this->userOrderRepository = $userOrderRepository;
         $this->bidService = $bidService;
         $this->ed = $ed;
+        $this->settingService = $settingService;
     }
 
     /**
@@ -233,16 +238,23 @@ class UserOrderService
 
     public function changeOrderFromWorkToGuarantee(UserOrder $userOrder, User $user, Request $request)
     {
-        $cnt = 10;
+        $companies = $userOrder->getUser()->getCompanies();
 
-        $date = $this->dateTimeService->addDaysToDate($cnt);
+        /* @var Company $company */
+        $company = $companies[0];
+
+        $setting = $this->settingService->getSettingByCompanyAndName($company, Setting::GUARANTEE_DAYS);
+
+        $days = $setting->getValue();
+
+        $date = $this->dateTimeService->addDaysToDate($days);
 
         $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_GUARANTEE_CODE)
             ->setDateFinish(new \DateTime())
             ->setDateGuarantee($date);
 
         $this->dispatchEventChangeOrderStatus(
-            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_WORK_CODE, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, ['days' => $cnt]
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_WORK_CODE, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, ['days' => $days]
         );
 
         return $this->save($userOrder);
@@ -250,15 +262,15 @@ class UserOrderService
 
     public function changeOrderFromGuaranteeToRefining(UserOrder $userOrder, User $user, Request $request)
     {
-        $cnt = 2;
+        $days = 2;
 
-        $date = $this->dateTimeService->addDaysToDate($cnt);
+        $date = $this->dateTimeService->addDaysToDate($days);
 
         $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_REFINING_CODE)
             ->setDateRefining($date);
 
         $this->dispatchEventChangeOrderStatus(
-            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, StatusOrder::STATUS_ORDER_REFINING_CODE, ['days' => $cnt]
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, StatusOrder::STATUS_ORDER_REFINING_CODE, ['days' => $days]
         );
 
         return $this->save($userOrder);
@@ -274,7 +286,7 @@ class UserOrderService
             ->setDateGuarantee($date);
 
         $this->dispatchEventChangeOrderStatus(
-            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_REFINING_CODE, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, ['interval' => $interval]
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_REFINING_CODE, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, ['days' => $interval->days]
         );
 
         return $this->save($userOrder);

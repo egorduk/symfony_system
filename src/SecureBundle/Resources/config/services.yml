@@ -2,6 +2,7 @@ services:
     _defaults:
         public: true
         autoconfigure: true
+        autowire: true
 
     secure.service.date_time:
         class: SecureBundle\Service\DateTimeService
@@ -25,6 +26,7 @@ services:
             - '@secure.repository.user_order'
             - '@secure.service.bid'
             - '@event_dispatcher'
+            - '@secure.service.setting'
 
     secure.service.file:
         class: SecureBundle\Service\FileService

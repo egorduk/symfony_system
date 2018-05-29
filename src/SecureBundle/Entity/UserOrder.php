@@ -120,11 +120,6 @@ class UserOrder
     private $isHidden;
 
     /**
-     * @ORM\Column(name="files_folder", type="string", length=20)
-     */
-    private $filesFolder;
-
-    /**
      * @ORM\Column(name="client_comment", type="string", length=100, nullable=true)
      */
     private $clientComment;
@@ -431,18 +426,6 @@ class UserOrder
     public function getIsDelayed()
     {
         return $this->isDelayed;
-    }
-
-    public function setFilesFolder($filesFolder)
-    {
-        $this->filesFolder = $filesFolder;
-
-        return $this;
-    }
-
-    public function getFilesFolder()
-    {
-        return $this->filesFolder;
     }
 
     public function setClientComment($clientComment)

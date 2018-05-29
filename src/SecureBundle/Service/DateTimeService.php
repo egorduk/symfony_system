@@ -58,7 +58,7 @@ class DateTimeService
             $dateB = new \DateTime();
         }
 
-        return $dateA->diff($dateB);
+        return $dateB->diff($dateA);
 
         //return date_diff($dateA, $dateB);
     }
@@ -122,8 +122,13 @@ class DateTimeService
     {
         $diff = $this->getDiffBetweenDates($order->getDateExpire());
 
-        //return $diff->days . ' дн. ' . $diff->h . ' ч. ' . $diff->m . ' мин.';
-        return sprintf(self::REMAINING_FORMAT, $diff->days, $diff->h, $diff->i);
+        $minus = '';
+
+        if ($diff->invert === 1) {
+            $minus = '- ';
+        }
+
+        return sprintf($minus.self::REMAINING_FORMAT, $diff->days, $diff->h, $diff->i);
     }
 
     public function getSpentDays(UserOrder $order)

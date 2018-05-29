@@ -2,6 +2,7 @@
 
 namespace SecureBundle\Service;
 
+use SecureBundle\Entity\Company;
 use SecureBundle\Entity\User;
 use SecureBundle\Repository\SettingRepository;
 use UserBundle\Model\SettingsModel;
@@ -29,5 +30,10 @@ class SettingService
         }
 
         $this->settingRepository->flush();
+    }
+
+    public function getSettingByCompanyAndName(Company $company, $name = '')
+    {
+        return $this->settingRepository->findOneBy(['company' => $company, 'name' => $name]);
     }
 }
