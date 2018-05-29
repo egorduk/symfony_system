@@ -43,6 +43,10 @@
     <field name="dateCancel" type="datetime" column="date_cancel" nullable="true"/>
     <field name="dateConfirm" type="datetime" column="date_confirm" nullable="true"/>
     <field name="dateFinish" type="datetime" column="date_finish" nullable="true"/>
+    <field name="dateRefining" type="datetime" column="date_refining" nullable="true"/>
+    <field name="dateAuction" type="datetime" column="date_auction" nullable="true"/>
+    <field name="dateReject" type="datetime" column="date_reject" nullable="true"/>
+    <field name="dateAssignee" type="datetime" column="date_assignee" nullable="true"/>
     <field name="isShownOthers" type="boolean" column="is_show_others" nullable="false">
       <options>
           <option name="default">1</option>

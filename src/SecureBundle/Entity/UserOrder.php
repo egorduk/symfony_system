@@ -65,9 +65,19 @@ class UserOrder
     private $dateGuarantee;
 
     /**
+     * @ORM\Column(name="date_refining", type="datetime", nullable=true)
+     */
+    private $dateRefining;
+
+    /**
      * @ORM\Column(name="date_cancel", type="datetime", nullable=true)
      */
     private $dateCancel;
+
+    /**
+     * @ORM\Column(name="date_assignee", type="datetime", nullable=true)
+     */
+    private $dateAssignee;
 
     /**
      * @ORM\Column(name="date_confirm", type="datetime", nullable=true)
@@ -78,6 +88,16 @@ class UserOrder
      * @ORM\Column(name="date_finish", type="datetime", nullable=true)
      */
     private $dateFinish;
+
+    /**
+     * @ORM\Column(name="date_auction", type="datetime", nullable=true)
+     */
+    private $dateAuction;
+
+    /**
+     * @ORM\Column(name="date_reject", type="datetime", nullable=true)
+     */
+    private $dateReject;
 
     /**
      * @ORM\Column(name="is_show_user", type="boolean")
@@ -169,6 +189,7 @@ class UserOrder
     private $remainingExpire = null;
     private $remainingGuarantee = null;
     private $remainingExpireWithDays = null;
+    private $remainingRefining = null;
     private $maxBid = 0;
     private $minBid = 0;
     private $cntBids = 0;
@@ -189,6 +210,9 @@ class UserOrder
     }
 
 
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
@@ -214,6 +238,9 @@ class UserOrder
         return $this;
     }
 
+    /**
+     * @return TypeOrder
+     */
     public function getType()
     {
         return $this->type;
@@ -226,6 +253,9 @@ class UserOrder
         return $this;
     }
 
+    /**
+     * @return SubjectOrder
+     */
     public function getSubject()
     {
         return $this->subject;
@@ -569,6 +599,11 @@ class UserOrder
         return $this->status->getCode() === StatusOrder::STATUS_ORDER_ASSIGNED_CODE;
     }
 
+    public function isRefining()
+    {
+        return $this->status->getCode() === StatusOrder::STATUS_ORDER_REFINING_CODE;
+    }
+
     public function isCompleted()
     {
         return $this->status->getCode() === StatusOrder::STATUS_ORDER_COMPLETED_CODE;
@@ -665,5 +700,82 @@ class UserOrder
     public function setDateFinish($dateFinish)
     {
         $this->dateFinish = $dateFinish;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateRefining()
+    {
+        return $this->dateRefining;
+    }
+
+    public function setDateRefining($dateRefining)
+    {
+        $this->dateRefining = $dateRefining;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateAuction()
+    {
+        return $this->dateAuction;
+    }
+
+    public function setDateAuction($dateAuction)
+    {
+        $this->dateAuction = $dateAuction;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateReject()
+    {
+        return $this->dateReject;
+    }
+
+    public function setDateReject($dateReject)
+    {
+        $this->dateReject = $dateReject;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateAssignee()
+    {
+        return $this->dateAssignee;
+    }
+
+    public function setDateAssignee($dateAssignee)
+    {
+        $this->dateAssignee = $dateAssignee;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getRemainingRefining()
+    {
+        return $this->remainingRefining;
+    }
+
+    public function setRemainingRefining($remainingRefining)
+    {
+        $this->remainingRefining = $remainingRefining;
+
+        return $this;
     }
 }

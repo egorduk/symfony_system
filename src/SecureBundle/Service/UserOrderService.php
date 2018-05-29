@@ -151,7 +151,7 @@ class UserOrderService
             }
 
             $order = $this->userOrderRepository->getAllowedOrderForUser($user, $order);
-            //dump($order);
+            //dump($order);die;
 
             if ($order instanceof UserOrder) {
                 return true;
@@ -173,23 +173,133 @@ class UserOrderService
         return $this->userOrderRepository->find($orderId);
     }
 
-    public function changeOrderFromWorkToGuarantee(UserOrder $userOrder, User $user, Request $request)
+    public function changeOrderFromNewToAuction(UserOrder $userOrder, User $user, UserBid $userBid, Request $request)
     {
-        $date = $this->dateTimeService->addDaysToDate(10);
+        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_AUCTION_CODE)
+            ->setDateAuction(new \DateTime());
 
-        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_GUARANTEE_CODE)
-            ->setDateComplete(new \DateTime())
-            ->setDateGuarantee($date);
-
-        $this->ed->dispatch(
-            UserActivityEvent::CHANGE_ORDER_STATUS,
-            new UserActivityEvent($user, $request, [
-                'order_id' => $userOrder->getId(),
-                'old_status' => StatusOrder::STATUS_ORDER_WORK_CODE,
-                'new_status' => StatusOrder::STATUS_ORDER_GUARANTEE_CODE,
-            ])
+        $this->dispatchEventChangeOrderStatus(
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_NEW_CODE, StatusOrder::STATUS_ORDER_AUCTION_CODE, ['bid_id' => $userBid->getId()]
         );
 
         return $this->save($userOrder);
+    }
+
+    public function changeOrderFromAuctionToAssigned(UserOrder $userOrder, User $user, UserBid $userBid, Request $request)
+    {
+        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_ASSIGNED_CODE)
+            ->setDateAssignee(new \DateTime());
+
+        $userBid->setAssigned();
+
+        $this->dispatchEventChangeOrderStatus(
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_AUCTION_CODE, StatusOrder::STATUS_ORDER_ASSIGNED_CODE, ['bid_id' => $userBid->getId()]
+        );
+
+        return $this->save($userOrder);
+    }
+
+    public function changeOrderFromAssignedToRejected(UserOrder $userOrder, User $user, UserBid $userBid, Request $request, $comment = '')
+    {
+        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_REJECTED_CODE)
+            ->setDateReject(new \DateTime());
+
+        $userBid->setRejected();
+
+        $this->dispatchEventChangeOrderStatus(
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_ASSIGNED_CODE, StatusOrder::STATUS_ORDER_REJECTED_CODE, ['comment' => $comment]
+        );
+
+        return $this->save($userOrder);
+    }
+
+    public function changeOrderFromAssignedToWork(UserOrder $userOrder, User $user, UserBid $userBid, Request $request)
+    {
+        $days = $userBid->getDay();
+        $dateExpire = $userBid->isClientDate() ? $userOrder->getDateExpire() : $this->dateTimeService->addDaysToDate($days);
+
+        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_WORK_CODE)
+            ->setDateExpire($dateExpire)
+            ->setDateConfirm(new \DateTime());
+
+        $userBid->setConfirmed();
+
+        $this->dispatchEventChangeOrderStatus(
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_ASSIGNED_CODE, StatusOrder::STATUS_ORDER_WORK_CODE
+        );
+
+        return $this->save($userOrder);
+    }
+
+    public function changeOrderFromWorkToGuarantee(UserOrder $userOrder, User $user, Request $request)
+    {
+        $cnt = 10;
+
+        $date = $this->dateTimeService->addDaysToDate($cnt);
+
+        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_GUARANTEE_CODE)
+            ->setDateFinish(new \DateTime())
+            ->setDateGuarantee($date);
+
+        $this->dispatchEventChangeOrderStatus(
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_WORK_CODE, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, ['days' => $cnt]
+        );
+
+        return $this->save($userOrder);
+    }
+
+    public function changeOrderFromGuaranteeToRefining(UserOrder $userOrder, User $user, Request $request)
+    {
+        $cnt = 2;
+
+        $date = $this->dateTimeService->addDaysToDate($cnt);
+
+        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_REFINING_CODE)
+            ->setDateRefining($date);
+
+        $this->dispatchEventChangeOrderStatus(
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, StatusOrder::STATUS_ORDER_REFINING_CODE, ['days' => $cnt]
+        );
+
+        return $this->save($userOrder);
+    }
+
+    public function changeOrderFromRefiningToGuarantee(UserOrder $userOrder, User $user, Request $request)
+    {
+        $interval = $this->dateTimeService->getDiffBetweenDates($userOrder->getDateRefining());
+
+        $date = $this->dateTimeService->addIntervalToDate($interval, $userOrder->getDateGuarantee());
+
+        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_GUARANTEE_CODE)
+            ->setDateGuarantee($date);
+
+        $this->dispatchEventChangeOrderStatus(
+            $userOrder, $user, $request, StatusOrder::STATUS_ORDER_REFINING_CODE, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, ['interval' => $interval]
+        );
+
+        return $this->save($userOrder);
+    }
+
+    public function changeOrderFromGuaranteeToCompleted(UserOrder $userOrder, User $user, Request $request)
+    {
+        $this->changeStatusOrder($userOrder, StatusOrder::STATUS_ORDER_COMPLETED_CODE)
+            ->setDateComplete(new \DateTime());
+
+        $this->dispatchEventChangeOrderStatus($userOrder, $user, $request, StatusOrder::STATUS_ORDER_GUARANTEE_CODE, StatusOrder::STATUS_ORDER_COMPLETED_CODE);
+
+        return $this->save($userOrder);
+    }
+
+    private function dispatchEventChangeOrderStatus(UserOrder $userOrder, User $user, Request $request, $newStatusCode = '', $oldStatusCode = '', $data = [])
+    {
+        $this->ed->dispatch(
+            UserActivityEvent::CHANGE_ORDER_STATUS,
+            new UserActivityEvent($user, $request, array_merge($data, [
+                    'order_id' => $userOrder->getId(),
+                    'old_status' => $newStatusCode,
+                    'new_status' => $oldStatusCode,
+                ])
+            )
+        );
     }
 }

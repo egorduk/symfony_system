@@ -166,7 +166,7 @@ class BidService
                 'user' => $user,
                 'order' => $order,
             ])
-            ->setMaxResults(1)
+            //->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
     }

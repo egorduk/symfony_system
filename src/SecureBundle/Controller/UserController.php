@@ -82,16 +82,20 @@ class UserController extends Controller
 
         if ($type === StatusOrder::STATUS_ORDER_NEW_CODE) {
             $orders = $this->get('secure.repository.user_order')->getValuationOrders($user);
-        } else if ($type === StatusOrder::STATUS_USER_ORDER_BID) {
+        } elseif ($type === StatusOrder::STATUS_USER_ORDER_BID) {
             $orders = $this->get('secure.repository.user_order')->getEvaluatedOrders($user);
-        } else if ($type === StatusOrder::STATUS_USER_ORDER_ASSIGN) {
+        } elseif ($type === StatusOrder::STATUS_USER_ORDER_ASSIGNEE) {
             $orders = $this->get('secure.repository.user_order')->getAssignedOrders($user);
-        } else if ($type === StatusOrder::STATUS_ORDER_WORK_CODE) {
+        } elseif ($type === StatusOrder::STATUS_ORDER_WORK_CODE) {
             $orders = $this->get('secure.repository.user_order')->getWorkOrders($user);
-        } else if ($type === StatusOrder::STATUS_ORDER_GUARANTEE_CODE) {
+        } elseif ($type === StatusOrder::STATUS_ORDER_GUARANTEE_CODE) {
             $orders = $this->get('secure.repository.user_order')->getGuaranteeOrders($user);
-        } else if ($type === StatusOrder::STATUS_USER_ORDER_FINISH) {
+        } elseif ($type === StatusOrder::STATUS_USER_ORDER_FINISH) {
             $orders = $this->get('secure.repository.user_order')->getCompletedOrders($user);
+        } elseif ($type === StatusOrder::STATUS_USER_ORDER_FINISH) {
+            $orders = $this->get('secure.repository.user_order')->getCompletedOrders($user);
+        } elseif ($type === StatusOrder::STATUS_ORDER_REFINING_CODE) {
+            $orders = $this->get('secure.repository.user_order')->getRefiningOrders($user);
         }
 
         $dateTimeService = $this->get('secure.service.date_time');
@@ -99,20 +103,25 @@ class UserController extends Controller
 
         /* @var UserOrder $order */
         foreach ($orders as $order) {
-            if ($type === StatusOrder::STATUS_USER_ORDER_BID) {
+            if (StatusOrder::isBidType($type)) {
                 $lastBid = $bidService->getLastUserBid($user, $order);
                 $order->setLastBid($lastBid);
-            } elseif ($type === StatusOrder::STATUS_ORDER_GUARANTEE_CODE) {
+            } elseif (StatusOrder::isGuaranteeType($type)) {
                 $order->setRemainingGuarantee($dateTimeService->getRemainingGuaranteeTime($order));
-            } elseif ($type === StatusOrder::STATUS_USER_ORDER_FINISH) {
+            } elseif (StatusOrder::isFinishType($type)) {
                 $order->setSpentDays($dateTimeService->getSpentDays($order));
-            } elseif ($type === StatusOrder::STATUS_ORDER_WORK_CODE) {
+            } elseif (StatusOrder::isWorkType($type)) {
                 $order->setRemainingExpire($dateTimeService->getRemainingExpireTime($order));
-            } elseif ($type === StatusOrder::STATUS_USER_ORDER_ASSIGN) {
+            } elseif (StatusOrder::isAssigneeType($type)) {
                 $selectedBid = $bidService->getSelectedUserBid($user, $order);
                 $order->setSelectedBid($selectedBid);
                 $order->setRemainingExpireWithDays($dateTimeService->getRemainingExpireTimeWithUserDays($order));
-            } else {
+            } elseif (StatusOrder::isRefiningType($type)) {
+                $order->setRemainingExpire($dateTimeService->getRemainingExpireTime($order));
+                $order->setRemainingRefining($dateTimeService->getRemainingRefiningTime($order));
+            }
+
+            if (StatusOrder::isBidType($type) || StatusOrder::isNewType($type)) {
                 $data = $bidService->getMaxMinCntBids($order);
                 $order->setMaxBid($data['max_bid']);
                 $order->setMinBid($data['min_bid']);
@@ -121,10 +130,7 @@ class UserController extends Controller
             }
         }
 
-        return [
-            'orders' => $orders,
-            'type' => $type,
-        ];
+        return compact('orders', 'type');
     }
 
     /**
@@ -232,14 +238,20 @@ class UserController extends Controller
 
         if ($order->isGuarantee()) {
             $order->setRemainingGuarantee($dateTimeService->getRemainingGuaranteeTime($order));
-        } elseif ($order->isWork() || $order->isAuction() || $order->isNew()) {
+        }
+
+        if ($order->isWork() || $order->isAuction() || $order->isNew() || $order->isRefining()) {
             $order->setRemainingExpire($dateTimeService->getRemainingExpireTime($order));
-        } elseif ($order->isCompleted()) {
+        }
+
+        if ($order->isCompleted()) {
             $order->setSpentDays($dateTimeService->getSpentDays($order));
-        } elseif ($order->isAssigned()) {
+        }
+
+        if ($order->isAssigned()) {
             /* @var UserBid $selectedBid */
             $selectedBid = $bidService->getSelectedUserBid($user, $order);
-            //dump($selectedBid);
+
             $order->setSelectedBid($selectedBid);
             $order->setRemainingExpireWithDays($dateTimeService->getRemainingExpireTimeWithUserDays($order));
 
@@ -247,37 +259,28 @@ class UserController extends Controller
             $formConfirmBid->handleRequest($request);
 
             if ($formConfirmBid->isSubmitted() && $formConfirmBid->isValid()) {
-                $repositoryStatusOrder = $this->get('secure.repository.status_order');
-
                 if ($formConfirmBid->get('confirm')->isClicked()) {
-                    $status = $repositoryStatusOrder->findOneBy(['code' => StatusOrder::STATUS_ORDER_WORK_CODE]);
-
-                    $selectedBid->setConfirmed();
-
-                    $order->setDateConfirm(new \DateTime());
+                    $orderService->changeOrderFromAssignedToWork($order, $user, $selectedBid, $request);
 
                     $this->addFlash(
                         'success',
                         'Ставка принята! Заказ в работе!'
                     );
                 } else {
-                    $status = $repositoryStatusOrder->findOneBy(['code' => StatusOrder::STATUS_ORDER_AUCTION_CODE]);
+                    $comment = $formConfirmBid->get('comment')->getData();
 
-                    $selectedBid->setRejected();
-                    //$selectedBid->setSelected();
-                    $selectedBid->setDateReject(new \DateTime());
+                    $orderService->changeOrderFromAssignedToRejected($order, $user, $selectedBid, $request, $comment);
 
                     $this->addFlash(
                         'success',
                         'Ставка не принята! Заказ на оценке!'
                     );
                 }
-
-                $order->setStatus($status);
-
-                $orderService->save($order);
-                $bidService->save($selectedBid);
             }
+        }
+
+        if ($order->isRefining()) {
+            $order->setRemainingRefining($dateTimeService->getRemainingRefiningTime($order));
         }
 
         if ($order->isAuction() || $order->isNew()) {
@@ -290,7 +293,7 @@ class UserController extends Controller
 
                 if ($isSuccess) {
                     if ($order->isNew()) {
-                        $orderService->changeStatusOrder($order, StatusOrder::STATUS_ORDER_AUCTION_CODE);
+                        $orderService->changeOrderFromNewToAuction($order, $this->getUser(), $bid, $request);
                     }
 
                     $this->addFlash(

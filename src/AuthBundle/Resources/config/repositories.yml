@@ -1,5 +1,0 @@
-services:
-    auth.repository.user_activity:
-        class: Doctrine\Common\Persistence\ObjectRepository
-        factory: ['@doctrine', getRepository]
-        arguments: ['%user_activity_entity%']

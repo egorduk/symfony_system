@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     secure.repository.user_order:
         class: Doctrine\Common\Persistence\ObjectRepository
         factory: ['@doctrine', getRepository]

@@ -14,29 +14,36 @@
                     <li>Оригинальность заказа: {{ order.originality | percent }}</li>
                     <li>Предмет: {{ order.subject.name }}</li>
                     <li>Тип заказа: {{ order.type.name }}</li>
-                    <li>Статус заказа: {{ order.status.name }}</li>
+                    <li class="dynamic-block-order-status">Статус заказа: <span>{{ order.status.name }}</span></li>
                     <li>Дата создания: {{ order.datecreate | defaultDateFormat }}</li>
                     <li>ВУЗ: {{ order.hei | noData }}</li>
                     <li>Заказчик: {{ order.user | avatar | raw }}</li>
 
                     <div class="dynamic-block-order-info">
-                        {% if type == statusOrderNew or type == statusOrderWork or type == statusOrderAuction %}
+                        {% if type == statusOrderNew or type == statusOrderWork or type == statusOrderAuction or type == statusOrderRefining %}
                             <li>Выполнение до: {{ order.dateexpire | defaultDateFormat }}</li>
                             <li>На выполнение осталось: {{ order.remainingExpire }}</li>
-                        {% elseif type == statusOrderGuarantee %}
+                        {% endif %}
+                        {% if type == statusOrderGuarantee %}
                             <li>На гарантии с: {{ order.dateComplete | defaultDateFormat }}</li>
                             <li>На гарантии до: {{ order.dateGuarantee | defaultDateFormat }}</li>
                             <li>На гарантии осталось: {{ order.remainingGuarantee }}</li>
-                        {% elseif type == statusOrderCompleted %}
+                        {% endif %}
+                        {% if type == statusOrderCompleted %}
                             <li>В работе с: {{ order.dateConfirm | defaultDateFormat }}</li>
                             <li>Завершен: {{ order.dateComplete | defaultDateFormat }}</li>
                             <li>Затрачено дней: {{ order.spentDays }}</li>
-                        {% elseif type == statusOrderAssigned %}
+                        {% endif %}
+                        {% if type == statusOrderAssigned %}
                             <li>Выполнение до: {{ order.remainingExpireWithDays | defaultDateFormat }}</li>
                             <li>Цена: {{ order.selectedBid.sum | price }}</li>
                             <li>Срок: {{ order.selectedBid.day | day }}</li>
                             <li>Дата оценки: {{ order.selectedBid.dateBid | defaultDateFormat }}</li>
                             <li>В срок заказчика: {{ order.selectedBid.isClientDate }}</li>
+                        {% endif %}
+                        {% if type == statusOrderRefining %}
+                            <li>Доработка до: {{ order.dateRefining | defaultDateFormat }}</li>
+                            <li>На доработку осталось: {{ order.remainingRefining }}</li>
                         {% endif %}
                         {% if type == statusOrderWork %}
                             <li>В работе с: {{ order.dateConfirm | defaultDateFormat }}</li>

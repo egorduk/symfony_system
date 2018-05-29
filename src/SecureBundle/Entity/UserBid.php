@@ -36,9 +36,9 @@ class UserBid
     private $day;
 
     /**
-     * @ORM\Column(name="comment", type="string", length=50, nullable=true)
+     * @ORM\Column(name="comment", type="string", length=100, nullable=true)
      *
-     * @Assert\Length(max="50")
+     * @Assert\Length(max="100")
      */
     private $comment;
 
@@ -48,9 +48,19 @@ class UserBid
     private $dateBid;
 
     /**
+     * @ORM\Column(name="date_assignee", type="datetime")
+     */
+    private $dateAssignee;
+
+    /**
      * @ORM\Column(name="date_reject", type="datetime", nullable=true)
      */
     private $dateReject;
+
+    /**
+     * @ORM\Column(name="date_confirm", type="datetime", nullable=true)
+     */
+    private $dateConfirm;
 
     /**
      * @ORM\Column(name="is_client_date", type="boolean")
@@ -222,6 +232,8 @@ class UserBid
     public function setIsSelected($isSelected)
     {
         $this->isSelected = $isSelected;
+
+        return $this;
     }
 
     public function getIsConfirmed()
@@ -232,6 +244,8 @@ class UserBid
     public function setIsConfirmed($isConfirmed)
     {
         $this->isConfirmed = $isConfirmed;
+
+        return $this;
     }
 
     public function getIsRejected()
@@ -242,6 +256,8 @@ class UserBid
     public function setIsRejected($isRejected)
     {
         $this->isRejected = $isRejected;
+
+        return $this;
     }
 
     public function getDateReject()
@@ -252,21 +268,71 @@ class UserBid
     public function setDateReject($dateReject)
     {
         $this->dateReject = $dateReject;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateConfirm()
+    {
+        return $this->dateConfirm;
+    }
+
+    public function setDateConfirm($dateConfirm)
+    {
+        $this->dateConfirm = $dateConfirm;
+
+        return $this;
     }
 
     public function setConfirmed()
     {
-        $this->setIsConfirmed(1);
+        $this->setIsConfirmed(1)
+            ->setIsSelected(1)
+            ->setIsRejected(0)
+            ->setDateConfirm(new \DateTime());
     }
 
     public function setRejected()
     {
-        $this->setIsRejected(1);
-        $this->setIsSelected(0);
+        $this->setIsRejected(1)
+            ->setIsSelected(0)
+            ->setIsConfirmed(0)
+            ->setDateReject(new \DateTime());
+    }
+
+    public function setAssigned()
+    {
+        $this->setIsRejected(0)
+            ->setIsSelected(1)
+            ->setIsConfirmed(0)
+            ->setDateAssignee(new \DateTime());
     }
 
     public function setSelected()
     {
         $this->setIsSelected(1);
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDateAssignee()
+    {
+        return $this->dateAssignee;
+    }
+
+    public function setDateAssignee($dateAssignee)
+    {
+        $this->dateAssignee = $dateAssignee;
+
+        return $this;
+    }
+
+    public function isClientDate()
+    {
+        return $this->isClientDate === 1;
     }
 }

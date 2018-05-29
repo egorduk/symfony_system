@@ -13,8 +13,6 @@ class AuthBundleExtension extends Extension
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
-        $loader->load('parameters.yml');
-        $loader->load('repositories.yml');
         $loader->load('fixtures.yml');
     }
 }

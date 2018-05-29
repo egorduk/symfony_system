@@ -92,6 +92,14 @@ class FileUploaderController extends FineUploaderController
             ]);
         }
 
+        $data = '';
+
+        if ($order->isGuarantee()) {
+            $data = '<li>На гарантии с:'.$dateTimeService->getDatetimeFormatted($order->getDateFinish()).'</li>
+                     <li>На гарантии до:'.$dateTimeService->getDatetimeFormatted($order->getDateGuarantee()).'</li>
+                     <li>На гарантии осталось:'.$dateTimeService->getRemainingGuaranteeTime($order).'</li>';
+        }
+
         $response->offsetSet(0, [
             'fileOrder' => [
                 'name' => $orderFile->getName(),
@@ -106,10 +114,8 @@ class FileUploaderController extends FineUploaderController
             ],
             'order' => [
                 'status' => $order->getStatus()->getName(),
-                'dateGuarantee' => $order->getDateGuarantee()->format(DateTimeService::DEFAULT_FORMAT),
-                'data' => '<li>На гарантии с:'.$dateTimeService->getDatetimeFormatted($order->getDateFinish()).'</li>
-                     <li>На гарантии до:'.$dateTimeService->getDatetimeFormatted($order->getDateGuarantee()).'</li>
-                     <li>На гарантии осталось:'.$dateTimeService->getRemainingGuaranteeTime($order).'</li>',
+                //'dateGuarantee' => $order->getDateGuarantee()->format(DateTimeService::DEFAULT_FORMAT),
+                'data' => $data,
             ],
         ]);
 

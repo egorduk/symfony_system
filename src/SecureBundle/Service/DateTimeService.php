@@ -111,6 +111,13 @@ class DateTimeService
         return sprintf(self::REMAINING_FORMAT, $diff->days, $diff->h, $diff->i);
     }
 
+    public function getRemainingRefiningTime(UserOrder $order)
+    {
+        $diff = $this->getDiffBetweenDates($order->getDateRefining());
+
+        return sprintf(self::REMAINING_FORMAT, $diff->days, $diff->h, $diff->i);
+    }
+
     public function getRemainingExpireTime(UserOrder $order)
     {
         $diff = $this->getDiffBetweenDates($order->getDateExpire());
@@ -138,6 +145,17 @@ class DateTimeService
     {
         $date = new \DateTime();
         $date->add(new \DateInterval('P'.$days.'D')); // P1D means a period of 1 day
+
+        return $date;
+    }
+
+    public function addIntervalToDate(\DateInterval $interval, $date = false)
+    {
+        if (!$date) {
+            $date = new \DateTime();
+        }
+
+        $date->add($interval);
 
         return $date;
     }

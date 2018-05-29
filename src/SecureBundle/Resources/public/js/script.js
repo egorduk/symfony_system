@@ -78,14 +78,16 @@ $(document).ready(function() {
                             orderStageTableEl = $('#order-stage-table'),
                             stageOrderTrEl = orderStageTableEl.find('tr#' + stageOrderData.id),
                             stageOrderSelectorEl = $('#stage_order_name'),
-                            dynamicBlockEl = $('.dynamic-block-order-info');
+                            dynamicBlockOrderInfoEl = $('.dynamic-block-order-info'),
+                            dynamicBlockOrderStatusEl = $('.dynamic-block-order-status');
 
                         //console.log(parsedData[0]);
 
                         stageOrderTrEl.find('td:last').text(stageOrderData.status);
                         stageOrderSelectorEl.find('[value="' + stageOrderData.id + '"]').remove();
 
-                        dynamicBlockEl.empty().append(orderData.data);
+                        dynamicBlockOrderInfoEl.empty().append(orderData.data);
+                        dynamicBlockOrderStatusEl.find('span').text(orderData.status);
 
                         orderFileTableTbodyEl.append('<tr>' +
                             '<td>' + ++cntFiles.length + '</td>' +

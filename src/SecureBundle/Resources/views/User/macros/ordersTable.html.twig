@@ -1,28 +1,30 @@
 {% macro ordersTable(type) %}
     {% set statusUserOrderBid = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_BID') %}
     {% set statusUserOrderFinish = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_FINISH') %}
-    {% set statusUserOrderAssign = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_ASSIGN') %}
+    {% set statusUserOrderAssignee = constant('SecureBundle\\Entity\\StatusOrder::STATUS_USER_ORDER_ASSIGNEE') %}
     {% set statusOrderWork = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_WORK_CODE') %}
     {% set statusOrderGuarantee = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_GUARANTEE_CODE') %}
     {% set statusOrderNew = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_NEW_CODE') %}
     {% set statusOrderCompleted = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_COMPLETED_CODE') %}
     {% set statusOrderAuction = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_AUCTION_CODE') %}
     {% set statusOrderAssigned = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_ASSIGNED_CODE') %}
+    {% set statusUserOrderRefining = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_REFINING_CODE') %}
 
     <tr>
         <th>№ заказа</th>
         <th>Предмет</th>
         <th>Тип работы</th>
         <th>Тема работы</th>
+        <th>Создан</th>
         {% if type == statusUserOrderBid %}
             <th>Оценен</th>
             <th>Ставка</th>
         {% endif %}
-        {% if type != statusOrderGuarantee and type != statusUserOrderFinish and type != statusUserOrderAssign %}
+        {% if type != statusOrderGuarantee and type != statusUserOrderFinish and type != statusUserOrderAssignee %}
             <th>Выполнение до</th>
             <th>До сдачи</th>
         {% endif %}
-        {% if type != statusOrderWork and type != statusUserOrderFinish and type != statusOrderGuarantee and type != statusUserOrderAssign %}
+        {% if type != statusOrderWork and type != statusUserOrderFinish and type != statusUserOrderRefining and type != statusOrderGuarantee and type != statusUserOrderAssignee %}
             <th>Max ставка</th>
             <th>Min ставка</th>
             <th>Ставок</th>
@@ -37,17 +39,19 @@
             <th>Завершен</th>
             <th>Затрачено дней</th>
         {% endif %}
-        {% if type == statusUserOrderAssign %}
+        {% if type == statusUserOrderAssignee %}
             <th>Выполнение до</th>
             <th>Цена</th>
             <th>Срок</th>
             <th>Дата оценки</th>
             <th>В срок заказчика</th>
         {% endif %}
-        <th>Создан</th>
+        {% if type == statusUserOrderRefining %}
+            <th>Доработка до</th>
+        {% endif %}
         {% if type == statusOrderNew %}
             <th>Статус</th>
         {% endif %}
-        <th>Действия</th>
+        {#<th>Действия</th>#}
     </tr>
 {% endmacro %}

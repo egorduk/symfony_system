@@ -30,7 +30,7 @@ class StatusOrder
 
     const STATUS_USER_ORDER_BID = 'bid';
     const STATUS_USER_ORDER_FINISH = 'finish';
-    const STATUS_USER_ORDER_ASSIGN = 'assign';
+    const STATUS_USER_ORDER_ASSIGNEE = 'assignee';
 
     /**
      * @ORM\Column(name="id", type="integer")
@@ -86,5 +86,40 @@ class StatusOrder
     public function getId()
     {
         return $this->id;
+    }
+
+    static function isRefiningType($type = '')
+    {
+        return $type === self::STATUS_ORDER_REFINING_CODE;
+    }
+
+    static function isNewType($type = '')
+    {
+        return $type === self::STATUS_ORDER_NEW_CODE;
+    }
+
+    static function isBidType($type = '')
+    {
+        return $type === self::STATUS_USER_ORDER_BID;
+    }
+
+    static function isGuaranteeType($type = '')
+    {
+        return $type === self::STATUS_ORDER_GUARANTEE_CODE;
+    }
+
+    static function isFinishType($type = '')
+    {
+        return $type === self::STATUS_USER_ORDER_FINISH;
+    }
+
+    static function isWorkType($type = '')
+    {
+        return $type === self::STATUS_ORDER_WORK_CODE;
+    }
+
+    static function isAssigneeType($type = '')
+    {
+        return $type === self::STATUS_USER_ORDER_ASSIGNEE;
     }
 }

@@ -73,7 +73,9 @@ class AppRuntime
 
         if ($action === UserActivityEvent::SET_BID) {
             return sprintf('Ставка номер %s на заказ номер %s', $data->bid_id, $data->order_id);
-        }
+        } /*elseif ($action === UserActivityEvent::STANDARD_LOGIN) {
+            return 'Вход в систему';
+        }*/
 
         return null;
     }

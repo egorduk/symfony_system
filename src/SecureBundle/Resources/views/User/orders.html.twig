@@ -24,15 +24,16 @@
                         <td>{{ order.subject.name }}</td>
                         <td>{{ order.type.name }}</td>
                         <td>{{ order.theme }}</td>
+                        <td>{{ order.datecreate | date('d.m.Y H:i') }}</td>
                         {% if type == statusUserOrderBid %}
                             <td>{{ order.lastBid.dateBid | date('d.m.Y H:i') }}</td>
                             <td>{{ order.lastBid.sum }}</td>
                         {% endif %}
-                        {% if type != statusOrderGuarantee and type != statusUserOrderFinish and type != statusUserOrderAssign %}
+                        {% if type != statusOrderGuarantee and type != statusUserOrderFinish and type != statusUserOrderAssignee %}
                             <td>{{ order.dateexpire | date('d.m.Y H:i') }}</td>
                             <td>{{ order.remainingExpire }}</td>
                         {% endif %}
-                        {% if type != statusOrderWork and type != statusUserOrderFinish and type != statusOrderGuarantee and type != statusUserOrderAssign %}
+                        {% if type != statusOrderWork and type != statusOrderRefining and type != statusUserOrderFinish and type != statusOrderGuarantee and type != statusUserOrderAssignee %}
                             <td>{{ order.maxBid | default('-') }}</td>
                             <td>{{ order.minBid | default('-') }}</td>
                             <td>{{ order.cntBids | default('-') }}</td>
@@ -47,21 +48,23 @@
                             <td>{{ order.dateComplete | date('d.m.Y H:i') }}</td>
                             <td>{{ order.spentDays }}</td>
                         {% endif %}
-                        {% if type == statusUserOrderAssign %}
+                        {% if type == statusUserOrderAssignee %}
                             <td>{{ order.remainingExpireWithDays | date('d.m.Y H:i') }}</td>
                             <td>{{ order.selectedBid.sum }}</td>
                             <td>{{ order.selectedBid.day }}</td>
                             <td>{{ order.selectedBid.dateBid | date('d.m.Y H:i') }}</td>
                             <td>{{ order.selectedBid.isClientDate | default('-') }}</td>
                         {% endif %}
-                        <td>{{ order.datecreate | date('d.m.Y H:i') }}</td>
+                        {% if type == statusOrderRefining %}
+                            <td>{{ order.remainingRefining }}</td>
+                        {% endif %}
                         {% if type == statusOrderNew %}
                             <td>{{ order.status.name }}</td>
                         {% endif %}
-                        <td>
+                        {#<td>
                             <button>Отказаться</button>
                             <button>Скрыть</button>
-                        </td>
+                        </td>#}
                     </tr>
                 {% endfor %}
                 </tbody>

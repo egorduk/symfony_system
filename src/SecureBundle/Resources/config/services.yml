@@ -1,4 +1,8 @@
 services:
+    _defaults:
+        public: true
+        autoconfigure: true
+
     secure.service.date_time:
         class: SecureBundle\Service\DateTimeService
 
@@ -71,6 +75,9 @@ services:
     secure.mail_helper:
         class: SecureBundle\Service\MailService
         arguments: ['@doctrine.orm.entity_manager', '%mail_options%', '@mailer']
+
+#    auth.captcha_service:
+#        class: AuthBundle\Service\Captcha\Captcha
 
 
 #

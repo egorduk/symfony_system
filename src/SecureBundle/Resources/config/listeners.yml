@@ -1,4 +1,8 @@
 services:
+    _defaults:
+        public: true
+        autoconfigure: true
+
     secure.listener.request_order:
         class: SecureBundle\Service\Listener\RequestOrderListener
         arguments: ['@security.token_storage', '@secure.service.order']
@@ -8,8 +12,8 @@ services:
     secure.listener.user_activity:
         class: SecureBundle\Service\Listener\UserActivityListener
         arguments: ['@secure.service.user_activity', '@em']
-        tags:
-            - { name: kernel.event_subscriber }
+        #tags:
+        #    - { name: kernel.event_subscriber }
 
     secure.listener.logout:
         class: SecureBundle\Service\Listener\LogoutListener

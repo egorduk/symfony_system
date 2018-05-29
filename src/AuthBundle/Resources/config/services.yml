@@ -1,6 +1,6 @@
 services:
-    auth.captcha_service:
-        class: AuthBundle\Service\Captcha\Captcha
+    _defaults:
+        public: true
 
     auth.service:
         class: AuthBundle\Service\AuthService

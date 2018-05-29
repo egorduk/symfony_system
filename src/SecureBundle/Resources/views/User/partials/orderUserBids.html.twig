@@ -16,7 +16,7 @@
                 {% for key, bid in bidsData.bids %}
                     <tr {% if key == 0 %} class="success" {% endif %}>
                         <td>{{ key + 1 }}</td>
-                        <td>{{ bid.sum }}</td>
+                        <td>{{ bid.sum | price }}</td>
                         <td>
                             {{ bid.day }} дн.
                             {% if bid.isClientDate == 1%} -

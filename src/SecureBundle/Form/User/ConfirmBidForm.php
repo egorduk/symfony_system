@@ -30,7 +30,6 @@ class ConfirmBidForm extends AbstractType
             ])
             ->add('comment', TextareaType::class, [
                 'label' => 'Комментарий',
-                'disabled' => true,
             ])
             ->add('isClientDate', CheckboxType::class, [
                 'label' => 'В срок заказчика',
