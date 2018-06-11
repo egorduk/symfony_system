@@ -755,6 +755,9 @@ class User implements AdvancedUserInterface, \Serializable
         $this->rawAvatar = $rawAvatar;
     }*/
 
+    /**
+     * @return UserInfo
+     */
     public function getUserInfo()
     {
         return $this->userInfo;

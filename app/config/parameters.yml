@@ -26,3 +26,4 @@ parameters:
     #uploads_dir: '%kernel.root_dir%/../web/uploads'
     web_dir: '%kernel.root_dir%/../web'
     file_upload_dir_user_avatars: 'uploads/avatars'
+    secure_bundle_web_dir: 'bundles/secure'

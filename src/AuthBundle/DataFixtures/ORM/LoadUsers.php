@@ -43,6 +43,17 @@ class LoadUsers implements ORMFixtureInterface
         $user->setIpReg(ip2long('127.0.0.1'));
         $manager->persist($user);
 
+        $user = new User();
+        $user->setLogin('manager');
+        $user->setEmail('manager@tut.by');
+        $user->setRoles(User::ROLE_MANAGER);
+        $user->setSalt('1234');
+        $user->setRegisterConfirm();
+        $encodedPassword = $this->encoderService->encodePassword($user, 'test');
+        $user->setPassword($encodedPassword);
+        $user->setIpReg(ip2long('127.0.0.1'));
+        $manager->persist($user);
+
         $roles = [
             User::ROLE_USER,
             User::ROLE_ADMIN,

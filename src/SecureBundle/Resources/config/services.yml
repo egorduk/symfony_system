@@ -43,14 +43,14 @@ services:
 
     app.twig_runtime:
         class: SecureBundle\Twig\AppRuntime
-        arguments: ['@secure.service.user']
+        arguments: ['@secure.service.user', '@assets.packages', '%secure_bundle_web_dir%']
         public: false
         tags:
             - { name: twig.runtime }
 
     secure.service.user:
         class: SecureBundle\Service\UserService
-        arguments: ['@doctrine.orm.entity_manager', '@assets.packages', '%file_upload_dir_user_avatars%']
+        arguments: ['@doctrine.orm.entity_manager', '@assets.packages', '%file_upload_dir_user_avatars%', '@router']
 
     secure.service.user_activity:
         class: SecureBundle\Service\UserActivityService

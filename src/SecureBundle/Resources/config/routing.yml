@@ -1,6 +1,12 @@
+#--ManagerController--#
+
 secure_manager_homepage:
     path: secure/manager/homepage
-    defaults: { _controller: SecureBundle:Manager:homepage }
+    defaults: { _controller: SecureBundle:Manager:home }
+
+secure_manager_profile:
+    path: secure/manager/profile
+    defaults: { _controller: SecureBundle:Manager:profile }
 
 #--OrderBundle--#
 

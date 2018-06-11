@@ -21,49 +21,42 @@ class UserInfo
 
     /**
      * @ORM\Column(name="skype", type="string", length=30, nullable=true)
-     *
      * @Assert\Length(max="20")
      */
     private $skype;
 
     /**
-     * @ORM\Column(name="mobile_phone", type="string", length=30, nullable=true)
-     *
+     * @ORM\Column(name="mobile_phone", type="string", length=30)
      * @Assert\Length(max="20")
      */
     private $mobilePhone;
 
     /**
      * @ORM\Column(name="static_phone", type="string", length=30, nullable=true)
-     *
      * @Assert\Length(max="20")
      */
     private $staticPhone;
 
     /**
      * @ORM\Column(name="username", type="string", length=30, nullable=true)
-     *
      * @Assert\Length(max="20")
      */
     private $userName;
 
     /**
      * @ORM\Column(name="surname", type="string", length=30, nullable=true)
-     *
      * @Assert\Length(max="20")
      */
     private $surName;
 
     /**
      * @ORM\Column(name="lastname", type="string", length=30, nullable=true)
-     *
      * @Assert\Length(max="20")
      */
     private $lastName;
 
     /**
      * @ORM\Column(name="account", type="string", length=30, nullable=true)
-     *
      * @Assert\Length(max="30")
      */
     private $account;
@@ -87,7 +80,7 @@ class UserInfo
 
     /**
      * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\Country", inversedBy="userInfo")
-     * @ORM\JoinColumn(name="country_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="country_id", referencedColumnName="id", nullable=false)
      */
     private $country;
 
@@ -148,6 +141,9 @@ class UserInfo
         $this->user = $user;
     }
 
+    /**
+     * @return Country
+     */
     public function getCountry()
     {
         return $this->country;

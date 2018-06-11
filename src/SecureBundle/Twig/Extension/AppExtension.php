@@ -19,6 +19,9 @@ class AppExtension extends \Twig_Extension
             new \Twig_SimpleFilter('avatar', [AppRuntime::class, 'avatarFilter']),
             new \Twig_SimpleFilter('ip', [AppRuntime::class, 'ipFilter']),
             new \Twig_SimpleFilter('additionalActivityInfo', [AppRuntime::class, 'additionalActivityInfoFilter']),
+            new \Twig_SimpleFilter('defaultStringData', [AppRuntime::class, 'defaultStringDataFilter']),
+            new \Twig_SimpleFilter('mobileNumber', [AppRuntime::class, 'mobileNumberFilter']),
+            new \Twig_SimpleFilter('country', [AppRuntime::class, 'countryFilter']),
         ];
     }
 

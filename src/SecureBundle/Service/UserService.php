@@ -5,6 +5,7 @@ namespace SecureBundle\Service;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserInfo;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Asset\Packages;
 
 class UserService
@@ -12,26 +13,22 @@ class UserService
     private $em;
     private $packages;
     private $uploadDir;
+    private $router;
 
     /**
      * @param EntityManager $em
      * @param Packages $packages
      * @param string $uploadDir
      */
-    public function __construct(EntityManager $em, Packages $packages, $uploadDir)
+    public function __construct(EntityManager $em, Packages $packages, $uploadDir, Router $router)
     {
         $this->em = $em;
         $this->packages = $packages;
         $this->uploadDir = $uploadDir;
+        $this->router = $router;
     }
 
-    /**
-     * @param User|null $user
-     * @param int|null $userId
-     *
-     * @return string
-     */
-    private function getFullPathToAvatar(User $user = null, $userId = null) {
+    private function getFullPathToAvatar(User $user = null) {
         $userAvatar = $user->getAvatar();
 
         $avatars = [
@@ -53,15 +50,13 @@ class UserService
         }
     }
 
-    /**
-     * @param string $role
-     * @param bool $isLower
-     *
-     * @return string
-     */
-    public function getRoleName($role, $isLower = false)
+    public function getRoleName($data, $isLower = false)
     {
-        $roleName = substr($role, strpos($role, '_') + 1, strlen($role));
+        if ($data instanceof User) {
+            $data = $data->getRole();
+        }
+
+        $roleName = substr($data, strpos($data, '_') + 1, strlen($data));
 
         return $isLower ? strtolower($roleName) : $roleName;
     }
@@ -76,10 +71,17 @@ class UserService
         $pathAvatar = $this->getFullPathToAvatar($user);
 
         $userAvatar = sprintf('<img src="%s" align="middle" alt="avatar" width="110px" height="auto" class="thumbnail">', $pathAvatar);
+        $userCompanies = $user->getCompanies()->count() ? $user->getCompanies() : null;
 
-        $company = $user->getCompanies()->count() ? $user->getCompanies()->first()->getName() : '';
+        $str = '';
 
-        return $userAvatar . ' - ' . ($user->isUser() ? $user->getLogin() : ($user->getLogin() . ' из ' . $company));
+        if ($userCompanies !== null) {
+            foreach ($userCompanies as $company) {
+                $str .= '<p><a href="' . $this->router->generate('secure_company_info', ['companyId' => $company->getId()]) . '">' . $company->getName() . '</a></p>';
+            }
+        }
+
+        return $userAvatar . ' - ' . ($user->isUser() ? $user->getLogin() : ($user->getLogin() . ' из ' . $str));
     }
 
     public function updateProfile(UserInfo $userInfo)

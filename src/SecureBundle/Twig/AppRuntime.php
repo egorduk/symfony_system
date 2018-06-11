@@ -5,14 +5,21 @@ namespace SecureBundle\Twig;
 use SecureBundle\Entity\User;
 use SecureBundle\Event\UserActivityEvent;
 use SecureBundle\Service\UserService;
+use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
+use Symfony\Component\Asset\Packages;
+use Symfony\Component\Config\FileLocator;
 
 class AppRuntime
 {
     private $userService;
+    private $packages;
+    private $secureBundleWebDir;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, Packages $packages, $secureBundleWebDir = '')
     {
         $this->userService = $userService;
+        $this->packages = $packages;
+        $this->secureBundleWebDir = $secureBundleWebDir;
     }
 
     public function priceFilter($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',')
@@ -63,6 +70,20 @@ class AppRuntime
         return long2ip($val);
     }
 
+    public function mobileNumberFilter(User $user)
+    {
+        $userInfo = $user->getUserInfo();
+        $mobilePhone = $userInfo->getMobilePhone();
+        $country = $userInfo->getCountry();
+
+        return '+' . $country->getMobileCode() . $mobilePhone;
+    }
+
+    public function defaultStringDataFilter($val = '')
+    {
+        return $val !== null ? $val : '-';
+    }
+
     public function additionalActivityInfoFilter($info, $action)
     {
         if (empty($info) || $info === 'null') {
@@ -78,5 +99,18 @@ class AppRuntime
         }*/
 
         return null;
+    }
+
+    public function countryFilter(User $user)
+    {
+        $country = $user->getUserInfo()->getCountry();
+        $code = $country->getCode();
+        $name = $country->getName();
+
+        $basePath = rtrim($this->packages->getUrl($this->secureBundleWebDir), '/');
+
+        $path = $basePath . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'flags' . DIRECTORY_SEPARATOR . strtolower($code) . '.png';
+
+        return sprintf('<img src="%s" align="middle" alt="flag" width="60px" height="auto" class="thumbnail" title="%s">', $path, $name);
     }
 }

@@ -10,6 +10,8 @@
 {% set statusOrderAuction = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_AUCTION_CODE') %}
 {% set statusOrderAssigned = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_ASSIGNED_CODE') %}
 {% set statusOrderRefining = constant('SecureBundle\\Entity\\StatusOrder::STATUS_ORDER_REFINING_CODE') %}
+{% set roleUser = constant('SecureBundle\\Entity\\User::ROLE_USER') %}
+{% set roleManager = constant('SecureBundle\\Entity\\User::ROLE_MANAGER') %}
 
 {% block head %}
     {% block stylesheets %}
@@ -44,7 +46,11 @@
 
 {% block body %}
     <div class="row">
-        {% include 'SecureBundle:User/partials:menu.html.twig' %}
+        {% if is_granted(roleUser) %}
+            {% include 'SecureBundle:User/partials:menu.html.twig' %}
+        {% elseif is_granted(roleManager) %}
+            {% include 'SecureBundle:Manager/partials:menu.html.twig' %}
+        {% endif %}
         <div class="col-md-10">
             {% block content %}{% endblock %}
         </div>
