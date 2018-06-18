@@ -2,13 +2,19 @@ services:
     _defaults:
         public: true
 
+    secure.repository.user_activity: '@SecureBundle\Repository\UserActivityRepository'
+
     SecureBundle\Repository\UserActivityRepository:
         factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%user_activity_entity%']
 
+    secure.repository.user_order: '@SecureBundle\Repository\UserOrderRepository'
+
     SecureBundle\Repository\UserOrderRepository:
         factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%user_order_entity%']
+
+    secure.repository.status_order: '@SecureBundle\Repository\StatusOrderRepository'
 
     SecureBundle\Repository\StatusOrderRepository:
         factory: ['@doctrine.orm.entity_manager', getRepository]
@@ -18,9 +24,13 @@ services:
         factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%company_entity%']
 
+    secure.repository.user_bid: '@SecureBundle\Repository\UserBidRepository'
+
     SecureBundle\Repository\UserBidRepository:
         factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%user_bid_entity%']
+
+    secure.repository.setting: '@SecureBundle\Repository\SettingRepository'
 
     SecureBundle\Repository\SettingRepository:
         factory: ['@doctrine.orm.entity_manager', getRepository]

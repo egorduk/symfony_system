@@ -8,7 +8,21 @@ services:
             $uploadUserAvatarsDir: '%file_upload_dir_user_avatars%'
             $secureBundleWebDir: '%secure_bundle_web_dir%'
             $repositoryClassMap: '%entity_repositories%'
-            $userActivityRepository: '@SecureBundle\Repository\UserActivityRepository'
+            $userActivityRepository: '@secure.repository.user_activity'
+            $fileService: '@secure.service.file'
+            $dateTimeService: '@secure.service.date_time'
+            $eventDispatcher: '@event_dispatcher'
+            $statusOrderRepository: '@secure.repository.status_order'
+            $userOrderRepository: '@secure.repository.user_order'
+            $bidService: '@secure.service.bid'
+            $settingService: '@secure.service.setting'
+            $userBidRepository: '@secure.repository.user_bid'
+            $settingRepository: '@secure.repository.setting'
+
+    secure.service.file: '@SecureBundle\Service\FileService'
+    secure.service.date_time: '@SecureBundle\Service\DateTimeService'
+    secure.service.bid: '@SecureBundle\Service\BidService'
+    secure.service.setting: '@SecureBundle\Service\SettingService'
 
     SecureBundle\Service\:
         resource: '../../../SecureBundle/Service/*'

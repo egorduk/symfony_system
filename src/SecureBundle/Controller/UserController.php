@@ -3,28 +3,27 @@
 namespace SecureBundle\Controller;
 
 use SecureBundle\Entity\User;
-use SecureBundle\Entity\Setting;
 use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Entity\UserBid;
 use SecureBundle\Entity\UserOrder;
 use SecureBundle\Event\UserActivityEvent;
 use SecureBundle\Form\User\BidForm;
 use SecureBundle\Form\User\ConfirmBidForm;
+use SecureBundle\Form\User\ProfileForm;
 use SecureBundle\Form\User\SettingForm;
 use SecureBundle\Form\User\StageOrderType;
 use SecureBundle\Repository\UserBidRepository;
 use SecureBundle\Repository\UserOrderRepository;
 use SecureBundle\Service\BidService;
 use SecureBundle\Service\DateTimeService;
-use SecureBundle\Service\OrdersService;
 use SecureBundle\Service\SettingService;
 use SecureBundle\Service\StageOrderService;
 use SecureBundle\Service\UserActivityService;
+use SecureBundle\Service\UserOrderService;
 use SecureBundle\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
-use UserBundle\Form\User\ProfileForm;
 use UserBundle\Model\SettingsModel;
 
 class UserController extends Controller
@@ -185,7 +184,10 @@ class UserController extends Controller
 
         $userService = $this->get(UserService::class);
 
-        $formProfile = $this->createForm(ProfileForm::class, $user->getUserInfo());
+        $formProfile = $this->createForm(ProfileForm::class, $user->getUserInfo(), [
+            'user' => $user,
+        ]);
+
         $formProfile->handleRequest($request);
 
         if ($formProfile->isSubmitted() && $formProfile->isValid()) {
@@ -228,7 +230,7 @@ class UserController extends Controller
         $formStageOrder = null;
 
         $dateTimeService = $this->get(DateTimeService::class);
-        $orderService = $this->get(OrdersService::class);
+        $orderService = $this->get(UserOrderService::class);
         $bidService = $this->get(BidService::class);
 
         $files = $orderService->prepareFiles($order->getFiles());
@@ -296,21 +298,8 @@ class UserController extends Controller
         }
 
         if ($order->isWork() || $order->isGuarantee() || $order->isRefining()) {
-            //$formUploadWork = $this->createForm(UploadWorkForm::class);
-            //$formUploadWork->handleRequest($request);
-            //$helper = $this->container->get('oneup_uploader.templating.uploader_helper');
-            //$endpoint = $helper->endpoint('gallery');
-            //dump($endpoint);
-
             $orderStages = $this->get(StageOrderService::class)->getStagesInWorkByOrder($order);
-            //$orderStages = $order->getStages();
-
             $formStageOrder = $this->createForm(StageOrderType::class, null, ['stages' => $orderStages]);
-            /*          $formStageOrder->handleRequest($request);
-
-                      if ($formStageOrder->isSubmitted() && $formStageOrder->isValid()) {
-
-                      }*/
         }
 
         if ($order->isGuarantee()) {

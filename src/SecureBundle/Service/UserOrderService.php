@@ -28,7 +28,7 @@ class UserOrderService
     private $statusOrderRepository;
     private $userOrderRepository;
     private $bidService;
-    private $ed;
+    private $eventDispatcher;
     private $settingService;
 
     public function __construct(
@@ -39,7 +39,7 @@ class UserOrderService
         StatusOrderRepository $statusOrderRepository,
         UserOrderRepository $userOrderRepository,
         BidService $bidService,
-        EventDispatcher $ed,
+        EventDispatcher $eventDispatcher,
         SettingService $settingService
     ) {
         $this->em = $em;
@@ -49,7 +49,7 @@ class UserOrderService
         $this->statusOrderRepository = $statusOrderRepository;
         $this->userOrderRepository = $userOrderRepository;
         $this->bidService = $bidService;
-        $this->ed = $ed;
+        $this->eventDispatcher = $eventDispatcher;
         $this->settingService = $settingService;
     }
 
@@ -304,7 +304,7 @@ class UserOrderService
 
     private function dispatchEventChangeOrderStatus(UserOrder $userOrder, User $user, Request $request, $newStatusCode = '', $oldStatusCode = '', $data = [])
     {
-        $this->ed->dispatch(
+        $this->eventDispatcher->dispatch(
             UserActivityEvent::CHANGE_ORDER_STATUS,
             new UserActivityEvent($user, $request, array_merge($data, [
                     'order_id' => $userOrder->getId(),
