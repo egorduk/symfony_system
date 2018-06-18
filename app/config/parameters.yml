@@ -10,18 +10,17 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: ThisTokenIsNotSoSecretChangeIt
-    publicKeyCaptcha: 6LcYmecSAAAAAJlYNqogbOXJVMvGgim5JoM0hcAi
-    privateKeyCaptcha: 6LcYmecSAAAAANaq8JFPxT3xEA_urO6st1gfVOXL
-    confirm_auth_path: 'http://localhost/symfony_system/web/app_dev.php/confirm'
-    mail_sender: egorduk@yandex.com
-    mail_title: Study
+    public_key_captcha: 6LcYmecSAAAAAJlYNqogbOXJVMvGgim5JoM0hcAi
+    private_key_captcha: 6LcYmecSAAAAANaq8JFPxT3xEA_urO6st1gfVOXL
+    confirm_auth_path: ''
+    mail_sender: ''
+    mail_title: ''
     mail_options:
         mail_sender: '%mail_sender%'
         mail_title: '%mail_title%'
         confirm_auth_path: '%confirm_auth_path%'
     file_upload_dir: '%kernel.root_dir%/Resources/uploads'
     file_upload_dir_fixtures: '%kernel.root_dir%/Resources/uploads/fixtures'
-    #file_upload_dir_order_attachments: '%kernel.root_dir%/Resources/uploads/attachments/orders'
     file_upload_dir_order_attachments: '%kernel.root_dir%/Resources/uploads/orders'
     #uploads_dir: '%kernel.root_dir%/../web/uploads'
     web_dir: '%kernel.root_dir%/../web'

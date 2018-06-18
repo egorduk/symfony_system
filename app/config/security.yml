@@ -1,9 +1,6 @@
 security:
     encoders:
-        # Our user class and the algorithm we'll use to encode passwords
-        # http://symfony.com/doc/current/book/security.html#encoding-the-user-s-password
         SecureBundle\Entity\User:
-#        Symfony\Component\Security\Core\User\User:
             algorithm: sha512
             encode-as-base64: true
             iterations: 10
@@ -13,9 +10,6 @@ security:
         ROLE_DIRECTOR: ROLE_MANAGER
 
     providers:
-        # in this example, users are stored via Doctrine in the database
-        # To see the users at src/AppBundle/DataFixtures/ORM/LoadFixtures.php
-        # To load users from somewhere else: http://symfony.com/doc/current/cookbook/security/custom_provider.html
         database_users:
             entity: { class: SecureBundle:User, property: email }
 #        in_memory:
@@ -31,21 +25,7 @@ security:
 #                        password: $2a$12$LCY0MefVIEc3TYPHV9SNnuzOfyr2p/AXIGoQJEDs4am4JwhNz/jli
 #                        roles: 'ROLE_USER'
 
-    # http://symfony.com/doc/current/book/security.html#firewalls-authentication
     firewalls:
-#        default:
-#            anonymous: ~
-#            http_basic: ~
-#        main:
-            #pattern: ^/
-#            anonymous: ~
-            #logout: ~
-#            form_login:
-#                login_path: login
-#                check_path: login
-            #http_basic: ~
-            #provider: our_db_provider
-#        secured_area:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -64,7 +44,7 @@ security:
             logout:
                 path: /logout
                 target: login
-                handlers: [secure.listener.logout]
+                handlers: ['SecureBundle\Service\Listener\LogoutListener']
 
     access_control:
         - { path: ^/secure/admin, roles: ROLE_ADMIN }

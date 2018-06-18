@@ -2,42 +2,34 @@ services:
     _defaults:
         public: true
 
-    secure.repository.user_order:
-        class: Doctrine\Common\Persistence\ObjectRepository
-        factory: ['@doctrine', getRepository]
-        arguments: ['%user_order_entity%']
-
-    secure.repository.status_order:
-        class: Doctrine\Common\Persistence\ObjectRepository
-        factory: ['@doctrine', getRepository]
-        arguments: ['%status_order_entity%']
-
-    secure.repository.company:
-        class: Doctrine\Common\Persistence\ObjectRepository
-        factory: ['@doctrine', getRepository]
-        arguments: ['%company_entity%']
-
-    secure.repository.user_bid:
-        class: Doctrine\Common\Persistence\ObjectRepository
-        factory: ['@doctrine', getRepository]
-        arguments: ['%user_bid_entity%']
-
-    secure.repository.setting:
-        class: Doctrine\Common\Persistence\ObjectRepository
-        factory: ['@doctrine', getRepository]
-        arguments: ['%setting_entity%']
-
-    secure.repository.user_activity:
-        class: Doctrine\Common\Persistence\ObjectRepository
-        factory: ['@doctrine', getRepository]
+    SecureBundle\Repository\UserActivityRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%user_activity_entity%']
 
-    secure.repository.order_file:
-        class: Doctrine\Common\Persistence\ObjectRepository
-        factory: ['@doctrine', getRepository]
+    SecureBundle\Repository\UserOrderRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments: ['%user_order_entity%']
+
+    SecureBundle\Repository\StatusOrderRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments: ['%status_order_entity%']
+
+    SecureBundle\Repository\CompanyRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments: ['%company_entity%']
+
+    SecureBundle\Repository\UserBidRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments: ['%user_bid_entity%']
+
+    SecureBundle\Repository\SettingRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments: ['%setting_entity%']
+
+    SecureBundle\Repository\OrderFileRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%order_file_entity%']
 
-    secure.repository.stage_order:
-        class: Doctrine\Common\Persistence\ObjectRepository
-        factory: ['@doctrine', getRepository]
+    SecureBundle\Repository\StageOrderRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%stage_order_entity%']

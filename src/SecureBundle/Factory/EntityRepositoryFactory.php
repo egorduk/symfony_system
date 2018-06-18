@@ -12,8 +12,8 @@ class EntityRepositoryFactory implements RepositoryFactory
      *
      * @var array<\Doctrine\Common\Persistence\ObjectRepository>
      */
-    private $repositoryList = array();
-    private $repositoryClassMap = array();
+    private $repositoryList = [];
+    private $repositoryClassMap = [];
 
     public function __construct($repositoryClassMap)
     {

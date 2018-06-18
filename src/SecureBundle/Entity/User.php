@@ -4,7 +4,6 @@ namespace SecureBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use SecureBundle\Entity\Company;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
@@ -22,6 +21,11 @@ class User implements AdvancedUserInterface, \Serializable
     const ROLE_MANAGER = 'ROLE_MANAGER';
     const ROLE_DIRECTOR = 'ROLE_DIRECTOR';
 
+    const DEFAULT_AVATAR = 0;
+    const DEFAULT_MAN_AVATAR = 1;
+    const DEFAULT_WOMAN_AVATAR = 2;
+    const CUSTOM_AVATAR = 3;
+
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -30,8 +34,6 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="login", type="string", length=12)
      */
     private $login;
@@ -49,15 +51,12 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\Column(name="email", type="string", length=60, unique=true)
-     *
      * @Assert\NotBlank()
      * @Assert\Email()
      */
     private $email;
 
     /**
-     * @var \DateTime
-     *
      * @ORM\Column(name="date_reg", type="datetime")
      */
     private $dateReg;
@@ -138,8 +137,6 @@ class User implements AdvancedUserInterface, \Serializable
     private $ratingPoint;
 
     /**
-     * @var integer
-     *
      * @ORM\Column(name="user_rating_id", type="integer", nullable=true)
      */
     private $rating;
@@ -175,7 +172,7 @@ class User implements AdvancedUserInterface, \Serializable
     private $activities;
 
     /**
-     * @ORM\ManyToOne(targetEntity="SecureBundle\Entity\UserInfo", inversedBy="user")
+     * @ORM\OneToOne(targetEntity="SecureBundle\Entity\UserInfo", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id")
      */
     private $userInfo;
@@ -634,7 +631,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     public function getRoles()
     {
-        return array($this->role);
+        return [$this->role];
     }
 
     public function eraseCredentials()
@@ -831,5 +828,14 @@ class User implements AdvancedUserInterface, \Serializable
     public function setSettings($settings)
     {
         $this->settings = $settings;
+    }
+
+    public function getRoleName($isLower = false)
+    {
+        $role = $this->role;
+
+        $roleName = substr($role, strpos($role, '_') + 1, strlen($role));
+
+        return $isLower ? strtolower($roleName) : $roleName;
     }
 }

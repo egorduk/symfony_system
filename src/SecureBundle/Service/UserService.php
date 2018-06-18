@@ -12,20 +12,18 @@ class UserService
 {
     private $em;
     private $packages;
-    private $uploadDir;
+    private $uploadUserAvatarsDir;
     private $router;
+    private $secureBundleWebDir;
 
-    /**
-     * @param EntityManager $em
-     * @param Packages $packages
-     * @param string $uploadDir
-     */
-    public function __construct(EntityManager $em, Packages $packages, $uploadDir, Router $router)
+
+    public function __construct(EntityManager $em, Packages $packages, Router $router, $uploadUserAvatarsDir, $secureBundleWebDir)
     {
         $this->em = $em;
         $this->packages = $packages;
-        $this->uploadDir = $uploadDir;
+        $this->uploadUserAvatarsDir = $uploadUserAvatarsDir;
         $this->router = $router;
+        $this->secureBundleWebDir = $secureBundleWebDir;
     }
 
     private function getFullPathToAvatar(User $user = null) {
@@ -37,28 +35,29 @@ class UserService
             'default_w.jpg',
         ];
 
-        $basePath = rtrim($this->packages->getUrl($this->uploadDir), '/');
-        $fileName = ltrim($userAvatar, '/');
-
         if (in_array($userAvatar, $avatars)) {
-            return $basePath . DIRECTORY_SEPARATOR . $fileName;
+            $basePath = $this->getBasePath($this->secureBundleWebDir);
+            $fileName = $this->getFileName($userAvatar);
+
+            return $basePath . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . 'avatars' . DIRECTORY_SEPARATOR . $fileName;
         } else {
             $userId = $user->getId();
-            $userRole = $user->getRole();
 
-            return $basePath . DIRECTORY_SEPARATOR . strtolower($this->getRoleName($userRole)) . DIRECTORY_SEPARATOR . $userId . DIRECTORY_SEPARATOR . $fileName;
+            $basePath = $this->getBasePath($this->uploadUserAvatarsDir);
+            $fileName = $this->getFileName($userAvatar);
+
+            return $basePath . DIRECTORY_SEPARATOR . $user->getRoleName(true) . DIRECTORY_SEPARATOR . $userId . DIRECTORY_SEPARATOR . $fileName;
         }
     }
 
-    public function getRoleName($data, $isLower = false)
+    protected function getBasePath($url)
     {
-        if ($data instanceof User) {
-            $data = $data->getRole();
-        }
+        return rtrim($this->packages->getUrl($url), '/');
+    }
 
-        $roleName = substr($data, strpos($data, '_') + 1, strlen($data));
-
-        return $isLower ? strtolower($roleName) : $roleName;
+    protected function getFileName($fileName)
+    {
+        return ltrim($fileName, '/');
     }
 
     /**

@@ -35,34 +35,22 @@ class UserActivityListener implements EventSubscriberInterface
 
     public function onStandardLogin(InteractiveLoginEvent $event)
     {
-        /* if ($user = $event->getAuthenticationToken()->getUser()) {
-             if ($user->getId()) {
-                 if ($user->isActive()) {
-                     return;
-                 }*/
+        $user = $event->getAuthenticationToken()->getUser();
+        $user->setActive();
 
-                $user = $event->getAuthenticationToken()->getUser();
-                $user->setActive();
+        $this->em->persist($user);
+        $this->em->flush();
 
-                $this->em->persist($user);
-                $this->em->flush();
-
-                $this->activityLogger->logActivity(
-                    $user,
-                    UserActivityEvent::STANDARD_LOGIN,
-                    $event->getRequest()->getClientIp()
-                );
-          //  }
-       // }
+        $this->activityLogger->logActivity(
+            $user,
+            UserActivityEvent::STANDARD_LOGIN,
+            $event->getRequest()->getClientIp()
+        );
     }
 
     public function onLogout(UserActivityEvent $event)
     {
         $user = $event->getUser();
-        $user->setInactive();
-
-        $this->em->persist($user);
-        $this->em->flush();
 
         $this->activityLogger->logActivity(
             $user,

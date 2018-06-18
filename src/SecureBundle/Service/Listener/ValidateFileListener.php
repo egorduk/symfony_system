@@ -1,23 +1,22 @@
 <?php
 
-namespace SecureBundle\Service\ListenerEventListener;
+namespace SecureBundle\Service\Listener;
 
 use Oneup\UploaderBundle\Event\ValidationEvent;
 use Oneup\UploaderBundle\Uploader\Exception\ValidationException;
 use SecureBundle\Service\FileService;
-use SecureBundle\Service\Helper\FileHelper;
 
 class ValidateFileListener
 {
-    private $fh;
+    private $fileService;
     private $error;
     private $options;
     private $config;
     private $server;
 
-    public function __construct(FileService $fh)
+    public function __construct(FileService $fileService)
     {
-        $this->fh = $fh;
+        $this->fileService = $fileService;
 
         $this->options = [
             'acceptFileTypes' => '/.+$/i',
@@ -43,20 +42,20 @@ class ValidateFileListener
 
     private function validateFileSize($fileSize, $uploadedFileName = null)
     {
-        $contentLength = $this->fh->fixIntegerOverflow(
-            (int)$this->fh->getServerVar($this->server, 'CONTENT_LENGTH')
+        $contentLength = $this->fileService->fixIntegerOverflow(
+            (int)$this->fileService->getServerVar($this->server, 'CONTENT_LENGTH')
         );
 
-        $postMaxSize = $this->fh->getConfigBytes(ini_get('post_max_size'));
+        $postMaxSize = $this->fileService->getConfigBytes(ini_get('post_max_size'));
 
         if ($postMaxSize && ($contentLength > $postMaxSize)) {
-            $this->error = $this->fh->getErrorMessage('postMaxSize');
+            $this->error = $this->fileService->getErrorMessage('postMaxSize');
 
             return false;
         }
 
         if ($uploadedFileName && is_uploaded_file($uploadedFileName)) {
-            $uploadedFileSize = $this->fh->getFileSize($uploadedFileName);
+            $uploadedFileSize = $this->fileService->getFileSize($uploadedFileName);
         } else {
             $uploadedFileSize = $contentLength;
         }
@@ -65,7 +64,7 @@ class ValidateFileListener
                 $fileSize > $this->config['max_size'] ||
                 $uploadedFileSize > $this->config['max_size'])
         ) {
-            $this->error = $this->fh->getErrorMessage('maxFileSize');
+            $this->error = $this->fileService->getErrorMessage('maxFileSize');
 
             return false;
         }
@@ -74,7 +73,7 @@ class ValidateFileListener
             $fileSize < $this->options['minFileSize'] ||
             $uploadedFileSize < $this->options['minFileSize']
         ) {
-            $this->error = $this->fh->getErrorMessage('minFileSize');
+            $this->error = $this->fileService->getErrorMessage('minFileSize');
 
             return false;
         }
@@ -85,7 +84,7 @@ class ValidateFileListener
     private function validateFileType($fileName)
     {
         if (!preg_match($this->options['acceptFileTypes'], $fileName)) {
-            $this->error = $this->fh->getErrorMessage('acceptFileTypes');
+            $this->error = $this->fileService->getErrorMessage('acceptFileTypes');
 
             return false;
         }
@@ -115,7 +114,7 @@ class ValidateFileListener
             return true;
         }
 
-        $this->error = $this->fh->getErrorMessage('invalidMimeType');
+        $this->error = $this->fileService->getErrorMessage('invalidMimeType');
 
         return false;
     }

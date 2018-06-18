@@ -8,30 +8,20 @@ secure_manager_profile:
     path: secure/manager/profile
     defaults: { _controller: SecureBundle:Manager:profile }
 
-#--OrderBundle--#
-
-secure_new_orders:
-    path: secure/orders/new
-    defaults: { _controller: SecureBundle:Order:newOrders }
-
-secure_get_order_full_info:
-    path: secure/order/fullInfo/{orderId}
-    defaults: { _controller: SecureBundle:Order:getOrderFullInfo }
-    methods: [GET]
-    requirements:
-        orderId: '\d+'
-    options:
-        expose: true
+#secure_get_order_full_info:
+#    path: secure/order/fullInfo/{orderId}
+#    defaults: { _controller: SecureBundle:Order:getOrderFullInfo }
+#    methods: [GET]
+#    requirements:
+#        orderId: '\d+'
+#    options:
+#        expose: true
 
 #--SecureBundle--#
 
 secure_index:
     path: secure/index
     defaults: { _controller: SecureBundle:Secure:index }
-
-secure_profile:
-    path: secure/profile
-    defaults:  { _controller: SecureBundle:Secure:profile }
 
 secure_download_file:
     path: secure/order/file/download/{type}/{fileId}

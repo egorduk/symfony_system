@@ -2,22 +2,22 @@
 
 namespace SecureBundle\Controller;
 
-use Doctrine\Tests\ORM\Functional\Ticket\Status;
 use Oneup\UploaderBundle\Controller\FineUploaderController;
 use Oneup\UploaderBundle\Uploader\File\FileInterface;
 use Oneup\UploaderBundle\Uploader\File\FilesystemFile;
-use Oneup\UploaderBundle\Uploader\Response\EmptyResponse;
 use Oneup\UploaderBundle\Uploader\Response\ResponseInterface;
 use SecureBundle\Entity\OrderFile;
 use SecureBundle\Entity\StageOrder;
-use SecureBundle\Entity\StatusOrder;
 use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserOrder;
 use SecureBundle\Event\UserActivityEvent;
+use SecureBundle\Repository\OrderFileRepository;
 use SecureBundle\Response\OrderFileUploadSuccessResponse;
 use SecureBundle\Service\DateTimeService;
+use SecureBundle\Service\FileService;
+use SecureBundle\Service\OrdersService;
+use SecureBundle\Service\StageOrderService;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 
 class FileUploaderController extends FineUploaderController
@@ -53,14 +53,14 @@ class FileUploaderController extends FineUploaderController
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $this->setUser($user);
 
-        $orderFileRepository = $this->container->get('secure.repository.order_file');
-        $orderService = $this->container->get('secure.service.order');
+        $orderFileRepository = $this->container->get(OrderFileRepository::class);
+        $orderService = $this->container->get(OrdersService::class);
 
         /* @var UserOrder $order */
         $order = $orderService->getOneById($this->getOrderId());
 
-        $fileService = $this->container->get('secure.service.file');
-        $dateTimeService = $this->container->get('secure.service.date_time');
+        $fileService = $this->container->get(FileService::class);
+        $dateTimeService = $this->container->get(DateTimeService::class);
 
         $orderFile = new OrderFile();
         $orderFile->setName($uploadedFile->getFilename());
@@ -84,7 +84,7 @@ class FileUploaderController extends FineUploaderController
             }
         }
 
-        $stageOrderService = $this->container->get('secure.service.stage_order');
+        $stageOrderService = $this->container->get(StageOrderService::class);
         $stageOrder = $stageOrderService->getOneById($this->getStageOrderId());
 
         if ($stageOrder->isWork()) {

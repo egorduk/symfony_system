@@ -1,39 +1,45 @@
 services:
-    AuthBundle\DataFixtures\ORM\LoadUsers:
-        arguments: ['@security.password_encoder']
-        tags: [doctrine.fixture.orm]
+    _defaults:
+        public: true
 
-    AuthBundle\DataFixtures\ORM\LoadStatuses:
-        tags: [doctrine.fixture.orm]
+    AuthBundle\DataFixtures\:
+        resource: '../../../AuthBundle/DataFixtures/*'
 
-    AuthBundle\DataFixtures\ORM\LoadSubjects:
-        tags: [doctrine.fixture.orm]
-
-    AuthBundle\DataFixtures\ORM\LoadTypes:
-        tags: [doctrine.fixture.orm]
-
-    AuthBundle\DataFixtures\ORM\LoadCountries:
-        tags: [doctrine.fixture.orm]
-
-    AuthBundle\DataFixtures\ORM\LoadOrders:
-        tags: [doctrine.fixture.orm]
-
-    AuthBundle\DataFixtures\ORM\LoadUserBids:
-        arguments: ['@secure.repository.user_order']
-        tags: [doctrine.fixture.orm]
-
-    AuthBundle\DataFixtures\ORM\LoadOrderFiles:
-        arguments: ['@secure.repository.user_order', '%file_upload_dir%', '%file_upload_dir_fixtures%']
-        tags: [doctrine.fixture.orm]
-
-    AuthBundle\DataFixtures\ORM\LoadUserInfo:
-        tags: [doctrine.fixture.orm]
-
-    AuthBundle\DataFixtures\ORM\LoadCompanies:
-        tags: [doctrine.fixture.orm]
-
-    AuthBundle\DataFixtures\ORM\ConnectCompaniesWithUsers:
-        tags: [doctrine.fixture.orm]
-
-    AuthBundle\DataFixtures\ORM\LoadOrderStages:
-        tags: [doctrine.fixture.orm]
+#    AuthBundle\DataFixtures\ORM\LoadUsers:
+#        arguments: ['@security.password_encoder']
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadStatuses:
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadSubjects:
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadTypes:
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadCountries:
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadOrders:
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadUserBids:
+#        arguments: ['@secure.repository.user_order']
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadOrderFiles:
+#        arguments: ['@secure.repository.user_order', '%file_upload_dir%', '%file_upload_dir_fixtures%']
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadUserInfo:
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadCompanies:
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\ConnectCompaniesWithUsers:
+#        tags: [doctrine.fixture.orm]
+#
+#    AuthBundle\DataFixtures\ORM\LoadOrderStages:
+#        tags: [doctrine.fixture.orm]

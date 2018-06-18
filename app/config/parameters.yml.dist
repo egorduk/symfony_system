@@ -12,20 +12,20 @@ parameters:
 
     mailer_transport:  smtp
     mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
+    mailer_user:       ''
+    mailer_password:   ''
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 
-    publicKeyCaptcha: 6LcYmecSAAAAAJlYNqogbOXJVMvGgim5JoM0hcAi
-    privateKeyCaptcha: 6LcYmecSAAAAANaq8JFPxT3xEA_urO6st1gfVOXL
-    confirm_auth_path: http://localhost/symfony_system/web/app_dev.php/confirm
-    mail_sender: egorduk@yandex.com
-    mail_title: Study
-    web_dir: "%kernel.root_dir%/../web"
-    #uploads_dir: "%kernel.root_dir%/../web/uploads"
-    #uploads_attachments_orders_dir: "%kernel.root_dir%/../web/uploads/attachments/orders"
-    #uploads_avatars_dir: "%kernel.root_dir%/../web/uploads/avatars"
+    public_key_captcha: ''
+    private_key_captcha: ''
+    confirm_auth_path: ''
+    mail_sender: ''
+    mail_title: ''
     file_upload_dir: '%kernel.root_dir%/Resources/uploads'
     file_upload_dir_fixtures: '%kernel.root_dir%/Resources/uploads/fixtures'
+    file_upload_dir_order_attachments: '%kernel.root_dir%/Resources/uploads/orders'
+    web_dir: '%kernel.root_dir%/../web'
+    file_upload_dir_user_avatars: 'uploads/avatars'
+    secure_bundle_web_dir: 'bundles/secure'/Resources/uploads/fixtures'

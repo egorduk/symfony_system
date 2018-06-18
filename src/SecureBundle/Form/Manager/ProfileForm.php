@@ -3,10 +3,12 @@
 namespace SecureBundle\Form\Manager;
 
 use SecureBundle\Entity\Country;
+use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserInfo;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,25 +17,15 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ProfileForm extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options) {
-        //$this->em = $options['entity_manager'];
-        //$currentCountryId = $options['data']->getCountry()->getId();
-
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder
-            ->add('selectorAvatarOptions', TextType::class, [
+            ->add('avatar', ChoiceType::class, [
                 'label' => 'Аватар',
-                'mapped' => false,
                 'required' => false,
-                //'error_bubbling' => true,
-                //'data' => $options['data']->selectorAvatarOptions,
-                //'expanded' => true,
-                //'multiple' => false,
-                //'invalid_message' => 'Ошибка!',
-                //'constraints' => new NotBlank([
-                //'message' => 'Ошибка!',
-                //]),
-                //'attr' => array('class' => 'radio-inline'),
-                //'choices' => $this->buildAvatarChoices()
+                'choices' => $this->getAvatarChoices(),
+                'placeholder' => false,
+                'data' => $this->setCurrentAvatar($options['user']),
             ])
             ->add('userName', TextType::class, [
                 'label' => 'Имя',
@@ -41,7 +33,7 @@ class ProfileForm extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Имя должно состоять только из русских букв',
-                    'maxlength' => 20,
+                    'maxlength' => 30,
                     'placeholder' => 'Введите имя',
                 ],
             ])
@@ -51,7 +43,7 @@ class ProfileForm extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Фамилия должна состоять только из русских букв',
-                    'maxlength' => 20,
+                    'maxlength' => 30,
                     'placeholder' => 'Введите фамилию',
                 ],
             ])
@@ -61,7 +53,7 @@ class ProfileForm extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Отчество должно состоять только из русских букв',
-                    'maxlength' => 20,
+                    'maxlength' => 30,
                     'placeholder' => 'Введите отчество',
                 ],
             ])
@@ -71,7 +63,7 @@ class ProfileForm extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Введите номер мобильного телефона',
-                    'maxlength' => 20,
+                    'maxlength' => 30,
                     'placeholder' => 'Введите номер',
                 ],
             ])
@@ -81,7 +73,7 @@ class ProfileForm extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Введите номер стационарного телефона',
-                    'maxlength' => 20,
+                    'maxlength' => 30,
                     'placeholder' => 'Введите номер',
                 ],
             ])
@@ -91,7 +83,7 @@ class ProfileForm extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Введите Skype',
-                    'maxlength' => 20,
+                    'maxlength' => 30,
                     'placeholder' => 'Введите Skype',
                 ],
             ])
@@ -111,7 +103,7 @@ class ProfileForm extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'title' => 'Введите БИК',
-                    'maxlength' => 15,
+                    'maxlength' => 20,
                     'placeholder' => 'Введите БИК',
                 ],
             ])
@@ -138,7 +130,7 @@ class ProfileForm extends AbstractType
         $builder->get('dateBirthday')->addModelTransformer(new CallbackTransformer(
             function ($value) {
                 if (!$value) {
-                    return new \DateTime('now -50 years');
+                    return new \DateTime('now -18 years');
                 }
 
                 return $value;
@@ -149,35 +141,41 @@ class ProfileForm extends AbstractType
         ));
     }
 
-    /* protected function getCountryCodes() {
-         $countries = $this->em->getRepository('AuthBundle:Country')->findAll();
+    protected function getAvatarChoices()
+    {
+        return [
+            'По умолчанию' => User::DEFAULT_AVATAR,
+            'Мужской' => User::DEFAULT_MAN_AVATAR,
+            'Женский' => User::DEFAULT_WOMAN_AVATAR,
+            'Загрузить свой' => User::CUSTOM_AVATAR,
+        ];
+    }
 
-         foreach ($countries as $country) {
-             $this->countryCodes[$country->getName() . ' ' . $country->getMobileCode()] = $country->getId();
-         }
+    protected function setCurrentAvatar(User $user)
+    {
+        $avatar = $user->getAvatar();
 
-         return $this->countryCodes;
-     }*/
+        if ($avatar === 'default_m.jpg') {
+            return User::DEFAULT_MAN_AVATAR;
+        } elseif ($avatar === 'default_w.jpg') {
+            return User::DEFAULT_WOMAN_AVATAR;
+        } elseif ($avatar === 'default.png') {
+            return User::DEFAULT_AVATAR;
+        }
 
-    protected function buildAvatarChoices() {
-        $choices['man'] = 'Мужской';
-        $choices['woman'] = 'Женский';
-        $choices['custom'] = 'Загрузить свой';
-
-        return $choices;
+        return User::CUSTOM_AVATAR;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => UserInfo::class,
-            //'trait_choices' => null,
+            'user' => null,
         ]);
-
-        //$resolver->setRequired('entity_manager');
     }
 
-    public function getName() {
+    public function getName()
+    {
         return '';
     }
 }

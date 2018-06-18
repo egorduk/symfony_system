@@ -63,7 +63,6 @@ class UserInfo
 
     /**
      * @ORM\Column(name="bic", type="string", length=20, nullable=true)
-     *
      * @Assert\Length(max="20")
      */
     private $bic;
@@ -74,7 +73,7 @@ class UserInfo
     private $dateBirthday;
 
     /**
-     * @ORM\OneToMany(targetEntity="SecureBundle\Entity\User", mappedBy="userInfo")
+     * @ORM\OneToOne(targetEntity="SecureBundle\Entity\User", mappedBy="userInfo")
      */
     private $user;
 
@@ -84,10 +83,12 @@ class UserInfo
      */
     private $country;
 
+    private $avatar;
+
 
     public function __construct()
     {
-        $this->user = new ArrayCollection();
+        //$this->user = new ArrayCollection();
     }
 
     public function setSkype($skype)
@@ -131,6 +132,9 @@ class UserInfo
         return $this->id;
     }
 
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
@@ -212,5 +216,15 @@ class UserInfo
     public function setDateBirthday($dateBirthday)
     {
         $this->dateBirthday = $dateBirthday;
+    }
+
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
     }
 }

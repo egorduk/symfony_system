@@ -3,12 +3,12 @@
 namespace SecureBundle\Controller;
 
 use SecureBundle\Entity\User;
+use SecureBundle\Entity\UserInfo;
 use SecureBundle\Form\Manager\ProfileForm;
+use SecureBundle\Service\DateTimeService;
+use SecureBundle\Service\UserService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class ManagerController extends Controller
@@ -29,21 +29,14 @@ class ManagerController extends Controller
         $sessionCreatedTimestamp = $session->getMetadataBag()->getCreated();
         $sessionLifeTimestamp = $session->getMetadataBag()->getLifetime();
 
-        $dateTimeHelper = $this->get('secure.service.date_time');
-        $userService = $this->get('secure.service.user');
+        $dateTimeService = $this->get(DateTimeService::class);
+        $whenLoginDate = $dateTimeService->getDateFromTimestamp($sessionCreatedTimestamp, 'd/m/Y H:i');
+        $sessionRemainingTimestamp = $dateTimeService->getRemainingTimestamp($sessionCreatedTimestamp, $sessionLifeTimestamp, '+');
+        $nowTimestamp = $dateTimeService->getCurrentTimestamp();
+        $sessionRemainingTimestamp = $dateTimeService->getRemainingTimestamp($sessionRemainingTimestamp, $nowTimestamp, '-');
+        $remainingTime = $dateTimeService->getDateFromTimestamp($sessionRemainingTimestamp, 'i:s');
 
-        $whenLoginDate = $dateTimeHelper->getDateFromTimestamp($sessionCreatedTimestamp, 'd/m/Y H:i');
-        $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionCreatedTimestamp, $sessionLifeTimestamp, '+');
-        $nowTimestamp = $dateTimeHelper->getCurrentTimestamp();
-        $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionRemainingTimestamp, $nowTimestamp, '-');
-        $remainingTime = $dateTimeHelper->getDateFromTimestamp($sessionRemainingTimestamp, 'i:s');
-
-        return [
-            'user' => $user,
-            'whenLoginDate' => $whenLoginDate,
-            'remainingTime' => $remainingTime,
-            'userRole' => $userService->getRoleName($user),
-        ];
+        return compact('user', 'whenLoginDate', 'remainingTime');
     }
 
     /**
@@ -57,19 +50,29 @@ class ManagerController extends Controller
     {
         $user = $this->getUser();
 
-        $userHelper = $this->get('secure.service.user');
+        $userService = $this->get(UserService::class);
 
-        //$user = $userHelper->setRawUserAvatar($user);
-
-        $formProfile = $this->createForm(ProfileForm::class, $user->getUserInfo()/*, [
-            'entity_manager' => $this->getDoctrine()->getManager()
-        ]*/);
+        $formProfile = $this->createForm(ProfileForm::class, $user->getUserInfo(), [
+            'user' => $user,
+        ]);
 
         $formProfile->handleRequest($request);
 
         if ($formProfile->isSubmitted() && $formProfile->isValid()) {
+            /* @var UserInfo $formData */
             $formData = $formProfile->getData();
-            $userHelper->updateProfile($formData);
+
+            if ($formData->getAvatar() === User::DEFAULT_WOMAN_AVATAR) {
+                $formData->getUser()->setAvatar($this->getParameter('default_woman_user_avatar'));
+            } elseif ($formData->getAvatar() === User::DEFAULT_MAN_AVATAR) {
+                $formData->getUser()->setAvatar($this->getParameter('default_man_user_avatar'));
+            } elseif ($formData->getAvatar() === User::DEFAULT_AVATAR) {
+                $formData->getUser()->setAvatar($this->getParameter('default_user_avatar'));
+            } else {
+
+            }
+
+            $userService->updateProfile($formData);
 
             $this->addFlash(
                 'success',
@@ -77,16 +80,12 @@ class ManagerController extends Controller
             );
         }
 
-        $templateData = [
-            'user' => $user,
-            'userRole' => $userHelper->getRoleName($user),
-            'formProfile' => $formProfile->createView(),
-        ];
+        $formProfile = $formProfile->createView();
 
         //$helper = $this->get('oneup_uploader.templating.uploader_helper');
         //$endpoint = $helper->endpoint('gallery');
         //dump($endpoint);die;
 
-        return $templateData;
+        return compact('user', 'formProfile');
     }
 }

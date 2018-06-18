@@ -12,6 +12,15 @@ use SecureBundle\Form\User\BidForm;
 use SecureBundle\Form\User\ConfirmBidForm;
 use SecureBundle\Form\User\SettingForm;
 use SecureBundle\Form\User\StageOrderType;
+use SecureBundle\Repository\UserBidRepository;
+use SecureBundle\Repository\UserOrderRepository;
+use SecureBundle\Service\BidService;
+use SecureBundle\Service\DateTimeService;
+use SecureBundle\Service\OrdersService;
+use SecureBundle\Service\SettingService;
+use SecureBundle\Service\StageOrderService;
+use SecureBundle\Service\UserActivityService;
+use SecureBundle\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,21 +45,14 @@ class UserController extends Controller
         $sessionCreatedTimestamp = $session->getMetadataBag()->getCreated();
         $sessionLifeTimestamp = $session->getMetadataBag()->getLifetime();
 
-        $dateTimeHelper = $this->get('secure.service.date_time');
-        $userService = $this->get('secure.service.user');
-
+        $dateTimeHelper = $this->get(DateTimeService::class);
         $whenLoginDate = $dateTimeHelper->getDateFromTimestamp($sessionCreatedTimestamp, 'd/m/Y H:i');
         $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionCreatedTimestamp, $sessionLifeTimestamp, '+');
         $nowTimestamp = $dateTimeHelper->getCurrentTimestamp();
         $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionRemainingTimestamp, $nowTimestamp, '-');
         $remainingTime = $dateTimeHelper->getDateFromTimestamp($sessionRemainingTimestamp, 'i:s');
 
-        return [
-            'user' => $user,
-            'whenLoginDate' => $whenLoginDate,
-            'remainingTime' => $remainingTime,
-            'userRole' => $userService->getRoleName($user->getRole()),
-        ];
+        return compact('user', 'whenLoginDate', 'remainingTime');
     }
 
     /**
@@ -60,11 +62,9 @@ class UserController extends Controller
      */
     public function bidsAction()
     {
-        $bids = $this->get('secure.repository.user_bid')->getBidsWithOrdersInfoByUser($this->getUser());
+        $bids = $this->get(UserBidRepository::class)->getBidsWithOrdersInfoByUser($this->getUser());
 
-        return [
-            'bids' => $bids,
-        ];
+        return compact('bids');
     }
 
     /**
@@ -81,25 +81,25 @@ class UserController extends Controller
         $user = $this->getUser();
 
         if ($type === StatusOrder::STATUS_ORDER_NEW_CODE) {
-            $orders = $this->get('secure.repository.user_order')->getValuationOrders($user);
+            $orders = $this->get(UserOrderRepository::class)->getValuationOrders($user);
         } elseif ($type === StatusOrder::STATUS_USER_ORDER_BID) {
-            $orders = $this->get('secure.repository.user_order')->getEvaluatedOrders($user);
+            $orders = $this->get(UserOrderRepository::class)->getEvaluatedOrders($user);
         } elseif ($type === StatusOrder::STATUS_USER_ORDER_ASSIGNEE) {
-            $orders = $this->get('secure.repository.user_order')->getAssignedOrders($user);
+            $orders = $this->get(UserOrderRepository::class)->getAssignedOrders($user);
         } elseif ($type === StatusOrder::STATUS_ORDER_WORK_CODE) {
-            $orders = $this->get('secure.repository.user_order')->getWorkOrders($user);
+            $orders = $this->get(UserOrderRepository::class)->getWorkOrders($user);
         } elseif ($type === StatusOrder::STATUS_ORDER_GUARANTEE_CODE) {
-            $orders = $this->get('secure.repository.user_order')->getGuaranteeOrders($user);
+            $orders = $this->get(UserOrderRepository::class)->getGuaranteeOrders($user);
         } elseif ($type === StatusOrder::STATUS_USER_ORDER_FINISH) {
-            $orders = $this->get('secure.repository.user_order')->getCompletedOrders($user);
+            $orders = $this->get(UserOrderRepository::class)->getCompletedOrders($user);
         } elseif ($type === StatusOrder::STATUS_USER_ORDER_FINISH) {
-            $orders = $this->get('secure.repository.user_order')->getCompletedOrders($user);
+            $orders = $this->get(UserOrderRepository::class)->getCompletedOrders($user);
         } elseif ($type === StatusOrder::STATUS_ORDER_REFINING_CODE) {
-            $orders = $this->get('secure.repository.user_order')->getRefiningOrders($user);
+            $orders = $this->get(UserOrderRepository::class)->getRefiningOrders($user);
         }
 
-        $dateTimeService = $this->get('secure.service.date_time');
-        $bidService = $this->get('secure.service.bid');
+        $dateTimeService = $this->get(DateTimeService::class);
+        $bidService = $this->get(BidService::class);
 
         /* @var UserOrder $order */
         foreach ($orders as $order) {
@@ -142,7 +142,8 @@ class UserController extends Controller
      */
     public function settingsAction(Request $request)
     {
-        $settings = $this->get('secure.service.setting')->getUserSettings($this->getUser());
+        $settingService = $this->get(SettingService::class);
+        $settings = $settingService->getUserSettings($this->getUser());
 
         $settingsModel = new SettingsModel();
         $settingsModel->setSettings($settings);
@@ -153,7 +154,7 @@ class UserController extends Controller
         if ($formSetting->isSubmitted() && $formSetting->isValid()) {
             $settingsModel = $formSetting->getData();
 
-            $this->get('secure.service.setting')->saveUserSettings($settingsModel, $this->getUser());
+            $settingService->saveUserSettings($settingsModel, $this->getUser());
 
             $this->addFlash(
                 'success',
@@ -166,10 +167,9 @@ class UserController extends Controller
             );
         }
 
-        return [
-            'settings' => $settings,
-            'formSetting' => $formSetting->createView(),
-        ];
+        $formSetting = $formSetting->createView();
+
+        return compact('settings', 'formSetting');
     }
 
     /**
@@ -183,7 +183,7 @@ class UserController extends Controller
     {
         $user = $this->getUser();
 
-        $userService = $this->get('secure.service.user');
+        $userService = $this->get(UserService::class);
 
         $formProfile = $this->createForm(ProfileForm::class, $user->getUserInfo());
         $formProfile->handleRequest($request);
@@ -202,11 +202,9 @@ class UserController extends Controller
         //$endpoint = $helper->endpoint('gallery');
         //dump($endpoint);die;
 
-        return [
-            'user' => $user,
-            'userRole' => $userService->getRoleName($user->getRoles()[0]),
-            'formProfile' => $formProfile->createView(),
-        ];
+        $formProfile = $formProfile->createView();
+
+        return compact('user', 'formProfile');
     }
 
     /**
@@ -219,7 +217,7 @@ class UserController extends Controller
      */
     public function orderAction(Request $request, $orderId)
     {
-        $orderRepository = $this->get('secure.repository.user_order');
+        $orderRepository = $this->get(UserOrderRepository::class);
         /* @var UserOrder $order */
         $order = $orderRepository->getOrderById($orderId);
 
@@ -229,9 +227,9 @@ class UserController extends Controller
         $formBid = null;
         $formStageOrder = null;
 
-        $dateTimeService = $this->get('secure.service.date_time');
-        $orderService = $this->get('secure.service.order');
-        $bidService = $this->get('secure.service.bid');
+        $dateTimeService = $this->get(DateTimeService::class);
+        $orderService = $this->get(OrdersService::class);
+        $bidService = $this->get(BidService::class);
 
         $files = $orderService->prepareFiles($order->getFiles());
         $order->setRawFiles($files);
@@ -304,7 +302,7 @@ class UserController extends Controller
             //$endpoint = $helper->endpoint('gallery');
             //dump($endpoint);
 
-            $orderStages = $this->get('secure.service.stage_order')->getStagesInWorkByOrder($order);
+            $orderStages = $this->get(StageOrderService::class)->getStagesInWorkByOrder($order);
             //$orderStages = $order->getStages();
 
             $formStageOrder = $this->createForm(StageOrderType::class, null, ['stages' => $orderStages]);
@@ -348,7 +346,7 @@ class UserController extends Controller
      */
     public function activitiesAction()
     {
-        $activities = $this->get('secure.service.user_activity')->getUserActivities($this->getUser());
+        $activities = $this->get(UserActivityService::class)->getUserActivities($this->getUser());
 
         return compact('activities');
     }

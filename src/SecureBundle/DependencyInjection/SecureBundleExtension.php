@@ -16,5 +16,12 @@ class SecureBundleExtension extends Extension
         $loader->load('parameters.yml');
         $loader->load('repositories.yml');
         $loader->load('listeners.yml');
+
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $container->setParameter('default_user_avatar', $config['user_avatars']['default']);
+        $container->setParameter('default_man_user_avatar', $config['user_avatars']['default_man']);
+        $container->setParameter('default_woman_user_avatar', $config['user_avatars']['default_woman']);
     }
 }

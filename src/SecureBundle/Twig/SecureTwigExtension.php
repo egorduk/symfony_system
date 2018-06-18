@@ -5,11 +5,9 @@ namespace SecureBundle\Twig;
 use SecureBundle\Entity\User;
 use SecureBundle\Event\UserActivityEvent;
 use SecureBundle\Service\UserService;
-use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
 use Symfony\Component\Asset\Packages;
-use Symfony\Component\Config\FileLocator;
 
-class AppRuntime
+class SecureTwigExtension extends \Twig_Extension
 {
     private $userService;
     private $packages;
@@ -20,6 +18,25 @@ class AppRuntime
         $this->userService = $userService;
         $this->packages = $packages;
         $this->secureBundleWebDir = $secureBundleWebDir;
+    }
+
+    public function getFilters()
+    {
+        return [
+            new \Twig_SimpleFilter('price', [$this, 'priceFilter']),
+            new \Twig_SimpleFilter('day', [$this, 'dayFilter']),
+            new \Twig_SimpleFilter('defaultDateFormat', [$this, 'defaultDateFormatFilter']),
+            new \Twig_SimpleFilter('stageDateFormat', [$this, 'stageDateFormatFilter']),
+            new \Twig_SimpleFilter('percent', [$this, 'percentFilter']),
+            new \Twig_SimpleFilter('countSheet', [$this, 'countSheetFilter']),
+            new \Twig_SimpleFilter('noData', [$this, 'noDataFilter']),
+            new \Twig_SimpleFilter('avatar', [$this, 'avatarFilter']),
+            new \Twig_SimpleFilter('ip', [$this, 'ipFilter']),
+            new \Twig_SimpleFilter('additionalActivityInfo', [$this, 'additionalActivityInfoFilter']),
+            new \Twig_SimpleFilter('defaultStringData', [$this, 'defaultStringDataFilter']),
+            new \Twig_SimpleFilter('mobileNumber', [$this, 'mobileNumberFilter']),
+            new \Twig_SimpleFilter('country', [$this, 'countryFilter']),
+        ];
     }
 
     public function priceFilter($number, $decimals = 0, $decPoint = '.', $thousandsSep = ',')

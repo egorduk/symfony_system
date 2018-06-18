@@ -45,7 +45,7 @@
       </options>
     </field>
     <field name="dateBirthday" type="date" column="date_birthday" nullable="true"/>
-    <one-to-many target-entity="SecureBundle\Entity\User" mapped-by="userInfo" field="user" />
+    <one-to-one target-entity="SecureBundle\Entity\User" mapped-by="userInfo" field="user"/>
     <many-to-one field="country" target-entity="SecureBundle\Entity\Country" inversed-by="userInfo">
       <join-column name="country_id" referenced-column-name="id" nullable="false"/>
     </many-to-one>

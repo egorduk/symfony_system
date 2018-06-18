@@ -1,23 +1,31 @@
 services:
     _defaults:
         public: true
-        autoconfigure: true
+        bind:
+            $activityLogger: '@SecureBundle\Service\UserActivityService'
+            $em: '@doctrine.orm.entity_manager'
+            $eventDispatcher: '@event_dispatcher'
+
+    SecureBundle\Service\Listener\:
+        resource: '../../../SecureBundle/Service/Listener/*'
 
     secure.listener.request_order:
         class: SecureBundle\Service\Listener\RequestOrderListener
-        arguments: ['@security.token_storage', '@secure.service.order']
+        #arguments: ['@security.token_storage', '@secure.service.order']
+        autowire: true
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
-    secure.listener.user_activity:
+    SecureBundle\Service\Listener\UserActivityListener:
         class: SecureBundle\Service\Listener\UserActivityListener
-        arguments: ['@secure.service.user_activity', '@em']
-        #tags:
-        #    - { name: kernel.event_subscriber }
+        autowire: true
+        tags:
+            - { name: kernel.event_subscriber }
 
-    secure.listener.logout:
-        class: SecureBundle\Service\Listener\LogoutListener
-        arguments: ['@secure.service.user_activity', '@em', '@event_dispatcher']
+    #secure.listener.logout:
+    #    class: SecureBundle\Service\Listener\LogoutListener
+    #    autowire: true
+        #arguments: ['@secure.service.user_activity', '@em', '@event_dispatcher']
 
 #    secure.listener.upload_file_gallery:
 #        class: SecureBundle\Service\Listener\UploadFileListener

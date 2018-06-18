@@ -26,13 +26,12 @@ class RequestOrderListener
 
         if ($event->getRequest()->get('orderId') !== null && $event->getRequest()->get('_route') === 'secure_user_order_page') {
             $user = $this->tokenStorage->getToken()->getUser();
-            //$userId = $user->getId();
             $orderId = $event->getRequest()->get('orderId');
 
-            $res = $this->userOrderService->isUserHasAccessToOrder($user, $orderId);
-            //dump($res);
+            $isAllowed = $this->userOrderService->isUserHasAccessToOrder($user, $orderId);
+            //dump($isAllowed);
 
-            if (!$res) {
+            if (!$isAllowed) {
                 throw new AccessDeniedException();
             }
         }

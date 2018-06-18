@@ -3,14 +3,9 @@
 {% block title %}{{ 'My profile' | trans }}{% endblock %}
 
 {% block content %}
-    {#   <link href="{{ asset('bundles/css/window.css') }}" rel="stylesheet" />
-       <link href="{{ asset('bundles/css/select2.css') }}" rel="stylesheet" />
-       <script type="text/javascript" src="{{ asset('bundles/js/bootstrap-maxlength.min.js') }}"></script>
-       <script type="text/javascript" src="{{ asset('bundles/js/select2.min.js') }}"></script>#}
     <div class="container">
-        <div class="row">
+        {#<div class="row">
             <div  class="col-xs-5 col-xs-offset-4">
-                {#<p>{{ user.rawavatar | raw }}</p>#}
                 <p>ID: {{ user.id }}</p>
                 <hr style="border:solid 1px black">
                 <p>Ник: {{ user.login }}</p>
@@ -29,40 +24,45 @@
                 <hr style="border:solid 1px black">
                 <p>Номер стационарного телефона: {{ user.userInfo.staticPhone | defaultStringData }}</p>
                 <hr style="border:solid 1px black">
-                <p>Статус: {{ userRole }}</p>
+                <p>Статус: {{ user.roleName }}</p>
                 <hr style="border:solid 1px black">
                 <p>Дата регистрации в системе: {{ user.datereg | defaultDateFormat }}</p>
                 <hr style="border:solid 1px black">
                 <p>Страна: {{ user | country | raw }}</p>
             </div>
-        </div>
+        </div>#}
         <div class="row">
             <div class="col-xs-6 col-xs-offset-3">
                 {{ form_start(formProfile, {'attr': {'id' : 'formProfile'}}) }}
                 <div class="form-group">
-                    {#<p id="user-avatar">{{ user.rawavatar | raw }}</p>#}
+                    <div>{{ user | avatar | raw }}</div>
                     {{ form_start(formProfile) }}
-                   {# <div class="input-group form-group">
+             {#       <div class="input-group form-group">
                         <label for="btn-change-avatar" class="btn btn-success"><span class="icon-trash-1">&nbspИзменить</span></label>
                         <input type="button" id="btn-change-avatar" class="hidden">
                     </div>#}
-                    <div id="block-change-avatar" style="display: none">
-                        <div id="block-upload-avatar" style="display: none">
-                            {#{% include "PunkAveFileUploaderBundle:Default:upload_avatar_template.html.twig" %}#}
+                    <div id="block-change-avatar" {#style="display: block"#}>
+                        <div id="uploader">
+                            <a id="pickFile" href="javascript:;">[Select file]</a>
+                            <a id="uploadFile" href="javascript:;">[Upload file]</a>
+                            <a id="delete-file" href="javascript:;">[Delete file]</a>
+                            <div id="fileList">Your browser doesn't have Flash, Silverlight or HTML5 support.</div>
+                        </div>
+                        <div id="block-upload-avatar" style="display: block">
                             <div class="input-group">
                                 <div class="file-uploader-avatar"></div>
                             </div>
                         </div>
-                        <div id="block-choose-man-avatar" style="display: none">
-                            <p><img src='/study/web/uploads/avatars/default_m.jpg' align='middle' alt='Мужской аватар' width='100px' height='auto' class='thumbnail'></p>
+                        <div id="block-choose-man-avatar" style="display: block">
+                            <p><img src='{{ asset('bundles/secure/images/avatars/default_m.jpg') }}' align='middle' alt='Мужской аватар' width='100px' height='auto' class='thumbnail'></p>
                         </div>
-                        <div id="block-choose-woman-avatar" style="display: none">
-                            <p><img src='/study/web/uploads/avatars/default_w.jpg' align='middle' alt='Мужской аватар' width='100px' height='auto' class='thumbnail'></p>
+                        <div id="block-choose-woman-avatar" style="display: block">
+                            <p><img src='{{ asset('bundles/secure/images/avatars/default_w.jpg') }}' align='middle' alt='Мужской аватар' width='100px' height='auto' class='thumbnail'></p>
                         </div>
-                        {{ form_label(formProfile.selectorAvatarOptions) }}
-                        {{ form_errors(formProfile.selectorAvatarOptions) }}
+                        {{ form_label(formProfile.avatar) }}
+                        {{ form_errors(formProfile.avatar) }}
                         <div class="input-group">
-                            {{ form_widget(formProfile.selectorAvatarOptions) }}
+                            {{ form_widget(formProfile.avatar) }}
                         </div>
                     </div>
                     {{ form_label(formProfile.userName) }}
@@ -141,108 +141,20 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            var fileWrapper = $('.file-wrapper'),
-                fileInfo = fileWrapper.find('.file-info'),
-                fileButtons = fileWrapper.find('.file-buttons');
-
-            $('#file-uploader').fileupload({
-                //url: 'server/php/',
-                dataType: 'json',
-                autoUpload: false,
-                //acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                //maxFileSize: 999000,
-                // Enable image resizing, except for Android and Opera,
-                disableImageResize: /Android(?!.*Chrome)|Opera/
-                    .test(window.navigator.userAgent),
-                previewMaxWidth: 100,
-                previewMaxHeight: 100,
-                previewCrop: true,
-                limitMultiFileUploads: 1,
-                messages: {
-                    unknownError: 'Unknown error'
-                },
-                add: function (e, data) {
-                    //console.log(data.files);
-                    var fileData = data.files[0];
-                    fileInfo.find('#file-name').empty().append(fileData.name);
-                    fileInfo.find('#file-size').empty().append(formatFileSize(fileData.size));
-                    fileButtons.find('#btn-start').off('click').on('click', function (e) {
-                        e.preventDefault();
-                        data.submit();
-                    })
-                },
-                done: function (e, data) {
-                    console.log(data.result);
-                },
-                progressall: function (e, data) {
-                    //console.log(data.loaded);
-                    var progress = parseInt(data.loaded / data.total * 100, 10);
-                    $('#progress .bar').css(
-                        'width',
-                        progress + '%'
-                    );
-                },
-                /*done: function (e, data) {
-                 alert('1');
-                 $.each(data.result.files, function (index, file) {
-                 $('<p/>').text(file.name).appendTo(document.body);
-                 });
-                 }*/
-            }).on('fileuploadprogress', function (e, data) {
-                console.log(data.files);
-            });
-
-            function formatFileSize(bytes) {
-                if (typeof bytes !== 'number') {
-                    return '';
-                }
-
-                if (bytes >= 1000000000) {
-                    return (bytes / 1000000000).toFixed(2) + ' GB';
-                }
-
-                if (bytes >= 1000000) {
-                    return (bytes / 1000000).toFixed(2) + ' MB';
-                }
-
-                return (bytes / 1000).toFixed(2) + ' KB';
-            }
-            function formatBitrate (bits) {
-                if (typeof bits !== 'number') {
-                    return '';
-                }
-
-                if (bits >= 1000000000) {
-                    return (bits / 1000000000).toFixed(2) + ' Gbit/s';
-                }
-
-                if (bits >= 1000000) {
-                    return (bits / 1000000).toFixed(2) + ' Mbit/s';
-                }
-
-                if (bits >= 1000) {
-                    return (bits / 1000).toFixed(2) + ' kbit/s';
-                }
-
-                return bits.toFixed(2) + ' bit/s';
-            }
-            function formatTime (seconds) {
-                var date = new Date(seconds * 1000),
-                    days = Math.floor(seconds / 86400);
-
-                days = days ? days + 'd ' : '';
-
-                return days +
-                    ('0' + date.getUTCHours()).slice(-2) + ':' +
-                    ('0' + date.getUTCMinutes()).slice(-2) + ':' +
-                    ('0' + date.getUTCSeconds()).slice(-2);
-            }
-            function formatPercentage (floatValue) {
-                return (floatValue * 100).toFixed(2) + ' %';
-            }
-        });
-    </script>
-
 {% endblock %}
+
+    {% block javascripts_footer %}
+        {{ parent() }}
+
+        {% javascripts
+        '@SecureBundle/Resources/public/js/jquery-3.3.1.min.js'
+        '@SecureBundle/Resources/public/js/browser-plus.js'
+        '@SecureBundle/Resources/public/js/jquery-ui.min.js'
+        '@SecureBundle/Resources/public/js/plupload.full.min.js'
+        '@SecureBundle/Resources/public/js/jquery.plupload.queue.js'
+        '@SecureBundle/Resources/public/js/jquery.ui.plupload.min.js'
+        '@SecureBundle/Resources/public/js/manager/script.js'
+        %}
+        <script src="{{ asset_url }}"></script>
+        {% endjavascripts %}
+    {% endblock %}
