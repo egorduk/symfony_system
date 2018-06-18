@@ -1,16 +1,22 @@
-{{ form_start(form) }}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'Registration'|trans }}
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
     {{ form_row(form.username) }}
     {{ form_row(form.email) }}
     {{ form_row(form.plainPassword.first) }}
     {{ form_row(form.plainPassword.second) }}
     {{ form_row(form.termsAccepted) }}
-
-<div>
-    {% if (captcha.captchaError) %}
-        <span class="icon-warning" style="color:red">{{ captcha.captchaError|raw }}</span>
-    {% endif %}
-    {{ captcha.captchaForm|raw }}
-</div>
-
-<button type="submit">Register</button>
-{{ form_end(form) }}
+    <div>
+        {% if (captcha.captchaError) %}
+            <span class="icon-warning" style="color:red">{{ captcha.captchaError|raw }}</span>
+        {% endif %}
+        {{ captcha.captchaForm|raw }}
+    </div>
+    <button type="submit">{{ 'Register'|trans }}</button>
+    {{ form_end(form) }}
+{% endblock %}

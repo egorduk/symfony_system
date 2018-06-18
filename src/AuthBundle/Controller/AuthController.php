@@ -2,13 +2,15 @@
 
 namespace AuthBundle\Controller;
 
+use AuthBundle\Form\RegisterForm;
+use AuthBundle\Service\AuthService;
+use AuthBundle\Service\CaptchaService;
 use SecureBundle\Entity\User;
-use AuthBundle\Form\AuthorRegForm;
 use AuthBundle\Form\LoginForm;
 use AuthBundle\Form\RecoveryPasswordForm;
+use SecureBundle\Service\MailService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class AuthController extends Controller
@@ -26,7 +28,7 @@ class AuthController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            // to do smth later
         }
 
         $helper = $this->get('security.authentication_utils');
@@ -46,6 +48,8 @@ class AuthController extends Controller
     }
 
     /**
+     * TODO: fix later
+     *
      * @Template()
      *
      * @param Request $request
@@ -55,17 +59,17 @@ class AuthController extends Controller
     public function registerAction(Request $request)
     {
         $user = new User();
-        $form = $this->createForm(AuthorRegForm::class, $user);
+        $form = $this->createForm(RegisterForm::class, $user);
         $form->handleRequest($request);
 
-        $captchaService = $this->get('auth.captcha_service');
+        $captchaService = $this->get(CaptchaService::class);
 
-        $publicKeyCaptcha = $this->getParameter('publicKeyCaptcha');
+        $publicKeyCaptcha = $this->getParameter('public_key_captcha');
         $captchaForm = $captchaService->captchaGetHtml($publicKeyCaptcha);
-        $captchaError = "";
+        $captchaError = '';
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $privateKeyCaptcha = $this->getParameter('privateKeyCaptcha');
+            $privateKeyCaptcha = $this->getParameter('private_key_captcha');
 
             $captchaCheckAnswer = $captchaService->captchaCheckAnswer(
                 $privateKeyCaptcha,
@@ -80,7 +84,7 @@ class AuthController extends Controller
                 $em->persist($user);
                 $em->flush();
 
-                $mailHelper = $this->get('secure.mail_helper');
+                $mailHelper = $this->get(MailService::class);
                 $mailHelper->sendConfirmRegistrationMail($user);
 
                 return $this->redirectToRoute('login');
@@ -89,7 +93,7 @@ class AuthController extends Controller
             }
         }
 
-        return $templateData = [
+        return [
             'form' => $form->createView(),
             'captcha' => [
                 'captchaForm' => $captchaForm,
@@ -99,11 +103,13 @@ class AuthController extends Controller
     }
 
     /**
+     * TODO: fix later
+     *
      * @Template()
      *
      * @return array
      */
-    public function recoveryAction(Request $request)
+    /*public function recoveryAction(Request $request)
     {
         $form = $this->createForm(RecoveryPasswordForm::class);
         $form->handleRequest($request);
@@ -113,12 +119,11 @@ class AuthController extends Controller
             $email = $form->getData()['email'];
 
             $em = $this->getDoctrine()->getManager();
-            /**@var User $user**/
             $user = $em->getRepository('AuthBundle:User')
                 ->findOneBy(['email' => $email]);
 
             if (!is_null($user)) {
-                $authHelper = $this->get('auth.auth_helper');
+                $authHelper = $this->get(AuthService::class);
                 $hashCode = $authHelper->getRandomValue(60);
                 $newPassword = $authHelper->getRandomValue(8);
                 $encodePassword = $authHelper->getEncodePassword($user, $newPassword);
@@ -126,7 +131,7 @@ class AuthController extends Controller
                 $user->setPassword($encodePassword);
                 $em->flush();
 
-                $mailHelper = $this->get('secure.mail_helper');
+                $mailHelper = $this->get(MailService::class);
                 $mailHelper->sendRecoveryPasswordMail($user, $newPassword);
 
                 $showWindow = true;
@@ -137,9 +142,11 @@ class AuthController extends Controller
             'form' => $form->createView(),
             'showWindow' => $showWindow,
         ];
-    }
+    }*/
 
     /**
+     * TODO: fix later
+     *
      * Confirm register and recovery password by Email
      *
      * @Template()
@@ -150,9 +157,9 @@ class AuthController extends Controller
      *
      * @return array
      */
-    public function confirmAction($typeConfirm, $hashCode, $userId)
+    /*public function confirmAction($typeConfirm, $hashCode, $userId)
     {
-        $authHelper = $this->get('auth.auth_helper');
+        $authHelper = $this->get(AuthService::class);
 
         $isCorrectUrl = $authHelper->isCorrectConfirmUrl($hashCode, $userId);
         $isSuccess = false;
@@ -160,7 +167,6 @@ class AuthController extends Controller
         if ($isCorrectUrl) {
             if ($typeConfirm === 'recovery' || $typeConfirm === 'register') {
                 $em = $this->getDoctrine()->getManager();
-                /**@var User $user * */
                 $user = $em->getRepository('AuthBundle:User')
                     ->findOneBy([
                         'id' => $userId,
@@ -179,5 +185,5 @@ class AuthController extends Controller
         }
 
         return array('isSuccess' => $isSuccess);
-    }
+    }*/
 }

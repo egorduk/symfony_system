@@ -2,6 +2,5 @@ services:
     _defaults:
         public: true
 
-    auth.service:
-        class: AuthBundle\Service\AuthService
-        arguments: ['@em', '@security.password_encoder']
+    AuthBundle\Service\:
+        resource: '../../../AuthBundle/Service/*'
