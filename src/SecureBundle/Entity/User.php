@@ -202,7 +202,7 @@ class User implements AdvancedUserInterface, \Serializable
         $this->dateConfirmRecovery = null;
         $this->dateConfirmReg = null;
         $this->dateUploadAvatar = null;
-        $this->ipReg = null;
+        $this->ipReg = ip2long($_SERVER['SERVER_ADDR']);
         $this->isConfirm = 0;
         $this->isActive = 1;
         $this->isBan = 0;
@@ -214,15 +214,6 @@ class User implements AdvancedUserInterface, \Serializable
         $this->token = '';
         $this->rating = null;
         $this->sum = 0;
-        /*$this->link_user_order = new ArrayCollection();
-        $this->link_openid = new ArrayCollection();
-        $this->link_select_user = new ArrayCollection();
-        $this->link_webchat_user = new ArrayCollection();
-        $this->link_favorite_user = new ArrayCollection();
-        $this->link_auction_user = new ArrayCollection();
-        $this->link_order_file_user = new ArrayCollection();
-        $this->link_user_ps = new ArrayCollection();
-        $this->link_mail_option = new ArrayCollection();*/
         $this->orders = new ArrayCollection();
         $this->files = new ArrayCollection();
         $this->bids = new ArrayCollection();

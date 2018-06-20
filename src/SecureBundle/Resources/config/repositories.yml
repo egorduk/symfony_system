@@ -43,3 +43,9 @@ services:
     SecureBundle\Repository\StageOrderRepository:
         factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%stage_order_entity%']
+
+    secure.repository.user: '@SecureBundle\Repository\UserRepository'
+
+    SecureBundle\Repository\UserRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments: ['%user_entity%']

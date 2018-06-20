@@ -5,21 +5,22 @@ namespace SecureBundle\Service;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserInfo;
+use SecureBundle\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Asset\Packages;
 
 class UserService
 {
-    private $em;
     private $packages;
     private $uploadUserAvatarsDir;
     private $router;
     private $secureBundleWebDir;
+    private $userRepository;
 
 
-    public function __construct(EntityManager $em, Packages $packages, Router $router, $uploadUserAvatarsDir, $secureBundleWebDir)
+    public function __construct(UserRepository $userRepository, Packages $packages, Router $router, $uploadUserAvatarsDir, $secureBundleWebDir)
     {
-        $this->em = $em;
+        $this->userRepository = $userRepository;
         $this->packages = $packages;
         $this->uploadUserAvatarsDir = $uploadUserAvatarsDir;
         $this->router = $router;
@@ -50,7 +51,7 @@ class UserService
         }
     }
 
-    protected function getBasePath($url)
+    protected function getBasePath($url = '')
     {
         return rtrim($this->packages->getUrl($url), '/');
     }
@@ -89,7 +90,22 @@ class UserService
             //$userInfo->setDateBirthday($date->getDate());
         }
 
-        $this->em->persist($userInfo);
-        $this->em->flush();
+        //$this->em->persist($userInfo);
+        //$this->em->flush();
+    }
+
+    public function save(User $user)
+    {
+        return $this->userRepository->save($user, true);
+    }
+
+    public function isExistsUsername($username = '')
+    {
+        return $this->userRepository->findOneBy(['login' => $username]) instanceof User;
+    }
+
+    public function isExistsEmail($email = '')
+    {
+        return $this->userRepository->findOneBy(['email' => $email]) instanceof User;
     }
 }

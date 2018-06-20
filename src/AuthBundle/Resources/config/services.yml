@@ -4,3 +4,8 @@ services:
 
     AuthBundle\Service\:
         resource: '../../../AuthBundle/Service/*'
+
+    auth.form.register:
+        class: AuthBundle\Form\RegisterForm
+        autowire: true
+        tags: [form.type]

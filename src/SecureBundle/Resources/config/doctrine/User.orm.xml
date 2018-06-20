@@ -110,6 +110,9 @@
     <one-to-many target-entity="SecureBundle\Entity\UserBid" mapped-by="user" field="bids" />
     <one-to-many target-entity="SecureBundle\Entity\UserActivity" mapped-by="user" field="activities" />
     <one-to-one field="userInfo" target-entity="SecureBundle\Entity\UserInfo" inversed-by="user">
+      <cascade>
+        <cascade-persist/>
+      </cascade>
       <join-column name="user_info_id" referenced-column-name="id"/>
     </one-to-one>
     <many-to-many field="companies" target-entity="SecureBundle\Entity\Company" inversed-by="users" fetch="LAZY">

@@ -11,12 +11,30 @@
     {{ form_row(form.plainPassword.first) }}
     {{ form_row(form.plainPassword.second) }}
     {{ form_row(form.termsAccepted) }}
-    <div>
+    {% block form_mobile_tel %}
+        {{ form_label(form.userInfo.mobilePhone) }}
+        {{ form_errors(form.userInfo.mobilePhone) }}
+        {{ form_errors(form.userInfo.country) }}
+        <div class="row">
+            <div class="form-group col-xs-3">
+                <div class="input-group">
+                    {{ form_widget(form.userInfo.country) }}
+                </div>
+            </div>
+            <div class="form-group col-xs-9 reset-padding">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-mobile-alt"></i></span>
+                    {{ form_widget(form.userInfo.mobilePhone) }}
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+    {#<div>
         {% if (captcha.captchaError) %}
             <span class="icon-warning" style="color:red">{{ captcha.captchaError|raw }}</span>
         {% endif %}
         {{ captcha.captchaForm|raw }}
-    </div>
+    </div>#}
     <button type="submit">{{ 'Register'|trans }}</button>
     {{ form_end(form) }}
 {% endblock %}

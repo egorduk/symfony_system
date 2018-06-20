@@ -14,6 +14,7 @@ services:
             $eventDispatcher: '@event_dispatcher'
             $statusOrderRepository: '@secure.repository.status_order'
             $userOrderRepository: '@secure.repository.user_order'
+            $userRepository: '@secure.repository.user'
             $bidService: '@secure.service.bid'
             $settingService: '@secure.service.setting'
             $userBidRepository: '@secure.repository.user_bid'
@@ -23,6 +24,7 @@ services:
     secure.service.date_time: '@SecureBundle\Service\DateTimeService'
     secure.service.bid: '@SecureBundle\Service\BidService'
     secure.service.setting: '@SecureBundle\Service\SettingService'
+    secure.service.user: '@SecureBundle\Service\UserService'
 
     SecureBundle\Service\:
         resource: '../../../SecureBundle/Service/*'

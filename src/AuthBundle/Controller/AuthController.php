@@ -9,6 +9,7 @@ use SecureBundle\Entity\User;
 use AuthBundle\Form\LoginForm;
 use AuthBundle\Form\RecoveryPasswordForm;
 use SecureBundle\Service\MailService;
+use SecureBundle\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -59,45 +60,53 @@ class AuthController extends Controller
     public function registerAction(Request $request)
     {
         $user = new User();
-        $form = $this->createForm(RegisterForm::class, $user);
+        $userService = $this->get(UserService::class);
+
+        $form = $this->createForm(RegisterForm::class, $user/*, ['user_service' => $userService]*/);
         $form->handleRequest($request);
 
-        $captchaService = $this->get(CaptchaService::class);
+        //$captchaService = $this->get(CaptchaService::class);
 
-        $publicKeyCaptcha = $this->getParameter('public_key_captcha');
-        $captchaForm = $captchaService->captchaGetHtml($publicKeyCaptcha);
-        $captchaError = '';
+        //$publicKeyCaptcha = $this->getParameter('public_key_captcha');
+        //$captchaForm = $captchaService->captchaGetHtml($publicKeyCaptcha);
+        //$captchaError = '';
 
         if ($form->isSubmitted() && $form->isValid()) {
             $privateKeyCaptcha = $this->getParameter('private_key_captcha');
 
-            $captchaCheckAnswer = $captchaService->captchaCheckAnswer(
-                $privateKeyCaptcha,
-                $request
-            );
+            /* $captchaCheckAnswer = $captchaService->captchaCheckAnswer(
+                 $privateKeyCaptcha,
+                 $request
+             );*/
 
-            if ($captchaCheckAnswer->getIsValid()) {
-                $password = $this->get('security.password_encoder')
-                    ->encodePassword($user, $user->getPlainPassword());
-                $user->setPassword($password);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($user);
-                $em->flush();
+            //if ($captchaCheckAnswer->getIsValid()) {
 
-                $mailHelper = $this->get(MailService::class);
-                $mailHelper->sendConfirmRegistrationMail($user);
+            //dump($form->getData());die;
 
-                return $this->redirectToRoute('login');
-            } else {
+            $password = $this->get('security.password_encoder')
+                ->encodePassword($user, $user->getPlainPassword());
+            $user->setPassword($password);
+
+            $this->get(UserService::class)->save($user);
+
+            /*$em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();*/
+
+            //$mailService = $this->get(MailService::class);
+            //$mailService->sendConfirmRegistrationMail($user);
+
+            return $this->redirectToRoute('login');
+            /*} else {
                 $captchaError = $captchaCheckAnswer->getErrorMessage();
-            }
+            }*/
         }
 
         return [
             'form' => $form->createView(),
             'captcha' => [
-                'captchaForm' => $captchaForm,
-                'captchaError' => $captchaError,
+                //'captchaForm' => $captchaForm,
+                //'captchaError' => $captchaError,
             ],
         ];
     }

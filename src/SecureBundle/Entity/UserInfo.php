@@ -86,11 +86,6 @@ class UserInfo
     private $avatar;
 
 
-    public function __construct()
-    {
-        //$this->user = new ArrayCollection();
-    }
-
     public function setSkype($skype)
     {
         $this->skype = $skype;

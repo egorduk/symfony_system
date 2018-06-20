@@ -3,13 +3,12 @@
 namespace AuthBundle\Form;
 
 use SecureBundle\Entity\User;
+use SecureBundle\Service\UserService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -20,6 +19,13 @@ use Symfony\Component\Validator\Constraints\IsTrue;
 
 class RegisterForm extends AbstractType
 {
+    private $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -33,64 +39,31 @@ class RegisterForm extends AbstractType
             ->add('termsAccepted', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => new IsTrue(),
-            ]);
+            ])
+            ->add('userInfo', UserInfoForm::class)
+            ->addEventListener(FormEvents::POST_SUBMIT, function(FormEvent $event) {
+                $form = $event->getForm();
+                $data = $event->getData();
 
-            /* ->add('selectorCountry', 'genemu_jqueryselect2_entity', array(
-                'mapped'   => false,
-                'class' => 'Acme\AuthBundle\Entity\Country',
-                'property' => 'code'
-            ))
-            ->add('selectorCountry', 'choice', array(
-                'mapped'   => false,
-                'choices' => $this->buildChoices(),
-            ));*/
+                if ($newUsername = $data->getLogin()) {
+                    if ($this->userService->isExistsUsername($newUsername)) {
+                        $form->get('username')->addError(new FormError('Такой логин уже используется'));
+                    }
+                }
 
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function(FormEvent $event)
-        {
-            $form = $event->getForm();
-            $data = $event->getData();
-
-            if ($data->getLogin() !== null)
-            {
-                $newLogin = $form->get('fieldLogin')->getData();
-
-                /*if (user name exists)
-                {
-                    $form->get('username')->addError(new FormError('Такой логин уже используется!'));
-                }*/
-            }
-
-            if ($data->getEmail() !== null)
-            {
-                $newEmail = $form->get('fieldEmail')->getData();
-
-               /* if (user email exists)
-                {
-                    $form->get('email')->addError(new FormError('Такой Email уже используется!'));
-                }*/
-            }
-        });
+                if ($newEmail = $data->getEmail()) {
+                    if ($this->userService->isExistsEmail($newEmail)) {
+                        $form->get('email')->addError(new FormError('Такой Email уже используется'));
+                    }
+                }
+            });
     }
-
-   /* protected function buildChoices()
-    {
-        $container = Helper::getContainer();
-        $choices = [];
-        $table2Repository = $container->get('doctrine')->getRepository('Acme\AuthBundle\Entity\Country');
-        $table2Objects = $table2Repository->findAll();
-
-        foreach ($table2Objects as $table2Obj) {
-            $choices[$table2Obj->getCode()] = $table2Obj->getName();
-        }
-
-        return $choices;
-    }*/
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'user' => null,
+            'error_bubbling' => false,
         ]);
     }
 
