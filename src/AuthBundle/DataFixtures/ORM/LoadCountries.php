@@ -2,9 +2,9 @@
 
 namespace AuthBundle\DataFixtures\ORM;
 
-use AuthBundle\Entity\Country;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use SecureBundle\Entity\Country;
 
 class LoadCountries implements ORMFixtureInterface
 {

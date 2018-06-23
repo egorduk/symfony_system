@@ -173,7 +173,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * @ORM\OneToOne(targetEntity="SecureBundle\Entity\UserInfo", inversedBy="user", cascade={"persist"})
-     * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id", nullable=false)
      */
     private $userInfo;
 
@@ -202,11 +202,11 @@ class User implements AdvancedUserInterface, \Serializable
         $this->dateConfirmRecovery = null;
         $this->dateConfirmReg = null;
         $this->dateUploadAvatar = null;
-        $this->ipReg = ip2long($_SERVER['SERVER_ADDR']);
+        $this->ipReg = isset($_SERVER['REMOTE_ADDR']) ? ip2long($_SERVER['REMOTE_ADDR']) : ip2long('127.0.0.1');
         $this->isConfirm = 0;
         $this->isActive = 1;
         $this->isBan = 0;
-        $this->isAccessOrder = 1;
+        $this->isAccessOrder = 0;
         $this->recoveryPassword = '';
         $this->ratingPoint = 0;
         $this->role = '';

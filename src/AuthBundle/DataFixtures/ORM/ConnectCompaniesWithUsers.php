@@ -2,12 +2,13 @@
 
 namespace AuthBundle\DataFixtures\ORM;
 
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use SecureBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use SecureBundle\Entity\Company;
 
-class ConnectCompaniesWithUsers implements ORMFixtureInterface
+class ConnectCompaniesWithUsers implements ORMFixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -22,5 +23,10 @@ class ConnectCompaniesWithUsers implements ORMFixtureInterface
         }
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 12;
     }
 }

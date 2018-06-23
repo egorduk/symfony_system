@@ -1,14 +1,19 @@
 services:
     _defaults:
         public: true
+        autowire: true
+        autoconfigure: true
+        bind:
+            $uploadDir: '%file_upload_dir%'
+            $sourceDir: '%file_upload_dir_fixtures%'
 
-    AuthBundle\DataFixtures\:
-        resource: '../../../AuthBundle/DataFixtures/*'
+    AuthBundle\DataFixtures\ORM\:
+        resource: '../../../AuthBundle/DataFixtures/ORM/*'
 
 #    AuthBundle\DataFixtures\ORM\LoadUsers:
 #        arguments: ['@security.password_encoder']
 #        tags: [doctrine.fixture.orm]
-#
+
 #    AuthBundle\DataFixtures\ORM\LoadStatuses:
 #        tags: [doctrine.fixture.orm]
 #

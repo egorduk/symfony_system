@@ -2,13 +2,14 @@
 
 namespace AuthBundle\DataFixtures\ORM;
 
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use SecureBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
-class LoadUsers implements ORMFixtureInterface
+class LoadUsers implements ORMFixtureInterface, OrderedFixtureInterface
 {
     private $encoderService;
 
@@ -76,5 +77,10 @@ class LoadUsers implements ORMFixtureInterface
         }
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 1;
     }
 }

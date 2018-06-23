@@ -2,6 +2,7 @@
 
 namespace AuthBundle\DataFixtures\ORM;
 
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use SecureBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -11,7 +12,7 @@ use SecureBundle\Entity\SubjectOrder;
 use SecureBundle\Entity\TypeOrder;
 use SecureBundle\Entity\UserOrder;
 
-class LoadOrders implements ORMFixtureInterface
+class LoadOrders implements ORMFixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -41,7 +42,6 @@ class LoadOrders implements ORMFixtureInterface
             $order->setTheme($faker->text(255));
             $order->setAdditionalInfo($faker->text());
             $order->setClientComment($faker->text(100));
-            $order->setFilesFolder($faker->randomDigitNotNull);
             $order->setUser($users[array_rand($users)]);
             $order->setSubject($subjects[array_rand($subjects)]);
             $order->setStatus($statuses[array_rand($statuses)]);
@@ -71,5 +71,10 @@ class LoadOrders implements ORMFixtureInterface
         }
 
         return date_create(date('Y-m-d H:i:s', $val));
+    }
+
+    public function getOrder()
+    {
+        return 9;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace AuthBundle\DataFixtures\ORM;
 
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use SecureBundle\Entity\Country;
 use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserInfo;
@@ -9,28 +10,22 @@ use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
 
-class LoadUserInfo implements ORMFixtureInterface
+class LoadUserInfo implements ORMFixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
         $userRepository = $manager->getRepository(User::class);
-        $users = $userRepository->findBy([
-            'role' => [
-                User::ROLE_USER,
-                User::ROLE_MANAGER,
-            ]
-        ]);
+        $users = $userRepository->findAll();
 
         $countryRepository = $manager->getRepository(Country::class);
         $countries = $countryRepository->findAll();
 
         $faker = Factory::create();
 
-        for ($i = 0; $i < 15; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $info = new UserInfo();
 
-            $index = array_rand($users);
-            $user = $users[$index];
+            $user = $users[$i];
             $user->setUserInfo($info);
 
             $rand = rand(0, 1);
@@ -49,21 +44,23 @@ class LoadUserInfo implements ORMFixtureInterface
                 $info->setUserName($faker->userName);
             }
 
-            if ($rand) {
-                $info->setMobilePhone($faker->e164PhoneNumber);
-            } else {
-                $info->setStaticPhone($faker->e164PhoneNumber);
-            }
+            $info->setMobilePhone($faker->e164PhoneNumber);
 
             if ($rand) {
+                $info->setStaticPhone($faker->e164PhoneNumber);
                 $info->setSkype($faker->firstNameFemale);
-            } else {
-                $info->setCountry($countries[array_rand($countries)]);
             }
+
+            $info->setCountry($countries[array_rand($countries)]);
 
             $manager->persist($info);
         }
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 9;
     }
 }

@@ -2,18 +2,19 @@
 
 namespace AuthBundle\DataFixtures\ORM;
 
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use SecureBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Faker\Factory;
 use SecureBundle\Entity\UserBid;
+use SecureBundle\Repository\UserOrderRepository;
 
-class LoadUserBids implements ORMFixtureInterface
+class LoadUserBids implements ORMFixtureInterface, OrderedFixtureInterface
 {
     private $orderRepository;
 
-    public function __construct(ObjectRepository $orderRepository)
+    public function __construct(UserOrderRepository $orderRepository)
     {
         $this->orderRepository = $orderRepository;
     }
@@ -46,5 +47,10 @@ class LoadUserBids implements ORMFixtureInterface
         }
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 10;
     }
 }

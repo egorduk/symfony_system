@@ -31,7 +31,7 @@
     <field name="dateConfirmRecovery" type="datetime" column="date_confirm_recovery" nullable="true"/>
     <field name="dateConfirmReg" type="datetime" column="date_confirm_reg" nullable="true"/>
     <field name="dateUploadAvatar" type="datetime" column="date_upload_avatar" nullable="true"/>
-    <field name="ipReg" type="integer" column="ip_reg" nullable="false"/>
+    <field name="ipReg" type="bigint" column="ip_reg" nullable="false"/>
     <field name="salt" type="string" column="salt" length="64" nullable="false">
       <options>
         <option name="fixed"/>
@@ -113,7 +113,7 @@
       <cascade>
         <cascade-persist/>
       </cascade>
-      <join-column name="user_info_id" referenced-column-name="id"/>
+      <join-column name="user_info_id" referenced-column-name="id" nullable="false" />
     </one-to-one>
     <many-to-many field="companies" target-entity="SecureBundle\Entity\Company" inversed-by="users" fetch="LAZY">
       <join-table name="user_has_company">

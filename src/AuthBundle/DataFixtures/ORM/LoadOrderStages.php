@@ -3,12 +3,13 @@
 namespace AuthBundle\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
 use SecureBundle\Entity\StageOrder;
 use SecureBundle\Entity\UserOrder;
 
-class LoadOrderStages implements ORMFixtureInterface
+class LoadOrderStages implements ORMFixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -28,5 +29,10 @@ class LoadOrderStages implements ORMFixtureInterface
         }
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 10;
     }
 }

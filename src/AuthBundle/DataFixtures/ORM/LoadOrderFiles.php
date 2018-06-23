@@ -3,18 +3,19 @@
 namespace AuthBundle\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
 use Faker\Factory;
 use SecureBundle\Entity\OrderFile;
+use SecureBundle\Repository\UserOrderRepository;
 
-class LoadOrderFiles implements ORMFixtureInterface
+class LoadOrderFiles implements ORMFixtureInterface, OrderedFixtureInterface
 {
     private $orderRepository;
     private $uploadDir;
     private $sourceDir;
 
-    public function __construct(ObjectRepository $orderRepository, $uploadDir, $sourceDir)
+    public function __construct(UserOrderRepository $orderRepository, $uploadDir = '', $sourceDir = '')
     {
         $this->orderRepository = $orderRepository;
         $this->uploadDir = $uploadDir;
@@ -40,5 +41,10 @@ class LoadOrderFiles implements ORMFixtureInterface
         }
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 11;
     }
 }
