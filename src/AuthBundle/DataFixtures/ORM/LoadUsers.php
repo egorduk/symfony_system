@@ -7,6 +7,7 @@ use SecureBundle\Entity\User;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
+use SecureBundle\Entity\UserInfo;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 
 class LoadUsers implements ORMFixtureInterface, OrderedFixtureInterface
@@ -22,6 +23,33 @@ class LoadUsers implements ORMFixtureInterface, OrderedFixtureInterface
     {
         $faker = Factory::create();
 
+        $userInfos = $manager->getRepository(UserInfo::class)->findAll();
+
+        $roles = [
+            User::ROLE_USER,
+            User::ROLE_ADMIN,
+            User::ROLE_MANAGER,
+            User::ROLE_DIRECTOR,
+        ];
+
+        $cnt = 30;
+
+        for ($i = 0; $i < $cnt; $i++) {
+            $user = new User();
+            $user->setLogin($faker->firstName);
+            $user->setEmail($faker->email);
+            $user->setRoles($roles[array_rand($roles)]);
+            $user->setSalt($faker->word);
+            $user->setSum($faker->numberBetween(-5000, 5000));
+            $user->setRegisterConfirm();
+            $user->setIpReg(ip2long($faker->ipv4));
+            $encodedPassword = $this->encoderService->encodePassword($user, 'test');
+            $user->setPassword($encodedPassword);
+            $user->setUserInfo($userInfos[$i]);
+            $manager->persist($user);
+        }
+
+
         $user = new User();
         $user->setLogin('admin');
         $user->setEmail('admin@tut.by');
@@ -31,8 +59,10 @@ class LoadUsers implements ORMFixtureInterface, OrderedFixtureInterface
         $encodedPassword = $this->encoderService->encodePassword($user, 'test');
         $user->setPassword($encodedPassword);
         $user->setIpReg(ip2long('127.0.0.1'));
+        $cnt++;
+        $user->setUserInfo($userInfos[$cnt]);
         $manager->persist($user);
-        
+
         $user = new User();
         $user->setLogin('user');
         $user->setEmail('user@tut.by');
@@ -42,6 +72,8 @@ class LoadUsers implements ORMFixtureInterface, OrderedFixtureInterface
         $encodedPassword = $this->encoderService->encodePassword($user, 'test');
         $user->setPassword($encodedPassword);
         $user->setIpReg(ip2long('127.0.0.1'));
+        $cnt++;
+        $user->setUserInfo($userInfos[$cnt]);
         $manager->persist($user);
 
         $user = new User();
@@ -53,34 +85,15 @@ class LoadUsers implements ORMFixtureInterface, OrderedFixtureInterface
         $encodedPassword = $this->encoderService->encodePassword($user, 'test');
         $user->setPassword($encodedPassword);
         $user->setIpReg(ip2long('127.0.0.1'));
+        $cnt++;
+        $user->setUserInfo($userInfos[$cnt]);
         $manager->persist($user);
-
-        $roles = [
-            User::ROLE_USER,
-            User::ROLE_ADMIN,
-            User::ROLE_MANAGER,
-            User::ROLE_DIRECTOR,
-        ];
-
-        for ($i = 0; $i < 30; $i++) {
-            $user = new User();
-            $user->setLogin($faker->firstName);
-            $user->setEmail($faker->email);
-            $user->setRoles($roles[array_rand($roles)]);
-            $user->setSalt($faker->word);
-            $user->setSum($faker->numberBetween(-5000, 5000));
-            $user->setRegisterConfirm();
-            $user->setIpReg(ip2long($faker->ipv4));
-            $encodedPassword = $this->encoderService->encodePassword($user, 'test');
-            $user->setPassword($encodedPassword);
-            $manager->persist($user);
-        }
 
         $manager->flush();
     }
 
     public function getOrder()
     {
-        return 1;
+        return 4;
     }
 }

@@ -4,7 +4,6 @@ namespace AuthBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use SecureBundle\Entity\Country;
-use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserInfo;
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -14,19 +13,13 @@ class LoadUserInfo implements ORMFixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
-        $userRepository = $manager->getRepository(User::class);
-        $users = $userRepository->findAll();
-
         $countryRepository = $manager->getRepository(Country::class);
         $countries = $countryRepository->findAll();
 
         $faker = Factory::create();
 
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i <= 33; $i++) {
             $info = new UserInfo();
-
-            $user = $users[$i];
-            $user->setUserInfo($info);
 
             $rand = rand(0, 1);
 
@@ -61,6 +54,6 @@ class LoadUserInfo implements ORMFixtureInterface, OrderedFixtureInterface
 
     public function getOrder()
     {
-        return 9;
+        return 3;
     }
 }

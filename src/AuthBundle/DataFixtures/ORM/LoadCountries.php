@@ -3,10 +3,11 @@
 namespace AuthBundle\DataFixtures\ORM;
 
 use Doctrine\Bundle\FixturesBundle\ORMFixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use SecureBundle\Entity\Country;
 
-class LoadCountries implements ORMFixtureInterface
+class LoadCountries implements ORMFixtureInterface, OrderedFixtureInterface
 {
     public function load(ObjectManager $manager)
     {
@@ -23,5 +24,10 @@ class LoadCountries implements ORMFixtureInterface
         $manager->persist($data);
 
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        return 2;
     }
 }
