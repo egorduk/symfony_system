@@ -37,19 +37,12 @@ class UserController extends Controller
      */
     public function homeAction(Request $request)
     {
-        /* @var User $user */
         $user = $this->getUser();
-
         $session = $request->getSession();
-        $sessionCreatedTimestamp = $session->getMetadataBag()->getCreated();
-        $sessionLifeTimestamp = $session->getMetadataBag()->getLifetime();
 
-        $dateTimeHelper = $this->get(DateTimeService::class);
-        $whenLoginDate = $dateTimeHelper->getDateFromTimestamp($sessionCreatedTimestamp, 'd/m/Y H:i');
-        $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionCreatedTimestamp, $sessionLifeTimestamp, '+');
-        $nowTimestamp = $dateTimeHelper->getCurrentTimestamp();
-        $sessionRemainingTimestamp = $dateTimeHelper->getRemainingTimestamp($sessionRemainingTimestamp, $nowTimestamp, '-');
-        $remainingTime = $dateTimeHelper->getDateFromTimestamp($sessionRemainingTimestamp, 'i:s');
+        $dateTimeService = $this->get(DateTimeService::class);
+        $whenLoginDate = $dateTimeService->getLastLoginDateTime($session);
+        $remainingTime = $dateTimeService->getSessionRemainingTimeInSystem($session);
 
         return compact('user', 'whenLoginDate', 'remainingTime');
     }

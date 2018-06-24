@@ -47,6 +47,7 @@ security:
                 handlers: ['SecureBundle\Service\Listener\LogoutListener']
 
     access_control:
+        - { path: ^/secure/index, roles: [ROLE_ADMIN, ROLE_MANAGER, ROLE_DIRECTOR, ROLE_USER] }
         - { path: ^/secure/admin, roles: ROLE_ADMIN }
         - { path: ^/secure/manager, roles: ROLE_MANAGER }
         - { path: ^/secure/director, roles: ROLE_DIRECTOR }

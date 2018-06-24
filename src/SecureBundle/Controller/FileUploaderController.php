@@ -27,7 +27,16 @@ class FileUploaderController extends FineUploaderController
     private $user = null;
 
 
-    public function upload()
+    public function userAvatarsUploader()
+    {
+        $request = $this->getRequest();
+
+        $file = $this->getFiles($request->files)[0];
+
+        dump($file);
+    }
+
+    public function orderAttachmentsUploader()
     {
         $request = $this->getRequest();
 

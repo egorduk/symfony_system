@@ -3,11 +3,13 @@
 namespace SecureBundle\Service;
 
 use SecureBundle\Entity\UserOrder;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class DateTimeService
 {
     const REMAINING_FORMAT = '%d дн. %d ч. %d мин.';
     const DEFAULT_FORMAT = 'd.m.Y H:i';
+    const SESSION_REMAINING_FORMAT = 'i:s';
 
     /**
      * @param int $timestamp
@@ -27,7 +29,7 @@ class DateTimeService
      *
      * @return int
      */
-    public function getRemainingTimestamp($aTimestamp, $bTimestamp, $operation)
+    private function getRemainingTimestamp($aTimestamp, $bTimestamp, $operation)
     {
         if ($operation === '+') {
             return $aTimestamp + $bTimestamp;
@@ -36,6 +38,25 @@ class DateTimeService
         }
 
         return 0;
+    }
+
+    public function getSessionRemainingTimeInSystem(SessionInterface $session)
+    {
+        $sessionCreatedTimestamp = $session->getMetadataBag()->getCreated();
+        $sessionLifeTimestamp = $session->getMetadataBag()->getLifetime();
+        $nowTimestamp = $this->getCurrentTimestamp();
+
+        $sessionRemainingTimestamp = $this->getRemainingTimestamp($sessionCreatedTimestamp, $sessionLifeTimestamp, '+');
+        $sessionRemainingTimestamp = $this->getRemainingTimestamp($sessionRemainingTimestamp, $nowTimestamp, '-');
+
+        return $this->getDateFromTimestamp($sessionRemainingTimestamp, self::SESSION_REMAINING_FORMAT);
+    }
+
+    public function getLastLoginDateTime(SessionInterface $session)
+    {
+        $sessionCreatedTimestamp = $session->getMetadataBag()->getCreated();
+
+        return $this->getDateFromTimestamp($sessionCreatedTimestamp, self::DEFAULT_FORMAT);
     }
 
     /**

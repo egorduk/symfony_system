@@ -4,6 +4,7 @@ namespace SecureBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * )
  * @ORM\Entity
  */
-class User implements AdvancedUserInterface, \Serializable
+class User implements UserInterface, \Serializable
 {
     const ROLE_USER = 'ROLE_USER';
     const ROLE_ADMIN = 'ROLE_ADMIN';
@@ -732,16 +733,6 @@ class User implements AdvancedUserInterface, \Serializable
     {
         $this->bids = $bids;
     }
-
-/*    public function getRawAvatar()
-    {
-        return $this->rawAvatar;
-    }
-
-    public function setRawAvatar($rawAvatar)
-    {
-        $this->rawAvatar = $rawAvatar;
-    }*/
 
     /**
      * @return UserInfo

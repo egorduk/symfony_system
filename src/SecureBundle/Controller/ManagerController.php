@@ -22,21 +22,14 @@ class ManagerController extends Controller
      */
     public function homeAction(Request $request)
     {
-        /* @var User $user */
         $user = $this->getUser();
-
         $session = $request->getSession();
-        $sessionCreatedTimestamp = $session->getMetadataBag()->getCreated();
-        $sessionLifeTimestamp = $session->getMetadataBag()->getLifetime();
 
         $dateTimeService = $this->get(DateTimeService::class);
-        $whenLoginDate = $dateTimeService->getDateFromTimestamp($sessionCreatedTimestamp, 'd/m/Y H:i');
-        $sessionRemainingTimestamp = $dateTimeService->getRemainingTimestamp($sessionCreatedTimestamp, $sessionLifeTimestamp, '+');
-        $nowTimestamp = $dateTimeService->getCurrentTimestamp();
-        $sessionRemainingTimestamp = $dateTimeService->getRemainingTimestamp($sessionRemainingTimestamp, $nowTimestamp, '-');
-        $remainingTime = $dateTimeService->getDateFromTimestamp($sessionRemainingTimestamp, 'i:s');
+        $lastLoginDateTime = $dateTimeService->getLastLoginDateTime($session);
+        $remainingTime = $dateTimeService->getSessionRemainingTimeInSystem($session);
 
-        return compact('user', 'whenLoginDate', 'remainingTime');
+        return compact('user', 'lastLoginDateTime', 'remainingTime');
     }
 
     /**

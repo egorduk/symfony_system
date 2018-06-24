@@ -84,11 +84,11 @@ fos_js_routing:
 
 oneup_uploader:
     mappings:
-        gallery:
+        order_attachments:
             frontend: custom
             custom_frontend:
                 class: SecureBundle\Controller\FileUploaderController
-                name: customUploader
+                name: orderAttachmentsUploader
             #allowed_mimetypes: ['image/gif']
                 #- 'image/gif'
                 #- 'image/png'
@@ -100,6 +100,17 @@ oneup_uploader:
             #error_handler: secure.file_upload_error_handler
             storage:
                 directory: '%kernel.root_dir%/Resources/uploads/orders'
+        user_avatars:
+            frontend: custom
+            custom_frontend:
+                class: SecureBundle\Controller\FileUploaderController
+                name: userAvatarsUploader
+            max_size: 3145728 #3mb
+            enable_progress: true
+            storage:
+                directory: '%kernel.root_dir%/Resources/uploads/avatars'
+            #endpoints:
+            #    upload: '/test'
 
 secure_bundle:
     user_avatars:

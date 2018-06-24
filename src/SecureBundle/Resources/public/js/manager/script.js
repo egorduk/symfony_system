@@ -2,13 +2,12 @@ $(document).ready(function() {
     //var initUploader = function() {
         var uploader = new plupload.Uploader({
             runtimes: 'html5, flash, silverlight, html4',
-            url: '/symfony_system/web/app_dev.php/_uploader/gallery/upload',
+            url: '/symfony_system/web/app_dev.php/_uploader/user_avatars/upload',
             max_file_count: 1,
             browse_button : 'pickFile',
             container: document.getElementById('uploader'),
             chunks: {
-                size: '1mb',
-                send_chunk_number: false
+                size: '1mb'
             },
             rename: true,
             multi_selection: false,
@@ -55,7 +54,7 @@ $(document).ready(function() {
                 FilesAdded: function(up, files) {
                     plupload.each(files, function(file) {
                         //if (up.total.queued == 1) {
-                            document.getElementById('fileList').innerHTML = '';
+                            //document.getElementById('fileList').innerHTML = '';
                             document.getElementById('fileList').innerHTML = '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
                         //}/* else {
                             up.removeFile(files);
