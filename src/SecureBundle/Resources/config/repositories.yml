@@ -49,3 +49,9 @@ services:
     SecureBundle\Repository\UserRepository:
         factory: ['@doctrine.orm.entity_manager', getRepository]
         arguments: ['%user_entity%']
+
+    secure.repository.user_info: '@SecureBundle\Repository\UserInfoRepository'
+
+    SecureBundle\Repository\UserInfoRepository:
+        factory: ['@doctrine.orm.entity_manager', getRepository]
+        arguments: ['%user_info_entity%']

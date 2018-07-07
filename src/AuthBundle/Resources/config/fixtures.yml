@@ -4,7 +4,7 @@ services:
         autowire: true
         autoconfigure: true
         bind:
-            $uploadDir: '%file_upload_dir%'
+            $uploadDir: '%file_upload_dir_order_attachments%'
             $sourceDir: '%file_upload_dir_fixtures%'
 
     AuthBundle\DataFixtures\ORM\:

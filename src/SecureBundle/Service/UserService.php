@@ -5,9 +5,11 @@ namespace SecureBundle\Service;
 use Doctrine\ORM\EntityManager;
 use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserInfo;
+use SecureBundle\Repository\UserInfoRepository;
 use SecureBundle\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Asset\Packages;
+use Symfony\Component\Config\FileLocator;
 
 class UserService
 {
@@ -16,18 +18,26 @@ class UserService
     private $router;
     private $secureBundleWebDir;
     private $userRepository;
+    private $userInfoRepository;
 
 
-    public function __construct(UserRepository $userRepository, Packages $packages, Router $router, $uploadUserAvatarsDir, $secureBundleWebDir)
-    {
+    public function __construct(
+        UserRepository $userRepository,
+        UserInfoRepository $userInfoRepository,
+        Packages $packages,
+        Router $router,
+        $uploadUserAvatarsDir = '',
+        $secureBundleWebDir = ''
+    ) {
         $this->userRepository = $userRepository;
         $this->packages = $packages;
         $this->uploadUserAvatarsDir = $uploadUserAvatarsDir;
         $this->router = $router;
         $this->secureBundleWebDir = $secureBundleWebDir;
+        $this->userInfoRepository = $userInfoRepository;
     }
 
-    private function getFullPathToAvatar(User $user = null) {
+    public function getFullPathToAvatar(User $user = null) {
         $userAvatar = $user->getAvatar();
 
         $avatars = [
@@ -45,9 +55,16 @@ class UserService
             $userId = $user->getId();
 
             $basePath = $this->getBasePath($this->uploadUserAvatarsDir);
+            //$basePath = $this->uploadUserAvatarsDir;
             $fileName = $this->getFileName($userAvatar);
 
-            return $basePath . DIRECTORY_SEPARATOR . $user->getRoleName(true) . DIRECTORY_SEPARATOR . $userId . DIRECTORY_SEPARATOR . $fileName;
+            //$configDirectories = array($basePath . DIRECTORY_SEPARATOR . $userId);
+
+            /*$fileLocator = new FileLocator($configDirectories);
+            $yamlUserFiles = $fileLocator->locate($userAvatar, null, false);
+            dump($yamlUserFiles);die;*/
+
+            return $basePath . DIRECTORY_SEPARATOR . $userId . DIRECTORY_SEPARATOR . $fileName;
         }
     }
 
@@ -86,12 +103,11 @@ class UserService
 
     public function updateProfile(UserInfo $userInfo)
     {
-        if ($date = $userInfo->getDateBirthday()) {
+        //if ($date = $userInfo->getDateBirthday()) {
             //$userInfo->setDateBirthday($date->getDate());
-        }
+        //}
 
-        //$this->em->persist($userInfo);
-        //$this->em->flush();
+        $this->userInfoRepository->save($userInfo);
     }
 
     public function save(User $user)

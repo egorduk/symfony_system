@@ -99,7 +99,7 @@ oneup_uploader:
             enable_progress: true
             #error_handler: secure.file_upload_error_handler
             storage:
-                directory: '%kernel.root_dir%/Resources/uploads/orders'
+                directory: '%kernel.root_dir%/../web/uploads/orders'
         user_avatars:
             frontend: custom
             custom_frontend:
@@ -108,7 +108,7 @@ oneup_uploader:
             max_size: 3145728 #3mb
             enable_progress: true
             storage:
-                directory: '%kernel.root_dir%/Resources/uploads/avatars'
+                directory: '%kernel.root_dir%/../web/uploads/avatars'
             #endpoints:
             #    upload: '/test'
 

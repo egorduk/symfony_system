@@ -820,4 +820,10 @@ class User implements UserInterface, \Serializable
 
         return $isLower ? strtolower($roleName) : $roleName;
     }
+
+    public function updateAvatar($avatar = '')
+    {
+        $this->avatar = $avatar;
+        $this->dateUploadAvatar = new \DateTime();
+    }
 }

@@ -8,3 +8,4 @@ parameters:
     order_file_entity: SecureBundle\Entity\OrderFile
     stage_order_entity: SecureBundle\Entity\StageOrder
     user_entity: SecureBundle\Entity\User
+    user_info_entity: SecureBundle\Entity\UserInfo

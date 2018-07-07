@@ -9,3 +9,4 @@ parameters:
         SecureBundle\Entity\OrderFile: SecureBundle\Repository\OrderFileRepository
         SecureBundle\Entity\StageOrder: SecureBundle\Repository\StageOrderRepository
         SecureBundle\Entity\User: SecureBundle\Repository\UserRepository
+        SecureBundle\Entity\UserInfo: SecureBundle\Repository\UserInfoRepository

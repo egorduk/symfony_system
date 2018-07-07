@@ -18,6 +18,7 @@ services:
             $bidService: '@secure.service.bid'
             $settingService: '@secure.service.setting'
             $userBidRepository: '@secure.repository.user_bid'
+            $userInfoRepository: '@secure.repository.user_info'
             $settingRepository: '@secure.repository.setting'
 
     secure.service.file: '@SecureBundle\Service\FileService'

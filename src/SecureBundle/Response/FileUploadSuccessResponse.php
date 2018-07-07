@@ -4,7 +4,7 @@ namespace SecureBundle\Response;
 
 use Oneup\UploaderBundle\Uploader\Response\AbstractResponse;
 
-class FileUploaderResponse extends AbstractResponse
+class FileUploadSuccessResponse extends AbstractResponse
 {
     protected $success;
     protected $error;
@@ -19,20 +19,17 @@ class FileUploaderResponse extends AbstractResponse
 
     public function assemble()
     {
-        // explicitly overwrite success and error key
-        // as these keys are used internaly by the
-        // frontend uploader
         $data = $this->data;
         $data['success'] = $this->success;
 
-        if ($this->success)
+        if ($this->success) {
             unset($data['error']);
+        }
 
-        if (!$this->success)
+        if (!$this->success) {
             $data['error'] = $this->error;
+        }
 
         return $data;
     }
-
-    // ... snip, setters/getters
 }

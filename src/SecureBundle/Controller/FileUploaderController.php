@@ -12,11 +12,13 @@ use SecureBundle\Entity\User;
 use SecureBundle\Entity\UserOrder;
 use SecureBundle\Event\UserActivityEvent;
 use SecureBundle\Repository\OrderFileRepository;
+use SecureBundle\Response\FileUploadSuccessResponse;
 use SecureBundle\Response\OrderFileUploadSuccessResponse;
 use SecureBundle\Service\DateTimeService;
 use SecureBundle\Service\FileService;
 use SecureBundle\Service\OrdersService;
 use SecureBundle\Service\StageOrderService;
+use SecureBundle\Service\UserService;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -30,10 +32,40 @@ class FileUploaderController extends FineUploaderController
     public function userAvatarsUploader()
     {
         $request = $this->getRequest();
-
         $file = $this->getFiles($request->files)[0];
 
-        dump($file);
+        /*$this->dispatchEvent(UserActivityEvent::UPLOAD_FILE, [
+            'file_id' => $orderFile->getId(),
+        ]);*/
+
+        $response = new FileUploadSuccessResponse();
+
+        $uploadedFile = null;
+
+        $user = $this->getCurrentUser();
+        $this->setUser($user);
+
+        try {
+            $uploadedFile = $this->handleUpload($file, $response, $request);
+        } catch (UploadException $e) {
+            $this->errorHandler->addException($response, $e);
+        }
+
+        $avatarFileName = $uploadedFile->getFilename();
+
+        $user->updateAvatar($avatarFileName);
+
+        $userService = $this->container->get(UserService::class);
+        $userService->save($user);
+
+        $response->offsetSet(0, [
+                'user' => [
+                    'avatarUrl' => $userService->getFullPathToAvatar($user),
+                ],
+            ]
+        );
+
+        return $this->createSupportedJsonResponse($response->assemble());
     }
 
     public function orderAttachmentsUploader()
@@ -59,7 +91,7 @@ class FileUploaderController extends FineUploaderController
             $this->errorHandler->addException($response, $e);
         }
 
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getCurrentUser();
         $this->setUser($user);
 
         $orderFileRepository = $this->container->get(OrderFileRepository::class);
@@ -164,7 +196,15 @@ class FileUploaderController extends FineUploaderController
             $filesystem->mkdir($destination);
         }*/
 
-        $uploaded = $this->storage->upload($file, $name, $this->getOrderId());
+        $uploaded = null;
+
+        if ($this->getOrderId()) {
+            $uploaded = $this->storage->upload($file, $name, $this->getOrderId());
+        } else {
+            $user = $this->getUser();
+
+            $uploaded = $this->storage->upload($file, $name, $user->getId());
+        }
 
         $this->dispatchPostEvents($uploaded, $response, $request);
 
@@ -203,6 +243,9 @@ class FileUploaderController extends FineUploaderController
         $this->stageOrderId = $stageOrderId;
     }
 
+    /**
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
@@ -211,5 +254,13 @@ class FileUploaderController extends FineUploaderController
     public function setUser(User $user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return User
+     */
+    private function getCurrentUser()
+    {
+        return $this->container->get('security.token_storage')->getToken()->getUser();
     }
 }
