@@ -1,3 +1,5 @@
+.idea
+*.log
 /app/spool/*
 /var/cache/*
 /var/logs/*
@@ -5,6 +7,7 @@
 !var/cache/.gitkeep
 !var/logs/.gitkeep
 !var/sessions/.gitkeep
+!var/SymfonyRequirements.php
 /app/config/parameters.yml
 /app/config/parameters.ini
 /app/bootstrap.php.cache
@@ -15,9 +18,14 @@
 /vendor/
 /web/bundles/
 /web/uploads/
+/web/js/
 /app/phpunit.xml
 /phpunit.xml
 /build/
 /composer.phar
 **/Entity/*~
 /.web-server-pid
+*.env
+/docker/data
+/docker/logs
+!/docker/.env.template

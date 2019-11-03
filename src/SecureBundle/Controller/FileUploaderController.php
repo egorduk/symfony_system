@@ -1,6 +1,6 @@
 <?php
 
-namespace SecureBundle\Controller;
+/*namespace SecureBundle\Controller;
 
 use Oneup\UploaderBundle\Controller\FineUploaderController;
 use Oneup\UploaderBundle\Uploader\File\FileInterface;
@@ -38,7 +38,7 @@ class FileUploaderController extends FineUploaderController
             'file_id' => $orderFile->getId(),
         ]);*/
 
-        $response = new FileUploadSuccessResponse();
+        /*$response = new FileUploadSuccessResponse();
 
         $uploadedFile = null;
 
@@ -98,7 +98,7 @@ class FileUploaderController extends FineUploaderController
         $orderService = $this->container->get(OrdersService::class);
 
         /* @var UserOrder $order */
-        $order = $orderService->getOneById($this->getOrderId());
+        /*$order = $orderService->getOneById($this->getOrderId());
 
         $fileService = $this->container->get(FileService::class);
         $dateTimeService = $this->container->get(DateTimeService::class);
@@ -168,7 +168,7 @@ class FileUploaderController extends FineUploaderController
         return $this->createSupportedJsonResponse($response->assemble());
     }
 
-    private function dispatchEvent($eventName = '', array $data = [])
+    protected function dispatchEvent($eventName = '', array $data = [])
     {
         $this->container->get('event_dispatcher')->dispatch(
             $eventName,
@@ -196,7 +196,7 @@ class FileUploaderController extends FineUploaderController
             $filesystem->mkdir($destination);
         }*/
 
-        $uploaded = null;
+        /*$uploaded = null;
 
         if ($this->getOrderId()) {
             $uploaded = $this->storage->upload($file, $name, $this->getOrderId());
@@ -211,41 +211,26 @@ class FileUploaderController extends FineUploaderController
         return $uploaded;
     }
 
-    /**
-     * @return int
-     */
     public function getOrderId()
     {
         return $this->orderId;
     }
 
-    /**
-     * @param int $orderId
-     */
     public function setOrderId($orderId)
     {
         $this->orderId = $orderId;
     }
 
-    /**
-     * @return int
-     */
     public function getStageOrderId()
     {
         return $this->stageOrderId;
     }
 
-    /**
-     * @param int $stageOrderId
-     */
     public function setStageOrderId($stageOrderId)
     {
         $this->stageOrderId = $stageOrderId;
     }
 
-    /**
-     * @return User
-     */
     public function getUser()
     {
         return $this->user;
@@ -256,11 +241,9 @@ class FileUploaderController extends FineUploaderController
         $this->user = $user;
     }
 
-    /**
-     * @return User
-     */
     private function getCurrentUser()
     {
         return $this->container->get('security.token_storage')->getToken()->getUser();
     }
 }
+        */
